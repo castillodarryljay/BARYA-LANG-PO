@@ -1,717 +1,480 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  AlarmClock,
-  Briefcase,
-  Calendar,
-  Clock,
+  ChevronRight,
   Cloud,
   CloudRain,
-  FastForward,
   Flame,
+  Gamepad2,
+  Languages,
   Lock,
-  MapPin,
   Moon,
-  Pause,
-  Play,
+  Sparkles,
   Sun,
   Sunrise,
   Sunset,
-  Target,
   Wind,
 } from 'lucide-react';
 import {
-  CHAPTER_LABELS,
-  DAY_END_MINUTE,
   DAY_START_MINUTE,
-  DAYS_PER_YEAR,
   MAX_PAID_SHIFTS_PER_DAY,
-  MINIGAME_CONFIGS,
-  WAKE_UP_OPTIONS,
-  WEEKLY_ACTIONS,
 } from '../../data/config';
+import { getCalendarDayInfo, normalizeDayOfYear } from '../../engine/dailyScenes';
 import {
-  buildIdleMomentForTime,
-  getCalendarDayInfo,
-  getMealLabelForTime,
-} from '../../engine/dailyScenes';
+  BEAT_META,
+  buildDailyStoryScene,
+  DAILY_BEATS_ORDER,
+} from '../../engine/dailyStoryFlow';
 import {
-  canPerformDailyAction,
-  canStartMinigame,
   formatClockTime,
-  getSleepBonus,
   getTimeOfDayPhase,
   getWeekdayInfo,
+  interpolateText,
 } from '../../engine/storyEngine';
 import { soundFX } from '../../engine/audio';
 import { useGameStore } from '../../store/gameStore';
 import { PixelBackground } from '../art/PixelBackground';
 import { PixelSprite } from '../art/PixelSprite';
-import type { ClockSpeed, MinigameId, WakeUpChoiceId, WeatherId, WeeklyActionId } from '../../types/game';
+import type { DailyStoryChoice, TimeOfDayPhase, WeatherId } from '../../types/game';
 
-const SPEED_OPTIONS: { speed: ClockSpeed; label: string }[] = [
-  { speed: 0, label: 'Pause' },
-  { speed: 1, label: '1×' },
-  { speed: 2, label: '2×' },
-  { speed: 4, label: '4×' },
-];
-
-function getWeatherIcon(weather: WeatherId) {
-  switch (weather) {
-    case 'rainy':
-      return CloudRain;
-    case 'cloudy':
-      return Cloud;
-    case 'breezy':
-      return Wind;
-    default:
-      return Sun;
+function isCharacterSpeaking(charId: string, speakerRaw: string, playerName: string): boolean {
+  const s = speakerRaw.toLowerCase();
+  if (s === 'narrator' || s === 'system') return false;
+  if (charId === 'player') {
+    return s === playerName.toLowerCase() || s === '{name}' || s === 'you' || s === 'ikaw';
   }
+  if (charId === 'nena' && s.includes('nena')) return true;
+  if (charId === 'prof' && (s.includes('prof') || s.includes('reyes'))) return true;
+  if (charId === 'crush' && (s.includes('jamie') || s.includes('crush'))) return true;
+  return s.includes(charId.toLowerCase());
 }
+
+const PHASE_OVERLAY: Record<TimeOfDayPhase, string> = {
+  dawn: 'from-amber-400/18 via-orange-950/10 to-[#120b07]/65',
+  morning: 'from-amber-200/8 via-transparent to-[#120b07]/55',
+  afternoon: 'from-orange-400/12 via-transparent to-[#120b07]/60',
+  evening: 'from-indigo-950/40 via-purple-950/20 to-[#120b07]/75',
+  night: 'from-slate-950/60 via-indigo-950/35 to-[#120b07]/85',
+};
+
+const WEATHER_ICON: Record<WeatherId, React.ReactNode> = {
+  sunny: <Sun className="w-3.5 h-3.5 text-amber-300 shrink-0" />,
+  breezy: <Wind className="w-3.5 h-3.5 text-sky-300 shrink-0" />,
+  cloudy: <Cloud className="w-3.5 h-3.5 text-slate-300 shrink-0" />,
+  rainy: <CloudRain className="w-3.5 h-3.5 text-cyan-300 shrink-0" />,
+  hot: <Flame className="w-3.5 h-3.5 text-orange-400 shrink-0" />,
+};
 
 export const WeeklyPlanner: React.FC = () => {
   const {
     save,
     settings,
     lastWeekFeedback,
+    chooseDailyStoryChoice,
     updateSettings,
-    tickDayClock,
-    doMorningWakeUp,
-    doDailyAction,
-    finishCurrentDay,
-    startMinigame,
   } = useGameStore();
 
-  const [showJobs, setShowJobs] = useState(false);
-  const [recentActionId, setRecentActionId] = useState<WeeklyActionId | null>(null);
+  const [showJobPicker, setShowJobPicker] = useState(false);
+  const [lineIndex, setLineIndex] = useState(0);
+  const [charCount, setCharCount] = useState(0);
 
-  const clockSpeed: ClockSpeed = settings.clockSpeed ?? 1;
-  const isPlannerActive = save?.phase === 'planner';
-  const hasWokenUp = Boolean(save?.hasWokenUpToday);
+  const scene = useMemo(() => {
+    if (!save) return null;
+    return buildDailyStoryScene(save, { showJobPicker });
+  }, [save, showJobPicker]);
 
-  // Calm, realistic live 24-hour clock ticker:
-  // 1x = 1 game min per 1200ms (real chill pace), 2x = 2m/800ms, 4x = 5m/400ms
-  // Automatically pauses during the Morning Wake-Up scene or while browsing the Job Board.
+  // Reset job picker when day or beat changes
+  const beatKey = `${save?.totalWeeks ?? 0}_${save?.dayBeat ?? 'wake_up'}`;
   useEffect(() => {
-    if (!isPlannerActive || !hasWokenUp || clockSpeed === 0 || showJobs) return;
-    const intervalMs = clockSpeed === 1 ? 1200 : clockSpeed === 2 ? 800 : 400;
-    const stepMins = clockSpeed === 1 ? 1 : clockSpeed === 2 ? 2 : 5;
-    const timer = window.setInterval(() => {
-      tickDayClock(stepMins);
-    }, intervalMs);
-    return () => window.clearInterval(timer);
-  }, [isPlannerActive, hasWokenUp, clockSpeed, showJobs, tickDayClock]);
+    setShowJobPicker(false);
+  }, [beatKey]);
 
-  if (!save) return null;
+  // Reset dialogue typewriter whenever scene ID changes
+  const sceneId = scene?.id ?? '';
+  useEffect(() => {
+    setLineIndex(0);
+    setCharCount(0);
+  }, [sceneId]);
 
   const isTL = settings.language === 'taglish';
-  const minuteOfDay = save.minuteOfDay ?? DAY_START_MINUTE;
-  const { time12, time24 } = formatClockTime(minuteOfDay);
-  const phase = getTimeOfDayPhase(minuteOfDay);
+  const currentLine = scene?.lines[Math.min(lineIndex, (scene?.lines.length ?? 1) - 1)];
+
+  const fullText = useMemo(() => {
+    if (!save || !currentLine) return '';
+    const raw = isTL ? currentLine.text : currentLine.textEn || currentLine.text;
+    return interpolateText(raw, save.profile);
+  }, [currentLine, isTL, save]);
+
+  const speakerName = useMemo(() => {
+    if (!save || !currentLine) return '';
+    return interpolateText(currentLine.speaker, save.profile);
+  }, [currentLine, save]);
+
+  const speedMs =
+    settings.textSpeed === 'instant'
+      ? 0
+      : settings.textSpeed === 'fast'
+        ? 10
+        : settings.textSpeed === 'slow'
+          ? 30
+          : 16;
+
+  useEffect(() => {
+    if (!fullText) return;
+    if (speedMs === 0) {
+      setCharCount(fullText.length);
+      return;
+    }
+    if (charCount >= fullText.length) return;
+    const timer = window.setTimeout(() => {
+      setCharCount((c) => c + 1);
+      if (charCount % 6 === 0) soundFX.playBlip();
+    }, speedMs);
+    return () => window.clearTimeout(timer);
+  }, [charCount, fullText, speedMs]);
+
+  if (!save || !scene) return null;
+
+  const isTyping = charCount < fullText.length;
+  const isLastLine = lineIndex >= scene.lines.length - 1;
+  const visibleText = fullText.slice(0, charCount);
+
+  const dayOfYear = normalizeDayOfYear(save.dayOfYear ?? save.totalWeeks);
+  const cal = getCalendarDayInfo(dayOfYear, save.totalWeeks);
   const weekday = getWeekdayInfo(save.totalWeeks);
-  const cal = getCalendarDayInfo(save.dayOfYear ?? 1, save.totalWeeks);
-  const dayBlocks = save.dayActions ?? [];
-  const sleepBonus = getSleepBonus(minuteOfDay, save.pendingWeeklyActions.length);
-  const activeChallenge = save.activeChallenge;
-  const streak = save.studyStreak ?? 0;
-  const isHardcore = save.profile.difficulty === 'hardcore';
-  const shiftsToday = save.workJobsCompletedThisWeek;
-  const livesAtHome = !save.chapter.startsWith('college') || !save.profile.isProvincial;
-  const moment = buildIdleMomentForTime(save);
-  const WeatherIcon = getWeatherIcon(cal.weather);
+  const minuteOfDay = save.minuteOfDay ?? DAY_START_MINUTE;
+  const clock = formatClockTime(minuteOfDay);
+  const phase = getTimeOfDayPhase(minuteOfDay);
+  const beatInfo = BEAT_META[scene.beat];
+  const currentBeatIdx = DAILY_BEATS_ORDER.indexOf(scene.beat);
 
-  const totalWakingMins = DAY_END_MINUTE - DAY_START_MINUTE; // 1110 mins (05:30 -> 24:00)
-  const elapsedWakingMins = Math.max(0, minuteOfDay - DAY_START_MINUTE);
-  const remainingMins = Math.max(0, DAY_END_MINUTE - minuteOfDay);
-  const remHours = Math.floor(remainingMins / 60);
-  const remMinsPart = remainingMins % 60;
-  const progressPct = Math.min(100, Math.max(0, (elapsedWakingMins / totalWakingMins) * 100));
-  const yearProgressPct = Math.min(100, Math.max(1, (cal.dayOfYear / DAYS_PER_YEAR) * 100));
+  const phaseIcon =
+    phase === 'dawn' ? (
+      <Sunrise className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+    ) : phase === 'morning' || phase === 'afternoon' ? (
+      <Sun className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+    ) : phase === 'evening' ? (
+      <Sunset className="w-3.5 h-3.5 text-orange-300 shrink-0" />
+    ) : (
+      <Moon className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
+    );
 
-  const phaseMeta =
-    phase === 'dawn'
-      ? {
-          icon: Sunrise,
-          label: isTL ? 'Bukang-Liwayway · Dawn' : 'Dawn',
-          tint: 'bg-amber-950/35',
-          iconColor: 'text-amber-300',
-        }
-      : phase === 'morning'
-        ? {
-            icon: Sunrise,
-            label: isTL ? 'Umaga · Morning' : 'Morning',
-            tint: 'bg-amber-500/5',
-            iconColor: 'text-amber-200',
-          }
-        : phase === 'afternoon'
-          ? {
-              icon: Sun,
-              label: isTL ? 'Tanghali · Afternoon' : 'Afternoon',
-              tint: 'bg-orange-500/10',
-              iconColor: 'text-orange-300',
-            }
-          : phase === 'evening'
-            ? {
-                icon: Sunset,
-                label: isTL ? 'Takipsilim · Evening' : 'Evening',
-                tint: 'bg-purple-950/35',
-                iconColor: 'text-purple-300',
-              }
-            : {
-                icon: Moon,
-                label: isTL ? 'Hatinggabi · Puyat Hours' : 'Late Night',
-                tint: 'bg-indigo-950/55',
-                iconColor: 'text-indigo-300',
-              };
-
-  const PhaseIcon = phaseMeta.icon;
-
-  const handleWakeUp = (choiceId: WakeUpChoiceId) => {
-    doMorningWakeUp(choiceId);
-  };
-
-  const handlePerformAction = (id: WeeklyActionId) => {
-    const res = doDailyAction(id);
-    if (!res) return;
-    setRecentActionId(id);
-    window.setTimeout(() => {
-      setRecentActionId((cur) => (cur === id ? null : cur));
-    }, 320);
-    if (res.reachedMidnight) {
-      window.setTimeout(() => {
-        finishCurrentDay();
-      }, 340);
+  const handleAdvanceDialogue = () => {
+    if (isTyping) {
+      setCharCount(fullText.length);
+      return;
+    }
+    if (!isLastLine) {
+      soundFX.playClick();
+      setLineIndex((i) => i + 1);
+      setCharCount(0);
     }
   };
 
-  const handleLaunchJob = (id: MinigameId) => {
-    soundFX.playClick();
-    setShowJobs(false);
-    startMinigame(id);
+  const handleSelectChoice = (choice: DailyStoryChoice) => {
+    if (choice.openJobPicker) {
+      soundFX.playClick();
+      setShowJobPicker(true);
+      return;
+    }
+    if (choice.id === 'close_job_picker') {
+      soundFX.playClick();
+      setShowJobPicker(false);
+      return;
+    }
+    chooseDailyStoryChoice(choice);
+  };
+
+  const hasSpecificSpeaker =
+    speakerName.toLowerCase() !== 'narrator' &&
+    scene.characters.some((c) =>
+      isCharacterSpeaking(c.id, currentLine?.speaker ?? '', save.profile.name)
+    );
+
+  const renderSlotCharacters = (pos: 'left' | 'center' | 'right') => {
+    const enterClass =
+      pos === 'left'
+        ? 'anim-enter-left'
+        : pos === 'right'
+          ? 'anim-enter-right'
+          : 'anim-fade-up';
+    return scene.characters
+      .filter((c) => c.position === pos)
+      .map((c) => {
+        const speaking = isCharacterSpeaking(c.id, currentLine?.speaker ?? '', save.profile.name);
+        const isWorried = c.sprite.endsWith('_worried') || c.sprite.endsWith('_sad');
+        const spriteAnim = speaking ? 'speaking' : isWorried ? 'worried' : 'idle';
+        return (
+          <div key={`${scene.id}-${c.id}-${c.sprite}`} className={enterClass}>
+            <PixelSprite
+              spriteId={c.sprite}
+              playerGender={save.profile.gender}
+              appearance={save.profile.appearance}
+              animation={spriteAnim}
+              dimmed={hasSpecificSpeaker && !speaking}
+              size="lg"
+            />
+          </div>
+        );
+      });
   };
 
   return (
-    <div className="space-y-4 anim-fade-up">
-      {/* FOCAL ANCHOR: Realistic Living-Day Scene Viewport */}
-      <section className="rounded-2xl overflow-hidden border border-amber-700/60 bg-[#1a120d] pixel-frame">
-        {/* Clean Unobstructed Scene Header Bar: 365-Day Date, Weather, Location & Live Clock */}
-        <div className="px-3.5 sm:px-5 py-3 bg-[#1c130e] border-b border-amber-800/50 flex flex-wrap items-start justify-between gap-2.5">
-          <div className="min-w-0 space-y-0.5 flex-1">
-            <div className="text-[11px] sm:text-xs font-mono text-amber-200/95 flex flex-wrap items-center gap-x-2 gap-y-0.5 tabular-nums">
-              <span className="inline-flex items-center gap-1 font-semibold text-amber-100">
-                <Calendar className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                {cal.monthName} {cal.dayOfMonth} · Day {cal.dayOfYear}/{DAYS_PER_YEAR} ({isTL ? weekday.tl : weekday.short})
+    <div
+      key={scene.id}
+      data-testid="continuous-daily-story"
+      className="space-y-3 sm:space-y-3.5 anim-fade-up"
+    >
+      {/* BAND 1 + BAND 2: Unobstructed 3-part Story Frame */}
+      <section className="rounded-2xl overflow-hidden border border-amber-700/60 bg-[#18100c] pixel-frame">
+        {/* Band 1: Clean Calendar, Weather, Clock & 7-Beat Story Progress Header */}
+        <div className="px-3 sm:px-4 py-2 bg-[#1d140f] border-b border-amber-900/50 space-y-1">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex items-center gap-2 text-[11px] font-mono">
+              <span className="text-amber-300 font-bold tabular-nums truncate">
+                {cal.monthShort} {cal.dayOfMonth} · Day {cal.dayOfYear}/365 ({isTL ? weekday.tl : weekday.short})
               </span>
-              <span className="text-amber-400/60">·</span>
-              <span className="inline-flex items-center gap-1 text-sky-200/95">
-                <WeatherIcon className="w-3.5 h-3.5 shrink-0" />
-                {isTL ? cal.weatherLabelTl : cal.weatherLabelEn}
-              </span>
-            </div>
-            <div className="text-[11px] font-mono text-amber-300/80 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-              <span className="inline-flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
-                {isTL ? moment.locationTl : moment.locationEn}
-              </span>
-              <span>· {CHAPTER_LABELS[save.chapter].tl} (Sem {save.semester})</span>
-              {weekday.isWeekend && (
-                <span className="text-emerald-300 font-bold">· Weekend +15% Raket</span>
-              )}
-              {isHardcore && <span className="text-rose-300 font-bold">· Hardcore</span>}
-              {streak >= 2 && (
-                <span className="inline-flex items-center gap-0.5 text-orange-300 font-bold">
-                  <Flame className="w-3 h-3" />
-                  {streak}d Streak
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Live Digital Clock Readout */}
-          <div className="text-right shrink-0">
-            <div
-              data-testid="daily-clock-readout"
-              className="font-pixel text-xl sm:text-2xl text-amber-50 flex items-center justify-end gap-1.5 tabular-nums"
-            >
-              <PhaseIcon className={`w-5 h-5 shrink-0 ${phaseMeta.iconColor}`} />
-              <span>{time12}</span>
-            </div>
-            <div className="text-[10px] font-mono text-amber-200/75 tabular-nums">
-              {time24} · {phaseMeta.label}
-            </div>
-          </div>
-        </div>
-
-        {/* Unobstructed 16:9 Animated Pixel Scene & Character Sprites */}
-        <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#120c08]">
-          <PixelBackground backgroundId={moment.backgroundId} animated />
-
-          {/* Atmospheric Time-of-Day Light Overlay */}
-          <div
-            className={`pointer-events-none absolute inset-0 transition-colors duration-700 ${phaseMeta.tint}`}
-          />
-
-          {/* Subtle Rain Ambience Overlay on Rainy Philippine Days */}
-          {cal.weather === 'rainy' && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 opacity-30 bg-[repeating-linear-gradient(108deg,transparent_0,transparent_18px,rgba(186,230,253,0.45)_18px,rgba(186,230,253,0.45)_19px)]"
-            />
-          )}
-
-          {/* Character & Companion Sprites Standing Cleanly in the Scene */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-3 sm:bottom-5 flex items-end justify-center gap-8 sm:gap-16 px-4">
-            <div className="anim-sprite-idle drop-shadow-[0_6px_12px_rgba(0,0,0,0.75)]">
-              <PixelSprite
-                spriteId={`player_${moment.playerEmotion}`}
-                playerGender={save.profile.gender}
-                appearance={save.profile.appearance}
-                animation="idle"
-                size="md"
-              />
-            </div>
-            {moment.companionSpriteId && (
-              <div className="anim-sprite-idle drop-shadow-[0_6px_12px_rgba(0,0,0,0.75)]">
-                <PixelSprite spriteId={moment.companionSpriteId} animation="idle" size="md" />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Dedicated Narrative Caption Strip Below the Art (Zero Overlap on Any Device) */}
-        <div className="px-3.5 sm:px-5 py-3 bg-[#150e0a] border-t border-amber-900/50 space-y-1">
-          {cal.specialDayTl && (
-            <div className="text-[11px] font-mono font-bold text-amber-300">
-              {isTL ? `Ngayong Araw: ${cal.specialDayTl}` : `Special Day: ${cal.specialDayEn}`}
-            </div>
-          )}
-          <p className="text-xs sm:text-sm text-amber-50/95 leading-relaxed">
-            {isTL ? moment.narrationTl : moment.narrationEn}
-          </p>
-        </div>
-
-        {/* Interactive Morning Waking Up Routine (05:30 AM before the day begins) */}
-        {!hasWokenUp ? (
-          <div
-            data-testid="morning-wakeup-panel"
-            className="p-4 sm:p-5 bg-[#201610] border-t border-amber-800/50 space-y-3"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <AlarmClock className="w-5 h-5 text-amber-400 shrink-0" />
-                <h2 className="font-pixel text-lg sm:text-xl text-amber-100">
-                  {isTL ? '05:30 AM · Paggising! Paano mo sisimulan ang araw?' : '05:30 AM · Wake Up! How do you start your morning?'}
-                </h2>
-              </div>
-              <span className="text-[11px] font-mono text-amber-300/75">
-                {isTL ? cal.seasonLabelTl : cal.seasonLabelEn}
+              <span className="hidden sm:inline text-amber-500/50">•</span>
+              <span className="hidden sm:inline-flex items-center gap-1 text-amber-100/85 truncate">
+                {WEATHER_ICON[cal.weather]}
+                <span className="truncate">{isTL ? cal.weatherLabelTl : cal.weatherLabelEn}</span>
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-              {WAKE_UP_OPTIONS.map((opt) => {
-                const effectiveCost = opt.id === 'breakfast' && livesAtHome ? 0 : opt.moneyDelta;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    data-testid={`wakeup-${opt.id}`}
-                    onClick={() => handleWakeUp(opt.id)}
-                    className="text-left p-3.5 rounded-xl bg-[#2a1d15] hover:bg-[#36251b] border border-amber-700/60 hover:border-amber-400 transition-colors flex flex-col justify-between gap-2 min-h-[108px]"
-                  >
-                    <div className="space-y-1">
-                      <div className="font-pixel text-base text-amber-100">
-                        {isTL ? opt.labelTl : opt.labelEn}
-                      </div>
-                      <p className="text-xs text-amber-200/80 leading-snug">
-                        {isTL ? opt.descTl : opt.descEn}
-                      </p>
-                    </div>
-                    <div className="text-[11px] font-mono text-amber-300/90 tabular-nums">
-                      +{opt.durationMins}m · EN {opt.energyDelta >= 0 ? '+' : ''}
-                      {opt.energyDelta} · MH +{opt.mentalDelta}
-                      {effectiveCost !== 0
-                        ? ` · -₱${Math.abs(effectiveCost)}`
-                        : opt.id === 'breakfast'
-                          ? isTL
-                            ? ' · Libre sa Bahay'
-                            : ' · Free at Home'
-                          : ''}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {lastWeekFeedback && (
-              <div className="text-[11px] font-mono text-amber-200/80 pt-1 flex flex-wrap gap-x-3 gap-y-1 tabular-nums border-t border-amber-900/40">
-                <span className="text-emerald-300">
-                  {isTL ? 'Kahapon Baon:' : 'Yesterday Allowance:'} +₱{lastWeekFeedback.allowanceReceived}
+            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+              {/* Compact 7-Beat Day Arc Indicator */}
+              <div className="hidden sm:flex items-center gap-1.5 pr-1" aria-label="Daily story progress">
+                <span className="text-[11px] font-mono text-amber-200/75">
+                  {beatInfo.index}/7 {isTL ? scene.beatLabelTl : scene.beatLabelEn}
                 </span>
-                <span className="text-rose-300">Bills -₱{lastWeekFeedback.livingCosts}</span>
-                {lastWeekFeedback.debtInterest > 0 && (
-                  <span className="text-rose-400 font-bold">
-                    Utang Interest -₱{lastWeekFeedback.debtInterest}
-                  </span>
-                )}
-                {lastWeekFeedback.absentPenalty && (
-                  <span className="text-rose-400 font-bold">Absent Penalty (-50% Baon)</span>
-                )}
-              </div>
-            )}
-          </div>
-        ) : (
-          /* Post-Wake-Up Controls: Calm Speed Selector, 24h Timeline, Year Progress, Sleep & Raket */
-          <div className="p-4 sm:p-5 bg-[#201610] border-t border-amber-800/50 space-y-3.5">
-            {/* Clock Speed Bar & 365-Day Year Progress */}
-            <div className="flex flex-wrap items-center justify-between gap-2.5">
-              <div className="text-xs font-mono text-amber-200/85 tabular-nums flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>
-                  {remHours}h {String(remMinsPart).padStart(2, '0')}m {isTL ? 'natitira ngayon' : 'left today'}
-                </span>
-                <span className="text-amber-400/50">·</span>
-                <span>
-                  {isTL ? 'Taon:' : 'Year:'} {Math.round(yearProgressPct)}% ({cal.dayOfYear}/{DAYS_PER_YEAR})
-                </span>
-              </div>
-
-              <div className="flex items-center gap-1 bg-[#150e0a] border border-amber-900/60 rounded-xl p-1">
-                {SPEED_OPTIONS.map((opt) => {
-                  const active = clockSpeed === opt.speed;
-                  return (
-                    <button
-                      key={opt.speed}
-                      type="button"
-                      aria-label={opt.speed === 0 ? 'Pause 24-hour clock' : `Set clock speed ${opt.label}`}
-                      onClick={() => {
-                        soundFX.playClick();
-                        updateSettings({ clockSpeed: opt.speed });
-                      }}
-                      className={`min-h-[34px] px-2.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1 transition-colors whitespace-nowrap shrink-0 ${
-                        active
-                          ? 'bg-amber-500 text-[#1b110a]'
-                          : 'text-amber-200/80 hover:bg-[#2a1d15]'
+                <div className="flex items-center gap-1">
+                  {DAILY_BEATS_ORDER.map((b, idx) => (
+                    <span
+                      key={b}
+                      className={`h-1.5 rounded-full transition-all ${
+                        idx === currentBeatIdx
+                          ? 'w-4 bg-amber-400'
+                          : idx < currentBeatIdx
+                            ? 'w-1.5 bg-emerald-400/80'
+                            : 'w-1.5 bg-amber-900/80'
                       }`}
-                    >
-                      {opt.speed === 0 ? (
-                        <Pause className="w-3.5 h-3.5" />
-                      ) : opt.speed === 1 ? (
-                        <Play className="w-3 h-3 fill-current" />
-                      ) : (
-                        <FastForward className="w-3 h-3" />
-                      )}
-                      <span>{opt.speed === 0 ? '' : opt.label}</span>
-                    </button>
-                  );
-                })}
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundFX.playClick();
-                    tickDayClock(30);
-                  }}
-                  aria-label="Advance 30 minutes"
-                  className="min-h-[34px] px-2 rounded-lg text-xs font-mono font-semibold text-amber-300 hover:bg-[#2a1d15] border-l border-amber-900/50 ml-0.5 whitespace-nowrap shrink-0"
-                >
-                  +30m
-                </button>
-              </div>
-            </div>
-
-            {/* 24-Hour Day Timeline Bar (05:30 AM -> 12:00 AM) */}
-            <div className="space-y-1.5">
-              <div className="relative h-4 w-full rounded-lg bg-[#140e0a] border border-amber-900/70 overflow-hidden">
-                <div
-                  className="absolute inset-y-0 left-0 bg-amber-500/15 transition-[width] duration-300"
-                  style={{ width: `${progressPct}%` }}
-                />
-                {dayBlocks.map((blk) => {
-                  const leftPct = ((blk.startMinute - DAY_START_MINUTE) / totalWakingMins) * 100;
-                  const widthPct = Math.max(
-                    2,
-                    ((blk.endMinute - blk.startMinute) / totalWakingMins) * 100
-                  );
-                  const cfg = WEEKLY_ACTIONS.find((a) => a.id === blk.actionId);
-                  const color =
-                    blk.actionId === 'wakeup'
-                      ? '#fde68a'
-                      : blk.actionId === 'minigame'
-                        ? '#34d399'
-                        : cfg?.timelineColor ?? '#f59e0b';
-                  return (
-                    <div
-                      key={blk.id}
-                      title={`${formatClockTime(blk.startMinute).time12} – ${formatClockTime(blk.endMinute).time12}: ${isTL ? blk.label : blk.labelEn}`}
-                      className="absolute inset-y-0.5 rounded-sm border border-black/30"
-                      style={{
-                        left: `${Math.max(0, leftPct)}%`,
-                        width: `${Math.min(100 - Math.max(0, leftPct), widthPct)}%`,
-                        backgroundColor: color,
-                      }}
                     />
-                  );
-                })}
-                <div
-                  className="absolute inset-y-0 w-0.5 bg-amber-100 shadow-[0_0_6px_rgba(254,243,199,0.9)] transition-[left] duration-300"
-                  style={{ left: `${progressPct}%` }}
-                />
-              </div>
-
-              <div className="flex justify-between text-[10px] font-mono text-amber-300/60 tabular-nums">
-                <span>05:30 AM</span>
-                <span>12:00 PM</span>
-                <span>06:00 PM</span>
-                <span>10:00 PM</span>
-                <span>12:00 AM</span>
-              </div>
-
-              {/* Chronological Daily Log (Clean Unboxed Typographic List) */}
-              {dayBlocks.length > 0 && (
-                <div className="text-[11px] font-mono text-amber-200/80 pt-0.5 flex flex-wrap gap-x-2.5 gap-y-1 tabular-nums">
-                  {dayBlocks.map((blk, i) => (
-                    <span key={blk.id}>
-                      {i > 0 && <span className="text-amber-500/50 mr-2">→</span>}
-                      <span className="text-amber-300/80">{formatClockTime(blk.startMinute).time24}</span>{' '}
-                      {isTL ? blk.label : blk.labelEn}
-                    </span>
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
 
-            {/* Primary Actions: Sleep & End Day + Job Minigames */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <button
-                type="button"
-                onClick={finishCurrentDay}
-                className="min-h-[46px] px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#1b110a] font-bold text-sm flex items-center justify-center gap-2 pixel-btn"
-              >
-                <Moon className="w-4 h-4 shrink-0" />
-                <span className="truncate">
-                  {isTL ? 'Matulog Na · Bukas Ulit' : 'Go to Sleep · Next Morning'}
-                </span>
-              </button>
+              {/* Digital Clock */}
+              <div className="flex items-center gap-1 text-xs sm:text-sm font-mono font-bold text-[#fff6e5] tabular-nums">
+                {phaseIcon}
+                <span data-testid="daily-clock-readout">{clock.time12}</span>
+              </div>
 
+              {/* Taglish / English Toggle */}
               <button
                 type="button"
                 onClick={() => {
                   soundFX.playClick();
-                  setShowJobs((v) => !v);
+                  updateSettings({ language: isTL ? 'english' : 'taglish' });
                 }}
-                className="min-h-[46px] px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-bold flex items-center justify-center gap-2 pixel-btn"
+                aria-label="Toggle Taglish or English"
+                className="min-h-[28px] sm:min-h-[32px] px-2 sm:px-2.5 rounded-lg bg-[#2a1d14] hover:bg-[#38271b] border border-amber-700/60 text-[11px] font-semibold text-amber-100 inline-flex items-center gap-1"
               >
-                <Briefcase className="w-4 h-4 shrink-0" />
-                <span className="truncate">
-                  {showJobs
-                    ? isTL
-                      ? 'Isara ang Raket Board'
-                      : 'Hide Job Board'
-                    : isTL
-                      ? 'Raket Minigames (2h · Big ₱)'
-                      : 'Job Minigames (2h · Big ₱)'}
-                </span>
+                <Languages className="w-3.5 h-3.5 text-amber-400" />
+                {isTL ? 'TL' : 'EN'}
               </button>
             </div>
-
-            <div className="text-[11px] font-mono text-amber-200/80 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-              <span>
-                Sleep Status:{' '}
-                <strong
-                  className={
-                    sleepBonus.isAbsentSkip || sleepBonus.energyBonus < 0
-                      ? 'text-rose-300'
-                      : 'text-emerald-300'
-                  }
-                >
-                  {isTL ? sleepBonus.labelTl : sleepBonus.labelEn}
-                </strong>
-              </span>
-              <span
-                className={`tabular-nums font-bold ${
-                  shiftsToday >= MAX_PAID_SHIFTS_PER_DAY ? 'text-rose-300' : 'text-amber-300'
-                }`}
-              >
-                {isTL ? 'Raket Shifts:' : 'Paid Shifts:'} {shiftsToday}/{MAX_PAID_SHIFTS_PER_DAY}
-              </span>
-            </div>
           </div>
-        )}
+
+          <div className="flex items-center justify-between gap-2 text-[11px] sm:text-xs text-amber-100/80">
+            <div className="min-w-0 flex items-center gap-1.5 truncate">
+              <span className="font-semibold text-[#fff4de] truncate">
+                {isTL ? scene.locationTl : scene.locationEn}
+              </span>
+              {cal.specialDayTl && (
+                <span className="text-amber-300 font-semibold inline-flex items-center gap-1 shrink-0">
+                  <Sparkles className="w-3 h-3 shrink-0" />
+                  <span className="truncate max-w-[140px] sm:max-w-none">
+                    {isTL ? cal.specialDayTl : cal.specialDayEn}
+                  </span>
+                </span>
+              )}
+            </div>
+            <span className="sm:hidden inline-flex items-center gap-1 text-[10px] font-mono text-amber-200/80 shrink-0">
+              {WEATHER_ICON[cal.weather]}
+              <span>{(isTL ? cal.weatherLabelTl : cal.weatherLabelEn).split('·')[0].trim()}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Band 2: Unobstructed 16:9 Pixel Art Scene & Speaking Characters */}
+        <div className="relative w-full h-[clamp(185px,33vh,350px)] sm:h-auto sm:aspect-[16/9] sm:max-h-[45vh] overflow-hidden bg-[#120b07]">
+          <PixelBackground backgroundId={scene.background} animated />
+
+          {/* Atmospheric Time-of-Day Tint */}
+          <div
+            className={`absolute inset-0 bg-gradient-to-b ${PHASE_OVERLAY[phase]} pointer-events-none transition-colors duration-700`}
+          />
+
+          {/* Subtle Rain Streaks on Rainy Days */}
+          {cal.weather === 'rainy' && (
+            <div
+              className="absolute inset-0 pointer-events-none opacity-25"
+              style={{
+                backgroundImage:
+                  'repeating-linear-gradient(115deg, transparent 0px, transparent 14px, rgba(186,230,253,0.45) 14px, rgba(186,230,253,0.45) 15px)',
+              }}
+            />
+          )}
+
+          {/* Bottom Scrim for Character Grounding */}
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#120b07]/90 via-[#120b07]/25 to-transparent pointer-events-none" />
+
+          {/* Animated Character Sprites */}
+          <div className="absolute inset-x-2 sm:inset-x-5 bottom-0 z-10 flex items-end justify-between pointer-events-none">
+            <div className="w-1/3 flex justify-start">{renderSlotCharacters('left')}</div>
+            <div className="w-1/3 flex justify-center">{renderSlotCharacters('center')}</div>
+            <div className="w-1/3 flex justify-end">{renderSlotCharacters('right')}</div>
+          </div>
+        </div>
       </section>
 
-      {/* Active Daily Challenge Card */}
-      {hasWokenUp && activeChallenge && (
-        <div className="bg-[#211912] border border-amber-700/50 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-1.5 text-[11px] font-mono font-bold text-amber-400">
-              <Target className="w-3.5 h-3.5 shrink-0" />
-              Daily Challenge · {save.challengesCompleted ?? 0} Cleared
-            </div>
-            <div className="font-pixel text-base sm:text-lg text-amber-100">
-              {isTL ? activeChallenge.title : activeChallenge.titleEn}
-            </div>
-            <p className="text-xs text-amber-200/85 leading-relaxed">
-              {isTL ? activeChallenge.desc : activeChallenge.descEn}
-            </p>
-          </div>
-          <div className="font-mono text-xs text-emerald-300 shrink-0 tabular-nums">
-            Reward: +₱{activeChallenge.rewardMoney} · +{activeChallenge.rewardMental} MH
-            {activeChallenge.rewardGwa ? ' · GWA ↑' : ''}
-          </div>
-        </div>
-      )}
-
-      {/* Expandable Playable Job / Minigame Board */}
-      {hasWokenUp && showJobs && (
-        <div className="bg-[#1e1510] border border-emerald-700/50 rounded-2xl p-4 sm:p-5 space-y-3 anim-fade-up">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h3 className="font-pixel text-lg sm:text-xl text-emerald-300">
-              {isTL ? 'Part-Time Raket Board (7 Playable Games)' : 'Part-Time Job Board (7 Playable Games)'}
-            </h3>
-            <span className="text-xs font-mono text-amber-200/70 tabular-nums">
-              Clock Paused · Energy: {save.stats.energy}/100
+      {/* BAND 3: Interactive Typewriter Dialogue Box */}
+      <button
+        type="button"
+        data-vn-advance="true"
+        onClick={handleAdvanceDialogue}
+        className="w-full text-left bg-[#231812] hover:bg-[#291c15] border border-amber-700/60 rounded-2xl p-3.5 sm:p-5 space-y-2 pixel-frame transition-colors focus-visible:outline-2 focus-visible:outline-amber-400"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="font-pixel text-base sm:text-lg text-amber-300 tracking-wide truncate">
+              {speakerName}
+            </span>
+            <span className="sm:hidden text-[11px] font-mono text-amber-200/65 shrink-0">
+              · {beatInfo.index}/7 {isTL ? scene.beatLabelTl : scene.beatLabelEn}
             </span>
           </div>
+          <span className="text-[11px] font-mono text-amber-200/60 tabular-nums shrink-0">
+            {lineIndex + 1}/{scene.lines.length}
+          </span>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {MINIGAME_CONFIGS.map((m) => {
-              const gate = canStartMinigame(m.id, save, false);
-              const disabled = !gate.allowed;
-              const isOvertime = m.id !== 'scholarship' && shiftsToday >= 1;
-              return (
-                <button
-                  key={m.id}
-                  type="button"
-                  disabled={disabled}
-                  onClick={() => handleLaunchJob(m.id)}
-                  className={`text-left p-3.5 rounded-xl border transition-colors ${
-                    disabled
-                      ? 'bg-[#17110d] border-amber-950/80 opacity-60 cursor-not-allowed'
-                      : 'bg-[#261b14] hover:bg-[#32231a] border-emerald-700/50 hover:border-emerald-400'
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-pixel text-base text-amber-100">
-                      {isTL ? m.title : m.titleEn}
-                    </span>
-                    {!disabled ? (
-                      <span className="text-xs font-mono font-bold text-emerald-300 tabular-nums">
-                        ₱{m.basePay}–{m.maxPay}
-                      </span>
+        <p className="text-[14px] sm:text-base text-[#faf2e3] leading-relaxed min-h-[3.25rem]">
+          {visibleText}
+          {isTyping && (
+            <span className="inline-block w-2 h-4 bg-amber-400 ml-1 align-middle caret-blink" />
+          )}
+        </p>
+
+        {(!isLastLine || isTyping) && (
+          <div className="flex items-center justify-end gap-1 text-xs font-semibold text-amber-400 pt-0.5">
+            <span>
+              {isTyping
+                ? isTL
+                  ? 'I-tap para tapusin'
+                  : 'Tap to skip'
+                : isTL
+                  ? 'Magpatuloy'
+                  : 'Continue'}
+            </span>
+            <ChevronRight className="w-4 h-4" />
+          </div>
+        )}
+      </button>
+
+      {/* Staggered Continuous Story Choices */}
+      {isLastLine && !isTyping && (
+        <div className="space-y-2" role="group" aria-label="Daily story choices">
+          {scene.choices.map((choice, idx) => {
+            const label = interpolateText(
+              isTL ? choice.text : choice.textEn || choice.text,
+              save.profile
+            );
+            const hint = isTL ? choice.hint : choice.hintEn || choice.hint;
+            const disabledReason = isTL ? choice.disabledReasonTl : choice.disabledReasonEn;
+            const isMinigame = Boolean(choice.triggerMinigame || choice.openJobPicker);
+
+            return (
+              <button
+                key={choice.id}
+                type="button"
+                data-vn-choice="true"
+                data-choice-id={choice.id}
+                onClick={() => handleSelectChoice(choice)}
+                style={{ animationDelay: `${idx * 45}ms` }}
+                className={`w-full min-h-[52px] text-left px-3.5 sm:px-4 py-3 rounded-xl border pixel-btn anim-choice-in flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 transition-colors ${
+                  choice.disabled
+                    ? 'bg-[#1a120e] border-amber-950/70 text-amber-200/45 cursor-not-allowed'
+                    : isMinigame
+                      ? 'bg-[#1f261b] hover:bg-[#273322] border-emerald-600/60 hover:border-emerald-400 text-[#f3ffe9]'
+                      : choice.nextBeat === 'NEXT_DAY'
+                        ? 'bg-[#2c1f12] hover:bg-[#3c2a17] border-amber-500/75 hover:border-amber-300 text-[#fff7e6]'
+                        : 'bg-[#2d1f16] hover:bg-[#3a281c] border-amber-600/60 hover:border-amber-400 text-[#fff6e5]'
+                }`}
+              >
+                <span className="text-sm sm:text-[15px] font-semibold leading-snug flex items-start gap-2">
+                  <span
+                    className={`font-mono shrink-0 ${
+                      choice.disabled
+                        ? 'text-amber-500/40'
+                        : isMinigame
+                          ? 'text-emerald-400'
+                          : 'text-amber-400'
+                    }`}
+                  >
+                    {choice.disabled ? (
+                      <Lock className="w-3.5 h-3.5 mt-1" />
+                    ) : isMinigame ? (
+                      <Gamepad2 className="w-4 h-4 mt-0.5" />
                     ) : (
-                      <Lock className="w-4 h-4 text-amber-500/70 shrink-0" />
+                      `${idx + 1}.`
                     )}
-                  </div>
-                  <p className="text-xs text-amber-200/75 mt-1 leading-snug">
-                    {disabled
-                      ? isTL
-                        ? gate.reasonTl
-                        : gate.reasonEn
-                      : isTL
-                        ? m.subtitle
-                        : m.subtitleEn}
-                  </p>
-                  <div className="text-[11px] font-mono text-amber-300/75 mt-2">
-                    2h Shift · -{m.energyCost + (isOvertime ? 4 : 0)} Energy · ~{m.durationSec}s
-                    {isOvertime ? ' · -20% OT' : ''}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
+                  </span>
+                  <span>{label}</span>
+                </span>
 
-      {/* 8 Realistic Daily Routine Activities (Shown once awake) */}
-      {hasWokenUp && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between px-1">
-            <h3 className="font-pixel text-base sm:text-lg text-amber-200">
-              {isTL ? 'Gawain Ngayong Araw' : 'Today’s Activities'}
-            </h3>
-            <span className="text-[11px] font-mono text-amber-300/70">
-              {isTL ? 'Live scene bawat gawain · Auto-tulog 12:00 AM' : 'Live scene per activity · Auto-sleep 12:00 AM'}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
-            {WEEKLY_ACTIONS.map((act) => {
-              const countToday = dayBlocks.filter((b) => b.actionId === act.id).length;
-              const gate = canPerformDailyAction(save, act.id);
-              const justDid = recentActionId === act.id;
-              const isOvertimeWork = act.id === 'work' && shiftsToday >= 1;
-              const mealInfo = act.id === 'eat_meal' ? getMealLabelForTime(minuteOfDay) : null;
-
-              let moneyShow = act.moneyDelta;
-              if (act.id === 'work') {
-                if (isOvertimeWork) moneyShow = Math.round(moneyShow * 0.8);
-                if (weekday.isWeekend) moneyShow = Math.round(moneyShow * 1.15);
-              } else if (act.id === 'eat_meal' && livesAtHome && (minuteOfDay < 630 || minuteOfDay >= 1080)) {
-                moneyShow = -15;
-              } else if (act.id === 'attend_class' && cal.weather === 'rainy') {
-                moneyShow -= 15;
-              }
-
-              const durationLabel =
-                act.durationHours < 1
-                  ? `${Math.round(act.durationHours * 60)}m`
-                  : `${act.durationHours}h`;
-
-              return (
-                <button
-                  key={act.id}
-                  type="button"
-                  disabled={!gate.allowed}
-                  onClick={() => handlePerformAction(act.id)}
-                  className={`text-left p-3.5 sm:p-4 rounded-xl border transition-all ${
-                    justDid
-                      ? 'bg-amber-500/25 border-amber-300 scale-[0.99]'
-                      : !gate.allowed
-                        ? 'bg-[#17110d] border-amber-950/70 text-amber-200/60 cursor-not-allowed opacity-65'
-                        : countToday > 0
-                          ? 'bg-[#2a1e16] hover:bg-[#35261c] border-amber-600/70 text-amber-50'
-                          : 'bg-[#201610] hover:bg-[#2a1d15] border-amber-900/50 text-amber-100'
+                <span
+                  className={`text-[11px] sm:text-xs font-mono shrink-0 ${
+                    choice.disabled
+                      ? 'text-rose-300/80'
+                      : isMinigame
+                        ? 'text-emerald-300/90'
+                        : 'text-amber-300/85'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-pixel text-base sm:text-lg text-amber-200 truncate">
-                      {mealInfo
-                        ? isTL
-                          ? `Kain: ${mealInfo.tl}`
-                          : `Eat: ${mealInfo.en}`
-                        : isTL
-                          ? act.label
-                          : act.labelEn}
-                    </span>
-                    <span className="text-xs font-mono font-bold text-amber-300/90 shrink-0 tabular-nums">
-                      +{durationLabel} · {countToday}/{act.maxPerDay}
-                    </span>
-                  </div>
-                  <p className="text-xs text-amber-200/75 mt-1 leading-relaxed">
-                    {gate.allowed
-                      ? isTL
-                        ? act.desc
-                        : act.descEn
-                      : isTL
-                        ? gate.reasonTl
-                        : gate.reasonEn}
-                  </p>
-                  <div className="text-[11px] font-mono text-amber-300/85 mt-2 tabular-nums">
-                    EN {act.energyDelta >= 0 ? '+' : ''}
-                    {act.energyDelta - (isOvertimeWork ? 4 : 0)} · MH {act.mentalDelta >= 0 ? '+' : ''}
-                    {act.mentalDelta} · SOC {act.socialDelta >= 0 ? '+' : ''}
-                    {act.socialDelta}
-                    {act.gwaDelta !== 0 ? ` · GWA ${act.gwaDelta < 0 ? '▲' : '▼'}` : ''}
-                    {moneyShow !== 0
-                      ? ` · ${moneyShow > 0 ? `+₱${moneyShow}` : `-₱${Math.abs(moneyShow)}`}`
-                      : ''}
-                    {isOvertimeWork && gate.allowed ? ' · OT' : ''}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+                  {choice.disabled && disabledReason ? disabledReason : hint}
+                </span>
+              </button>
+            );
+          })}
         </div>
       )}
+
+      {/* Subtle Unboxed 1-Line Story Metadata Footer (Daily Goal + Shifts + Yesterday's Summary) */}
+      <div className="pt-1 px-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[11px] text-amber-200/70 font-mono">
+        {save.activeChallenge && (
+          <span className="truncate">
+            <span className="text-amber-400 font-semibold">
+              {isTL ? 'Goal:' : 'Goal:'}
+            </span>{' '}
+            {isTL ? save.activeChallenge.desc : save.activeChallenge.descEn} (+₱
+            {save.activeChallenge.rewardMoney})
+          </span>
+        )}
+        <div className="flex items-center gap-3 shrink-0 tabular-nums">
+          <span>
+            {isTL ? 'Raket' : 'Shifts'}: {save.workJobsCompletedThisWeek}/{MAX_PAID_SHIFTS_PER_DAY}
+          </span>
+          {scene.beat === 'wake_up' && lastWeekFeedback && (
+            <span className="text-emerald-300/85">
+              {isTL ? 'Baon' : 'Allowance'} +₱{lastWeekFeedback.allowanceReceived} ·{' '}
+              {isTL ? 'Gastos' : 'Bills'} -₱{lastWeekFeedback.livingCosts}
+              {lastWeekFeedback.debtInterest > 0
+                ? ` · Utang -₱${lastWeekFeedback.debtInterest}`
+                : ''}
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

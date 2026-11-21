@@ -267,8 +267,8 @@ export const StatsPanel: React.FC = () => {
         ) : (
           <p className="text-xs text-amber-200/75">
             {isTL
-              ? 'Wala pang active scholarship. Panatilihin ang GWA ≤ 2.25 at buksan ang Scholarship Quest sa Jobs Board!'
-              : 'No active scholarship yet. Keep GWA ≤ 2.25 and enter the Scholarship Quest in the Job Board!'}
+              ? 'Wala pang active scholarship. Panatilihin ang GWA ≤ 2.25 at piliin ang Scholarship Quest sa hapon!'
+              : 'No active scholarship yet. Keep GWA ≤ 2.25 and pick the Scholarship Quest during afternoon scenes!'}
           </p>
         )}
         <p className="text-xs font-mono text-amber-300/80">

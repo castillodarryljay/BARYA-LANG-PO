@@ -401,5 +401,80 @@ test('interactive morning wake-up routine and eat_meal daily scenes update clock
   assert.ok(lunch.nextState.currentMoment?.locationTl.includes('Tanghalian'));
 });
 
+test('continuous 7-beat interactive daily story flows smoothly from wake_up to bedtime with intra-day memory', async () => {
+  const { buildDailyStoryScene, applyDailyStoryChoice } = await import('./dailyStoryFlow');
+
+  let state = createInitialSave(baseProfile);
+  assert.equal(state.dayBeat, 'wake_up');
+
+  // 1. Wake up -> snooze (sets 'snoozed' intra-day memory tag)
+  const wakeScene = buildDailyStoryScene(state);
+  assert.equal(wakeScene.beat, 'wake_up');
+  const snoozeChoice = wakeScene.choices.find((c) => c.id === 'wake_snooze');
+  assert.ok(snoozeChoice);
+  state = applyDailyStoryChoice(state, snoozeChoice).nextState;
+  assert.equal(state.dayBeat, 'commute');
+  assert.ok(state.dayContextTags?.includes('snoozed'));
+
+  // 2. Commute reacts directly to 'snoozed' tag!
+  const commuteScene = buildDailyStoryScene(state);
+  assert.equal(commuteScene.beat, 'commute');
+  assert.ok(commuteScene.lines[0].text.toLowerCase().includes('snooze'));
+  const jeepChoice = commuteScene.choices.find((c) => c.id === 'commute_jeep');
+  assert.ok(jeepChoice);
+  state = applyDailyStoryChoice(state, jeepChoice).nextState;
+  assert.equal(state.dayBeat, 'morning_campus');
+
+  // 3. Morning campus class reacts to 'snoozed' (rushed arrival)
+  const classScene = buildDailyStoryScene(state);
+  assert.equal(classScene.beat, 'morning_campus');
+  assert.ok(classScene.lines[0].text.includes('Hiningal'));
+  const reciteChoice = classScene.choices.find((c) => c.id === 'class_recite');
+  assert.ok(reciteChoice);
+  state = applyDailyStoryChoice(state, reciteChoice).nextState;
+  assert.equal(state.dayBeat, 'lunch');
+
+  // 4. Lunch reacts to skipped breakfast
+  const lunchScene = buildDailyStoryScene(state);
+  assert.equal(lunchScene.beat, 'lunch');
+  assert.ok(lunchScene.lines[0].text.includes('almusal'));
+  const munggoChoice = lunchScene.choices.find((c) => c.id === 'lunch_munggo');
+  assert.ok(munggoChoice);
+  state = applyDailyStoryChoice(state, munggoChoice).nextState;
+  assert.equal(state.dayBeat, 'afternoon');
+
+  // 5. Afternoon supports inline Job Picker story choices & Study progression
+  const jobPickerScene = buildDailyStoryScene(state, { showJobPicker: true });
+  assert.ok(jobPickerScene.choices.some((c) => c.triggerMinigame === 'carinderia'));
+  assert.ok(jobPickerScene.choices.some((c) => c.id === 'close_job_picker'));
+
+  const aftScene = buildDailyStoryScene(state);
+  const studyChoice = aftScene.choices.find((c) => c.id === 'aft_study');
+  assert.ok(studyChoice);
+  state = applyDailyStoryChoice(state, studyChoice).nextState;
+  assert.equal(state.dayBeat, 'evening');
+
+  // 6. Evening -> Bedtime
+  const eveScene = buildDailyStoryScene(state);
+  const mamaChoice = eveScene.choices.find((c) => c.id === 'eve_dinner_mama');
+  assert.ok(mamaChoice);
+  state = applyDailyStoryChoice(state, mamaChoice).nextState;
+  assert.equal(state.dayBeat, 'bedtime');
+
+  // 7. Bedtime -> NEXT_DAY triggers Day 2/365 with fresh wake_up beat and valid integrity hash
+  const bedScene = buildDailyStoryScene(state);
+  assert.ok(bedScene.lines[0].text.includes('recite'));
+  const sleepChoice = bedScene.choices.find((c) => c.nextBeat === 'NEXT_DAY');
+  assert.ok(sleepChoice);
+  const bedTransition = applyDailyStoryChoice(state, sleepChoice);
+  assert.equal(bedTransition.finishDay, true);
+
+  const day2 = finishDayAndAdvance(bedTransition.nextState).nextState;
+  assert.equal(day2.dayOfYear, 2);
+  assert.equal(day2.dayBeat, 'wake_up');
+  assert.deepEqual(day2.dayContextTags, []);
+  assert.equal(verifySaveIntegrity(day2).valid, true);
+});
+
 
 

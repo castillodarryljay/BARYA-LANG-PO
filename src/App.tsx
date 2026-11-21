@@ -87,7 +87,7 @@ export default function App() {
   // Reset scroll to top on view/phase transitions so sticky headers never clip new cards on mobile
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
-  }, [screen, activeTab, save?.phase, save?.currentNodeId]);
+  }, [screen, activeTab, save?.phase, save?.currentNodeId, save?.dayBeat]);
 
   const isTL = settings.language === 'taglish';
   const currentNode = getCurrentNode();

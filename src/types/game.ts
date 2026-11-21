@@ -93,6 +93,45 @@ export type TimeOfDayPhase = 'dawn' | 'morning' | 'afternoon' | 'evening' | 'nig
 export type WeatherId = 'sunny' | 'breezy' | 'cloudy' | 'rainy' | 'hot';
 export type SeasonId = 'habagat' | 'amihan' | 'tag_init';
 export type WakeUpChoiceId = 'early_shower' | 'snooze' | 'breakfast';
+export type DailyStoryBeat =
+  | 'wake_up'
+  | 'commute'
+  | 'morning_campus'
+  | 'lunch'
+  | 'afternoon'
+  | 'evening'
+  | 'bedtime';
+
+export interface DailyStoryChoice {
+  id: string;
+  text: string;
+  textEn: string;
+  hint?: string;
+  hintEn?: string;
+  nextBeat: DailyStoryBeat | 'NEXT_DAY';
+  advanceToMinute?: number;
+  effects?: ChoiceEffects;
+  countsAsAction?: WeeklyActionId;
+  contextTag?: string; // Remembers what happened earlier today so later scenes react!
+  triggerMinigame?: MinigameId;
+  openJobPicker?: boolean;
+  disabled?: boolean;
+  disabledReasonTl?: string;
+  disabledReasonEn?: string;
+}
+
+export interface DailyStoryScene {
+  id: string;
+  beat: DailyStoryBeat;
+  beatLabelTl: string;
+  beatLabelEn: string;
+  locationTl: string;
+  locationEn: string;
+  background: string;
+  characters: SceneCharacter[];
+  lines: DialogueLine[];
+  choices: DailyStoryChoice[];
+}
 
 export interface CalendarDayInfo {
   dayOfYear: number; // 1..365 (June 1 -> May 31)
@@ -334,6 +373,8 @@ export interface SaveData {
   dayOfYear?: number; // 1..365 real Philippine school calendar day (Jun 1 -> May 31)
   totalWeeks: number; // Total days survived across the whole playthrough
   minuteOfDay?: number; // 330 (05:30 AM) to 1440 (12:00 AM midnight)
+  dayBeat?: DailyStoryBeat; // Current continuous story beat of the day
+  dayContextTags?: string[]; // Intra-day story memory (e.g. 'snoozed', 'walked_to_school', 'helped_nena')
   hasWokenUpToday?: boolean; // Interactive morning wake-up scene gate
   currentMoment?: DailyMomentSnapshot | null; // Live visual scene caption & backdrop state
   dayActions?: DailyScheduleBlock[];

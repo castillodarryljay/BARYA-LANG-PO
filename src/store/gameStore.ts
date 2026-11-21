@@ -24,6 +24,7 @@ import {
   verifySaveIntegrity,
 } from '../engine/storyEngine';
 import { buildMorningWakeUpMoment } from '../engine/dailyScenes';
+import { applyDailyStoryChoice } from '../engine/dailyStoryFlow';
 import { soundFX } from '../engine/audio';
 import {
   DAY_END_MINUTE,
@@ -35,6 +36,7 @@ import {
 import type {
   CharacterAppearance,
   DailyScheduleBlock,
+  DailyStoryChoice,
   GameSettings,
   MinigameId,
   NpcId,
@@ -206,10 +208,11 @@ interface GameStoreState {
   continueAutoSave: () => void;
   updateProfileAppearance: (appearance: CharacterAppearance) => void;
 
-  // Story & Daily 24h Core Loop
+  // Story & Continuous Interactive Daily Loop
   getAllNodes: () => StoryNode[];
   getCurrentNode: () => StoryNode | null;
   chooseStoryChoice: (choice: StoryChoice) => void;
+  chooseDailyStoryChoice: (choice: DailyStoryChoice) => void;
   startMinigame: (id: MinigameId) => void;
   completeMinigame: (id: MinigameId, scoreRatio: number, passedScholarship?: boolean) => void;
   cancelMinigame: () => void;
@@ -457,6 +460,67 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     }
     safeWriteJson(STORAGE_KEYS.AUTOSAVE, updated);
     set({ save: updated, activeTab: 'scene', lastStatDeltas: delta });
+  },
+
+  chooseDailyStoryChoice: (choice) => {
+    const { save, settings } = get();
+    if (!save || save.phase !== 'planner') return;
+
+    if (choice.disabled) {
+      soundFX.playError();
+      const reason =
+        settings.language === 'taglish'
+          ? choice.disabledReasonTl || 'Hindi pa pwede ngayon.'
+          : choice.disabledReasonEn || 'Not available right now.';
+      get().showToast(reason);
+      return;
+    }
+
+    if (choice.triggerMinigame) {
+      const gate = canStartMinigame(choice.triggerMinigame, save, false);
+      if (!gate.allowed) {
+        soundFX.playError();
+        get().showToast(
+          (settings.language === 'taglish' ? gate.reasonTl : gate.reasonEn) ??
+            'Not available right now.'
+        );
+        return;
+      }
+      const { nextState } = applyDailyStoryChoice(save, choice);
+      const delta = computeStatDelta(save, nextState);
+      const launched = signSaveData({
+        ...nextState,
+        phase: 'minigame',
+        pendingMinigameId: choice.triggerMinigame,
+        savedAt: new Date().toISOString(),
+      });
+      safeWriteJson(STORAGE_KEYS.AUTOSAVE, launched);
+      soundFX.unlockAndStart('minigame');
+      set({ save: launched, activeTab: 'scene', lastStatDeltas: delta });
+      return;
+    }
+
+    const { nextState, finishDay } = applyDailyStoryChoice(save, choice);
+    const delta = computeStatDelta(save, nextState);
+    const stamped = signSaveData({
+      ...nextState,
+      savedAt: new Date().toISOString(),
+    });
+
+    if (finishDay) {
+      safeWriteJson(STORAGE_KEYS.AUTOSAVE, stamped);
+      set({ save: stamped, lastStatDeltas: delta });
+      get().finishCurrentDay();
+      return;
+    }
+
+    if ((delta?.money ?? 0) > 0) {
+      soundFX.playCoin();
+    } else {
+      soundFX.playPageTurn();
+    }
+    safeWriteJson(STORAGE_KEYS.AUTOSAVE, stamped);
+    set({ save: stamped, activeTab: 'scene', lastStatDeltas: delta });
   },
 
   startMinigame: (id) => {
@@ -929,6 +993,8 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
       week: 1,
       dayOfYear: 1,
       minuteOfDay: DAY_START_MINUTE,
+      dayBeat: 'wake_up',
+      dayContextTags: [],
       hasWokenUpToday: false,
       currentMoment: null,
       dayActions: [],

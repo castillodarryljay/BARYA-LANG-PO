@@ -190,13 +190,13 @@ export const TopHud: React.FC = () => {
         </div>
       </div>
 
-      {/* Animated Floating Stat Delta Feedback Bar (non-blocking bottom pill) */}
+      {/* Animated Floating Stat Delta Feedback Bar (anchored neatly below TopHud stats) */}
       {deltaItems.length > 0 && (
         <div
           key={visibleDeltaId}
-          className="pointer-events-none fixed bottom-16 lg:bottom-5 left-1/2 -translate-x-1/2 z-40 px-3 max-w-[95vw] anim-delta-pop"
+          className="pointer-events-none fixed top-[60px] right-2.5 sm:right-5 z-40 max-w-[92vw] anim-delta-pop"
         >
-          <div className="flex flex-wrap items-center justify-center gap-1.5 bg-[#1b120d]/95 border border-amber-700/80 rounded-xl px-3 py-1.5 shadow-xl">
+          <div className="flex flex-wrap items-center justify-end gap-1.5 bg-[#1b120d]/95 border border-amber-700/80 rounded-xl px-2.5 py-1 shadow-xl">
             {deltaItems.map((d) => (
               <span
                 key={d.key}
