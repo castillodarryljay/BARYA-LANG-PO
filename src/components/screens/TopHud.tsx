@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Clock, CloudRain, Home, Volume2, VolumeX } from 'lucide-react';
-import { CHAPTER_LABELS, DAY_START_MINUTE, WEEKS_PER_SEMESTER } from '../../data/config';
+import { CHAPTER_LABELS, DAY_START_MINUTE, DAYS_PER_YEAR } from '../../data/config';
+import { getCalendarDayInfo } from '../../engine/dailyScenes';
 import { formatClockTime, getWeekdayInfo } from '../../engine/storyEngine';
 import { useGameStore } from '../../store/gameStore';
 import { soundFX } from '../../engine/audio';
@@ -41,6 +42,7 @@ export const TopHud: React.FC = () => {
   const lowEnergy = save.stats.energy <= 20;
   const lowMental = save.stats.mental <= 20;
   const isHardcore = save.profile.difficulty === 'hardcore';
+  const cal = getCalendarDayInfo(save.dayOfYear ?? 1, save.totalWeeks);
 
   const deltaItems: { key: string; text: string; tone: string }[] = [];
   if (lastStatDeltas && visibleDeltaId === lastStatDeltas.id) {
@@ -97,7 +99,7 @@ export const TopHud: React.FC = () => {
           <div className="min-w-0 leading-tight">
             <div className="font-pixel text-[13px] sm:text-base text-amber-200 truncate flex items-center gap-1.5">
               <span>
-                {CHAPTER_LABELS[save.chapter].short} · S{save.semester} · D{save.week}/{WEEKS_PER_SEMESTER} ({getWeekdayInfo(save.totalWeeks).short})
+                {CHAPTER_LABELS[save.chapter].short} · {cal.monthShort} {cal.dayOfMonth} (D{cal.dayOfYear}/{DAYS_PER_YEAR} · {getWeekdayInfo(save.totalWeeks).short})
               </span>
             </div>
             <div className="text-[11px] text-amber-300/80 truncate flex items-center gap-1.5 font-mono tabular-nums">

@@ -72,7 +72,8 @@ export type WeeklyActionId =
   | 'rest'
   | 'socialize'
   | 'org'
-  | 'family';
+  | 'family'
+  | 'eat_meal';
 
 export type MinigameId =
   | 'carinderia'
@@ -88,11 +89,40 @@ export type TextSpeed = 'slow' | 'normal' | 'fast' | 'instant';
 export type DifficultyMode = 'classic' | 'hardcore';
 export type BgmStyle = 'lofi' | 'rainy' | 'chiptune';
 export type ClockSpeed = 0 | 1 | 2 | 4;
-export type TimeOfDayPhase = 'morning' | 'afternoon' | 'evening' | 'night';
+export type TimeOfDayPhase = 'dawn' | 'morning' | 'afternoon' | 'evening' | 'night';
+export type WeatherId = 'sunny' | 'breezy' | 'cloudy' | 'rainy' | 'hot';
+export type SeasonId = 'habagat' | 'amihan' | 'tag_init';
+export type WakeUpChoiceId = 'early_shower' | 'snooze' | 'breakfast';
+
+export interface CalendarDayInfo {
+  dayOfYear: number; // 1..365 (June 1 -> May 31)
+  monthName: string;
+  monthShort: string;
+  dayOfMonth: number;
+  season: SeasonId;
+  seasonLabelTl: string;
+  seasonLabelEn: string;
+  weather: WeatherId;
+  weatherLabelTl: string;
+  weatherLabelEn: string;
+  specialDayTl?: string;
+  specialDayEn?: string;
+}
+
+export interface DailyMomentSnapshot {
+  backgroundId: string;
+  playerEmotion: EmotionId;
+  companionSpriteId?: string;
+  locationTl: string;
+  locationEn: string;
+  narrationTl: string;
+  narrationEn: string;
+  time12: string;
+}
 
 export interface DailyScheduleBlock {
   id: string;
-  actionId: WeeklyActionId | 'minigame';
+  actionId: WeeklyActionId | 'minigame' | 'wakeup';
   label: string;
   labelEn: string;
   startMinute: number; // 0..1440
@@ -300,9 +330,12 @@ export interface SaveData {
   profile: PlayerProfile;
   chapter: SchoolChapterId;
   semester: 1 | 2;
-  week: number; // Semester day index 1..8 (kept named 'week' for story JSON compatibility)
+  week: number; // Academic period 1..8 (derived from dayOfYear for story JSON compatibility)
+  dayOfYear?: number; // 1..365 real Philippine school calendar day (Jun 1 -> May 31)
   totalWeeks: number; // Total days survived across the whole playthrough
-  minuteOfDay?: number; // 360 (06:00 AM) to 1440 (12:00 AM midnight)
+  minuteOfDay?: number; // 330 (05:30 AM) to 1440 (12:00 AM midnight)
+  hasWokenUpToday?: boolean; // Interactive morning wake-up scene gate
+  currentMoment?: DailyMomentSnapshot | null; // Live visual scene caption & backdrop state
   dayActions?: DailyScheduleBlock[];
   stats: GameStats;
   subjects: SubjectGrade[];

@@ -17,11 +17,17 @@ import {
   interpolateText,
   isMinigameUnlocked,
   performDailyAction,
+  performMorningWakeUp,
   resolveWeeklyPlan,
   selectNextEvent,
   signSaveData,
   verifySaveIntegrity,
 } from './storyEngine';
+import {
+  getCalendarDayInfo,
+  getMealLabelForTime,
+  getSemesterAndPeriodFromDay,
+} from './dailyScenes';
 import { ALL_BASE_STORY_NODES, ALL_ENDINGS } from '../data/story';
 import type { PlayerProfile } from '../types/game';
 
@@ -112,21 +118,23 @@ test('selectNextEvent prioritizes crisis events when energy or mental reaches 0'
   assert.equal(mentalCrisis?.id, 'crisis_mental_burnout');
 });
 
-test('resolveWeeklyPlan advances weeks, semesters, chapters, and enforces scholarship GWA', () => {
+test('resolveWeeklyPlan advances 365-day calendar, semesters, chapters, and enforces scholarship GWA', () => {
   let save = createInitialSave(baseProfile);
+  save.dayOfYear = 182; // Last day of Sem 1 (Nov 29)
   save.week = 8;
   save.semester = 1;
   save.scholarship = {
     id: 'iskolar',
     name: 'Iskolar ng Bayan',
     minGwa: 1.75,
-    weeklyStipend: 250,
+    weeklyStipend: 210,
     tuitionDiscount: 0.5,
     active: true,
   };
   save.stats.gwa = 2.1; // Worse than 1.75
 
   const res = resolveWeeklyPlan(save, ['rest', 'socialize', 'family']);
+  assert.equal(res.nextState.dayOfYear, 183);
   assert.equal(res.nextState.semester, 2);
   assert.equal(res.nextState.week, 1);
   assert.equal(res.scholarshipAlert, 'lost');
@@ -194,11 +202,12 @@ test('evaluateEnding selects Cum Laude, Student Entrepreneur, Scholar, and Shift
 });
 
 test('24-hour clock formatting, time-of-day phases, and sleep bonus behave accurately', () => {
-  assert.deepEqual(formatClockTime(360), { time12: '06:00 AM', time24: '06:00' });
+  assert.deepEqual(formatClockTime(330), { time12: '05:30 AM', time24: '05:30' });
   assert.deepEqual(formatClockTime(780), { time12: '01:00 PM', time24: '13:00' });
   assert.deepEqual(formatClockTime(1440), { time12: '12:00 AM', time24: '24:00' });
 
-  assert.equal(getTimeOfDayPhase(360), 'morning');
+  assert.equal(getTimeOfDayPhase(330), 'dawn');
+  assert.equal(getTimeOfDayPhase(480), 'morning');
   assert.equal(getTimeOfDayPhase(840), 'afternoon');
   assert.equal(getTimeOfDayPhase(1140), 'evening');
   assert.equal(getTimeOfDayPhase(1350), 'night');
@@ -210,12 +219,12 @@ test('24-hour clock formatting, time-of-day phases, and sleep bonus behave accur
 
 test('performDailyAction advances 24h clock, records timeline blocks, and applies weekend pay bonus', () => {
   const save = createInitialSave(baseProfile);
-  assert.equal(save.minuteOfDay, 360);
+  assert.equal(save.minuteOfDay, 330); // 05:30 AM dawn wake-up
   assert.equal(getWeekdayInfo(save.totalWeeks).short, 'Mon');
 
   const step1 = performDailyAction(save, 'attend_class');
   assert.ok(step1);
-  assert.equal(step1.nextState.minuteOfDay, 540); // +3h -> 09:00 AM
+  assert.equal(step1.nextState.minuteOfDay, 510); // +3h -> 08:30 AM
   assert.equal(step1.nextState.dayActions?.length, 1);
   assert.equal(step1.reachedMidnight, false);
 
@@ -228,16 +237,17 @@ test('performDailyAction advances 24h clock, records timeline blocks, and applie
   assert.ok(weekendWork.nextState.stats.money > weekdayWork.nextState.stats.money);
 });
 
-test('finishDayAndAdvance resets clock to 06:00 AM, clears timeline, and applies early sleep bonus', () => {
+test('finishDayAndAdvance resets clock to 05:30 AM, resets wake-up scene, and advances dayOfYear', () => {
   const save = createInitialSave(baseProfile);
   save.stats.energy = 50;
-  save.minuteOfDay = 1200; // 08:00 PM -> Early Sleep (+14 EN)
+  save.minuteOfDay = 1200; // 08:00 PM
   const step1 = performDailyAction(save, 'study');
   assert.ok(step1);
   const done = finishDayAndAdvance(step1.nextState);
-  assert.equal(done.nextState.week, 2);
+  assert.equal(done.nextState.dayOfYear, 2);
   assert.equal(done.nextState.totalWeeks, 2);
-  assert.equal(done.nextState.minuteOfDay, 360);
+  assert.equal(done.nextState.minuteOfDay, 330);
+  assert.equal(done.nextState.hasWokenUpToday, false);
   assert.equal(done.nextState.dayActions?.length, 0);
   assert.equal(done.sleepBonus, 7); // 08:00 PM + 2h study = 10:00 PM (1320) -> Normal Sleep (+7 EN)
 });
@@ -332,5 +342,64 @@ test('save integrity checksum verifies authentic saves and catches tampered edit
   });
   assert.equal(verifySaveIntegrity(validSigned).valid, true);
 });
+
+test('365-day Philippine calendar maps months, seasons, holidays, and year rollover accurately', () => {
+  const day1 = getCalendarDayInfo(1, 1);
+  assert.equal(day1.monthName, 'June');
+  assert.equal(day1.dayOfMonth, 1);
+  assert.equal(day1.season, 'habagat');
+  assert.ok(day1.specialDayTl?.includes('Pasukan'));
+
+  const xmas = getCalendarDayInfo(208, 208);
+  assert.equal(xmas.monthName, 'December');
+  assert.equal(xmas.dayOfMonth, 25);
+  assert.equal(xmas.season, 'amihan');
+  assert.ok(xmas.specialDayTl?.includes('Pasko'));
+
+  const day365 = getCalendarDayInfo(365, 365);
+  assert.equal(day365.monthName, 'May');
+  assert.equal(day365.dayOfMonth, 31);
+  assert.equal(day365.season, 'tag_init');
+
+  assert.equal(getSemesterAndPeriodFromDay(182).semester, 1);
+  assert.equal(getSemesterAndPeriodFromDay(183).semester, 2);
+
+  // Crossing Day 365 advances school year chapter (shs_year1 -> shs_year2) and wraps dayOfYear to 1
+  const yearEnd = createInitialSave(baseProfile);
+  yearEnd.dayOfYear = 365;
+  yearEnd.semester = 2;
+  yearEnd.week = 8;
+  yearEnd.minuteOfDay = 1200;
+  const rollover = finishDayAndAdvance(yearEnd);
+  assert.equal(rollover.nextState.dayOfYear, 1);
+  assert.equal(rollover.nextState.semester, 1);
+  assert.equal(rollover.nextState.chapter, 'shs_year2');
+  assert.equal(verifySaveIntegrity(rollover.nextState).valid, true);
+});
+
+test('interactive morning wake-up routine and eat_meal daily scenes update clock, stats, and narration', () => {
+  const fresh = createInitialSave(baseProfile);
+  assert.equal(fresh.hasWokenUpToday, false);
+  assert.ok(fresh.currentMoment?.narrationTl.includes('05:30 AM'));
+
+  const awake = performMorningWakeUp(fresh, 'breakfast');
+  assert.ok(awake);
+  assert.equal(awake.hasWokenUpToday, true);
+  assert.equal(awake.minuteOfDay, 375); // 05:30 + 45m = 06:15 AM
+  assert.equal(awake.stats.money, fresh.stats.money); // Free home breakfast in SHS!
+  assert.ok(awake.currentMoment?.locationTl.includes('Almusal'));
+
+  // Double wake-up blocked
+  assert.equal(performMorningWakeUp(awake, 'snooze'), null);
+
+  // Eat meal adapts by time of day (noon -> Tanghalian)
+  const noonState = { ...awake, minuteOfDay: 750 }; // 12:30 PM
+  assert.equal(getMealLabelForTime(750).tl, 'Tanghalian');
+  const lunch = performDailyAction(noonState, 'eat_meal');
+  assert.ok(lunch);
+  assert.equal(lunch.block.label, 'Tanghalian');
+  assert.ok(lunch.nextState.currentMoment?.locationTl.includes('Tanghalian'));
+});
+
 
 

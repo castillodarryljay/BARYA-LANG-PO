@@ -20,10 +20,46 @@ import type {
 } from '../types/game';
 
 export const WEEKS_PER_SEMESTER = 8;
-export const DAY_START_MINUTE = 360; // 06:00 AM
+export const DAYS_PER_YEAR = 365;
+export const SEM1_DAYS = 182; // Jun 1 .. Nov 29 (182 days)
+export const SEM2_DAYS = 183; // Nov 30 .. May 31 (183 days)
+export const DAY_START_MINUTE = 330; // 05:30 AM realistic Filipino student wake-up
 export const DAY_END_MINUTE = 1440; // 24:00 (12:00 AM)
 export const MAX_PAID_SHIFTS_PER_DAY = 2; // Anti-loophole cap on paid shifts/minigames per day
 export const MIN_STRENUOUS_ENERGY = 12; // Cannot grind work/study/class when exhausted
+
+export const PHILIPPINE_CALENDAR_MONTHS = [
+  { name: 'June', short: 'Jun', days: 30, season: 'habagat' as const },
+  { name: 'July', short: 'Jul', days: 31, season: 'habagat' as const },
+  { name: 'August', short: 'Aug', days: 31, season: 'habagat' as const },
+  { name: 'September', short: 'Sep', days: 30, season: 'habagat' as const },
+  { name: 'October', short: 'Oct', days: 31, season: 'habagat' as const },
+  { name: 'November', short: 'Nov', days: 30, season: 'amihan' as const },
+  { name: 'December', short: 'Dec', days: 31, season: 'amihan' as const },
+  { name: 'January', short: 'Jan', days: 31, season: 'amihan' as const },
+  { name: 'February', short: 'Feb', days: 28, season: 'amihan' as const },
+  { name: 'March', short: 'Mar', days: 31, season: 'tag_init' as const },
+  { name: 'April', short: 'Apr', days: 30, season: 'tag_init' as const },
+  { name: 'May', short: 'May', days: 31, season: 'tag_init' as const },
+] as const;
+
+export const CALENDAR_SPECIAL_DAYS: Record<number, { tl: string; en: string }> = {
+  1: { tl: 'Unang Araw ng Pasukan', en: 'First Day of School' },
+  12: { tl: 'Araw ng Kalayaan', en: 'Independence Day' },
+  75: { tl: 'Buwan ng Wika Celebration', en: 'Buwan ng Wika Celebration' },
+  93: { tl: 'Simula ng -Ber Months!', en: 'Start of -Ber Months!' },
+  112: { tl: 'Sem 1 Midterm Exam Week', en: 'Sem 1 Midterm Exam Week' },
+  154: { tl: 'Undas · Pag-alala sa Pamilya', en: 'All Saints’ Day (Undas)' },
+  178: { tl: 'Sem 1 Final Exams', en: 'Sem 1 Final Exams' },
+  199: { tl: 'Simbang Gabi Starts', en: 'Simbang Gabi Begins' },
+  208: { tl: 'Maligayang Pasko!', en: 'Merry Christmas!' },
+  215: { tl: 'Bagong Taon · New Year!', en: 'Happy New Year!' },
+  259: { tl: 'Araw ng mga Puso', en: 'Valentine’s Day' },
+  285: { tl: 'Sem 2 Midterm Exams', en: 'Sem 2 Midterm Exams' },
+  312: { tl: 'Semana Santa · Tahimik na Araw', en: 'Holy Week Reflection' },
+  349: { tl: 'Barangay Fiesta!', en: 'Town Fiesta!' },
+  365: { tl: 'Huling Araw ng Taon · Moving Up!', en: 'Year-End Recognition Day!' },
+};
 
 export const WEEKDAYS = [
   { short: 'Mon', tl: 'Lunes', isWeekend: false },
@@ -775,6 +811,74 @@ export const WEEKLY_ACTIONS: WeeklyActionConfig[] = [
     socialDelta: 5,
     gwaDelta: 0,
     moneyDelta: -25,
+  },
+  {
+    id: 'eat_meal',
+    label: 'Kain Muna (Carinderia / Baon)',
+    labelEn: 'Eat a Proper Meal',
+    desc: 'Almusal, tanghalian, o hapunan (max 3×/day). Walang gutom sa klase at raket!',
+    descEn: 'Breakfast, lunch, or dinner (max 3×/day). Stay fueled for class and shifts!',
+    durationHours: 0.75,
+    maxPerDay: 3,
+    strenuous: false,
+    timelineColor: '#fb923c',
+    energyDelta: 14,
+    mentalDelta: 6,
+    socialDelta: 1,
+    gwaDelta: 0,
+    moneyDelta: -45,
+  },
+];
+
+export interface WakeUpOptionConfig {
+  id: 'early_shower' | 'snooze' | 'breakfast';
+  labelTl: string;
+  labelEn: string;
+  descTl: string;
+  descEn: string;
+  durationMins: number;
+  energyDelta: number;
+  mentalDelta: number;
+  gwaDelta: number;
+  moneyDelta: number;
+}
+
+export const WAKE_UP_OPTIONS: WakeUpOptionConfig[] = [
+  {
+    id: 'early_shower',
+    labelTl: 'Bangon Agad · Ligo & Plantsa',
+    labelEn: 'Get Up Immediately · Cold Shower & Uniform',
+    descTl: 'Malamig ang tubig sa tabo pero presko at maaga ka sa klase (+45m · +4 MH · GWA focus).',
+    descEn: 'Brisk tabo bath and crisp uniform — calm, early start (+45m · +4 MH · study focus).',
+    durationMins: 45,
+    energyDelta: -2,
+    mentalDelta: 4,
+    gwaDelta: -0.01,
+    moneyDelta: 0,
+  },
+  {
+    id: 'snooze',
+    labelTl: 'Snooze 30 Mins · Higa Muna',
+    labelEn: 'Snooze 30 Mins · Stay Under Blanket',
+    descTl: 'Dagdag tulog sa ilalim ng kumot (+30m · +9 Energy), medyo nagmamadali na paglabas.',
+    descEn: 'Steal 30 extra minutes of rest (+30m · +9 Energy), slightly rushed morning prep.',
+    durationMins: 30,
+    energyDelta: 9,
+    mentalDelta: 1,
+    gwaDelta: 0,
+    moneyDelta: 0,
+  },
+  {
+    id: 'breakfast',
+    labelTl: 'Kape, Pandesal at Almusal',
+    labelEn: 'Warm Coffee, Pandesal & Breakfast',
+    descTl: 'Mainit na 3-in-1 kape at pandesal bago lumarga (+45m · +12 EN · +5 MH · -₱30).',
+    descEn: 'Hot 3-in-1 coffee and fresh pandesal before heading out (+45m · +12 EN · +5 MH · -₱30).',
+    durationMins: 45,
+    energyDelta: 12,
+    mentalDelta: 5,
+    gwaDelta: 0,
+    moneyDelta: -30,
   },
 ];
 

@@ -15,16 +15,20 @@ import {
   formatDateLabel,
   getScholarshipSemesterFlag,
   performDailyAction,
+  performMorningWakeUp,
   resolveWeeklyPlan,
   roundGwa,
   selectNextEvent,
+  shouldTriggerStoryEventOnNewDay,
   signSaveData,
   verifySaveIntegrity,
 } from '../engine/storyEngine';
+import { buildMorningWakeUpMoment } from '../engine/dailyScenes';
 import { soundFX } from '../engine/audio';
 import {
   DAY_END_MINUTE,
   DAY_START_MINUTE,
+  DAYS_PER_YEAR,
   MINIGAME_CONFIGS,
   getDefaultAppearance,
 } from '../data/config';
@@ -39,6 +43,7 @@ import type {
   SchoolChapterId,
   StoryChoice,
   StoryNode,
+  WakeUpChoiceId,
   WeeklyActionId,
 } from '../types/game';
 
@@ -86,7 +91,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   sfxVolume: 0.55,
   bgmStyle: 'lofi',
   rainAmbience: false,
-  clockSpeed: 2,
+  clockSpeed: 1,
   debugMode: false,
 };
 
@@ -152,7 +157,8 @@ function sanitizeTamperedSave(raw: SaveData): SaveData {
     cheated: true,
     flags: Array.from(new Set([...(raw.flags ?? []), 'tampered_save'])),
     week: clamp(Math.round(raw.week ?? 1), 1, 8),
-    totalWeeks: clamp(Math.round(raw.totalWeeks ?? 1), 1, 150),
+    dayOfYear: clamp(Math.round(raw.dayOfYear ?? 1), 1, DAYS_PER_YEAR),
+    totalWeeks: clamp(Math.round(raw.totalWeeks ?? 1), 1, 2500),
     stats: {
       money: clamp(Math.round(raw.stats?.money ?? 500), -debtLimit, 15000),
       debtLimit,
@@ -208,6 +214,7 @@ interface GameStoreState {
   completeMinigame: (id: MinigameId, scoreRatio: number, passedScholarship?: boolean) => void;
   cancelMinigame: () => void;
   tickDayClock: (deltaMinutes: number) => void;
+  doMorningWakeUp: (choiceId: WakeUpChoiceId) => void;
   doDailyAction: (actionId: WeeklyActionId) => { reachedMidnight: boolean } | null;
   finishCurrentDay: () => void;
   commitWeeklyPlan: (actions: WeeklyActionId[]) => void;
@@ -544,6 +551,25 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     updated = signSaveData({
       ...updated,
       minuteOfDay: endMin,
+      hasWokenUpToday: true,
+      currentMoment: {
+        backgroundId:
+          id === 'jeepney'
+            ? 'bg_jeepney_interior'
+            : id === 'tutoring'
+              ? 'bg_library'
+              : id === 'freelance'
+                ? 'bg_computer_lab'
+                : id === 'scholarship'
+                  ? 'bg_school_gate'
+                  : 'bg_carinderia',
+        playerEmotion: 'happy',
+        locationTl: `Tapos sa Shift · ${cfg.title}`,
+        locationEn: `Shift Complete · ${cfg.titleEn}`,
+        narrationTl: `Tapos na ang 2-hour shift mo sa ${cfg.title}! Hawak mo na ang +₱${payout} na pinaghirapan mo ngayong araw.`,
+        narrationEn: `Wrapped up your 2-hour ${cfg.titleEn} shift! You earned +₱${payout} through pure grit today.`,
+        time12: `${String(Math.floor(endMin / 60) % 12 || 12).padStart(2, '0')}:${String(endMin % 60).padStart(2, '0')} ${endMin >= 720 && endMin < 1440 ? 'PM' : 'AM'}`,
+      },
       dayActions: [...(updated.dayActions ?? []), mgBlock],
       phase: updated.currentNodeId ? 'vn' : 'planner',
       pendingMinigameId: null,
@@ -593,6 +619,8 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
   tickDayClock: (deltaMinutes) => {
     const { save, screen } = get();
     if (!save || screen !== 'playing' || save.phase !== 'planner') return;
+    // Pause ambient clock until the player finishes the morning Waking Up scene
+    if (!save.hasWokenUpToday) return;
     const cur = save.minuteOfDay ?? DAY_START_MINUTE;
     const nextMin = Math.min(DAY_END_MINUTE, cur + deltaMinutes);
     if (nextMin === cur) return;
@@ -605,6 +633,21 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     if (nextMin >= DAY_END_MINUTE) {
       get().finishCurrentDay();
     }
+  },
+
+  doMorningWakeUp: (choiceId) => {
+    const { save } = get();
+    if (!save || save.phase !== 'planner' || save.hasWokenUpToday) return;
+    const next = performMorningWakeUp(save, choiceId);
+    if (!next) return;
+    const delta = computeStatDelta(save, next);
+    soundFX.playSuccess();
+    const stamped = signSaveData({
+      ...next,
+      savedAt: new Date().toISOString(),
+    });
+    safeWriteJson(STORAGE_KEYS.AUTOSAVE, stamped);
+    set({ save: stamped, lastStatDeltas: delta });
   },
 
   doDailyAction: (actionId) => {
@@ -649,8 +692,11 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     } = finishDayAndAdvance(save);
 
     const delta = computeStatDelta(save, nextState);
+    const shouldFireStory = shouldTriggerStoryEventOnNewDay(save, nextState);
     const allNodes = getStoryMap(customNodes);
-    const nextEvent = selectNextEvent(nextState, Array.from(allNodes.values()));
+    const nextEvent = shouldFireStory
+      ? selectNextEvent(nextState, Array.from(allNodes.values()))
+      : null;
 
     const updated = signSaveData({
       ...nextState,
@@ -875,17 +921,22 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
   debugJumpToChapter: (chapter) => {
     const { save } = get();
     if (!save) return;
-    const updated = signSaveData({
+    const base: SaveData = {
       ...save,
       cheated: true,
       chapter,
       semester: 1,
       week: 1,
+      dayOfYear: 1,
       minuteOfDay: DAY_START_MINUTE,
+      hasWokenUpToday: false,
+      currentMoment: null,
       dayActions: [],
       phase: 'planner',
       currentNodeId: null,
-    });
+    };
+    base.currentMoment = buildMorningWakeUpMoment(base);
+    const updated = signSaveData(base);
     safeWriteJson(STORAGE_KEYS.AUTOSAVE, updated);
     set({ save: updated, activeTab: 'scene' });
   },

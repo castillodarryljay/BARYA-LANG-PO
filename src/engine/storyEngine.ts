@@ -5,17 +5,29 @@ import {
   COLLEGE_COURSES,
   DAY_END_MINUTE,
   DAY_START_MINUTE,
+  DAYS_PER_YEAR,
   FAMILY_BACKGROUNDS,
   getDefaultAppearance,
   HOMETOWN_OPTIONS,
   MAX_PAID_SHIFTS_PER_DAY,
   MIN_STRENUOUS_ENERGY,
   MINIGAME_CONFIGS,
+  SEM1_DAYS,
+  WAKE_UP_OPTIONS,
   WEEKDAYS,
   WEEKLY_ACTIONS,
   WEEKLY_CHALLENGES,
   WEEKS_PER_SEMESTER,
 } from '../data/config';
+import {
+  buildActionMoment,
+  buildMorningWakeUpMoment,
+  buildWakeUpResultMoment,
+  getCalendarDayInfo,
+  getMealLabelForTime,
+  getSemesterAndPeriodFromDay,
+  normalizeDayOfYear,
+} from './dailyScenes';
 import type {
   ChoiceEffects,
   DailyScheduleBlock,
@@ -30,6 +42,7 @@ import type {
   StoryConditions,
   StoryNode,
   TimeOfDayPhase,
+  WakeUpChoiceId,
   WeeklyActionId,
   WeeklyChallenge,
 } from '../types/game';
@@ -130,7 +143,8 @@ export function formatClockTime(minuteOfDay: number): { time12: string; time24: 
 }
 
 export function getTimeOfDayPhase(minuteOfDay: number): TimeOfDayPhase {
-  if (minuteOfDay < 720) return 'morning'; // 06:00 - 11:59
+  if (minuteOfDay < 420) return 'dawn'; // 05:30 - 06:59
+  if (minuteOfDay < 720) return 'morning'; // 07:00 - 11:59
   if (minuteOfDay < 1080) return 'afternoon'; // 12:00 - 17:59
   if (minuteOfDay < 1320) return 'evening'; // 18:00 - 21:59
   return 'night'; // 22:00 - 24:00
@@ -196,6 +210,7 @@ export function computeSaveIntegrityHash(save: SaveData): string {
     save.chapter,
     save.semester,
     save.week,
+    save.dayOfYear ?? 1,
     save.totalWeeks,
     Math.round(save.stats?.money ?? 0),
     Math.round(save.stats?.debtLimit ?? 0),
@@ -247,7 +262,15 @@ export function verifySaveIntegrity(save: SaveData): { valid: boolean; reason?: 
   if (gwa < 1.0 || gwa > 5.0 || energy < 0 || energy > 100 || mental < 0 || mental > 100 || social < 0 || social > 100) {
     return { valid: false, reason: 'Stats outside valid bounds' };
   }
-  if (save.week < 1 || save.week > WEEKS_PER_SEMESTER || save.totalWeeks < 1 || save.totalWeeks > 200) {
+  const dayOfYear = save.dayOfYear ?? 1;
+  if (
+    save.week < 1 ||
+    save.week > WEEKS_PER_SEMESTER ||
+    dayOfYear < 1 ||
+    dayOfYear > DAYS_PER_YEAR ||
+    save.totalWeeks < 1 ||
+    save.totalWeeks > 2500
+  ) {
     return { valid: false, reason: 'Calendar tampered' };
   }
   if (save.integrityHash) {
@@ -266,11 +289,16 @@ export function getScholarshipSemesterFlag(chapter: SchoolChapterId, semester: 1
 export function formatDateLabel(
   chapter: SchoolChapterId,
   semester: 1 | 2,
-  week: number
+  week: number,
+  dayOfYear?: number
 ): string {
   if (chapter === 'prologue') return 'Prologue';
   const short = CHAPTER_LABELS[chapter].short;
-  return `${short} · Sem ${semester} · Day ${week}`;
+  if (dayOfYear !== undefined) {
+    const cal = getCalendarDayInfo(dayOfYear);
+    return `${short} · ${cal.monthShort} ${cal.dayOfMonth} (Day ${cal.dayOfYear}/365)`;
+  }
+  return `${short} · Sem ${semester} · Period ${week}`;
 }
 
 export function pickWeeklyChallenge(totalWeeks: number): WeeklyChallenge {
@@ -294,15 +322,18 @@ export function createInitialSave(profile: PlayerProfile): SaveData {
   };
 
   const initial: SaveData = {
-    version: 3,
+    version: 4,
     savedAt: new Date().toISOString(),
     label: `${normalizedProfile.name} · ${normalizedProfile.strand} / ${normalizedProfile.course}`,
     profile: normalizedProfile,
     chapter: 'shs_year1',
     semester: 1,
     week: 1,
+    dayOfYear: 1,
     totalWeeks: 1,
     minuteOfDay: DAY_START_MINUTE,
+    hasWokenUpToday: false,
+    currentMoment: null,
     dayActions: [],
     stats: {
       money: startingMoney,
@@ -340,6 +371,7 @@ export function createInitialSave(profile: PlayerProfile): SaveData {
     cheated: false,
   };
 
+  initial.currentMoment = buildMorningWakeUpMoment(initial);
   return signSaveData(initial);
 }
 
@@ -488,6 +520,48 @@ export interface DailyActionResult {
   reachedMidnight: boolean;
 }
 
+export function performMorningWakeUp(
+  state: SaveData,
+  choiceId: WakeUpChoiceId
+): SaveData | null {
+  if (state.hasWokenUpToday) return null;
+  const opt = WAKE_UP_OPTIONS.find((o) => o.id === choiceId);
+  if (!opt) return null;
+
+  const startMinute = clamp(state.minuteOfDay ?? DAY_START_MINUTE, DAY_START_MINUTE, DAY_END_MINUTE);
+  const endMinute = Math.min(DAY_END_MINUTE, startMinute + opt.durationMins);
+  const livesAtHome = !state.chapter.startsWith('college') || !state.profile.isProvincial;
+  const mealCost = choiceId === 'breakfast' && livesAtHome ? 0 : opt.moneyDelta;
+
+  const nextStats: GameStats = {
+    ...state.stats,
+    money: Math.max(-state.stats.debtLimit, Math.round(state.stats.money + mealCost)),
+    energy: clamp(Math.round(state.stats.energy + opt.energyDelta), 0, 100),
+    mental: clamp(Math.round(state.stats.mental + opt.mentalDelta), 0, 100),
+    gwa: roundGwa(state.stats.gwa + opt.gwaDelta),
+  };
+
+  const block: DailyScheduleBlock = {
+    id: `wake_${Date.now()}`,
+    actionId: 'wakeup',
+    label: opt.labelTl.split('·')[0].trim(),
+    labelEn: opt.labelEn.split('·')[0].trim(),
+    startMinute,
+    endMinute,
+  };
+
+  const moment = buildWakeUpResultMoment(state, choiceId, endMinute);
+
+  return signSaveData({
+    ...state,
+    minuteOfDay: endMinute,
+    hasWokenUpToday: true,
+    currentMoment: moment,
+    dayActions: [...(state.dayActions ?? []), block],
+    stats: nextStats,
+  });
+}
+
 export function performDailyAction(
   state: SaveData,
   actId: WeeklyActionId
@@ -503,12 +577,28 @@ export function performDailyAction(
   const endMinute = Math.min(DAY_END_MINUTE, startMinute + durationMins);
   const isHardcore = state.profile.difficulty === 'hardcore';
   const weekday = getWeekdayInfo(state.totalWeeks);
+  const cal = getCalendarDayInfo(state.dayOfYear ?? state.totalWeeks, state.totalWeeks);
   const countToday = (state.dayActions ?? []).filter((b) => b.actionId === actId).length;
+  const livesAtHome = !state.chapter.startsWith('college') || !state.profile.isProvincial;
 
   let eMod = cfg.energyDelta;
   let mMod = cfg.mentalDelta;
   let gMod = cfg.gwaDelta;
   let moneyMod = cfg.moneyDelta;
+
+  // Realistic home-cooked savings vs boarding carinderia meals
+  if (actId === 'eat_meal' && livesAtHome && (startMinute < 630 || startMinute >= 1080)) {
+    moneyMod = -15; // Tipid bahay meal
+  }
+
+  // Realistic Philippine weather modifiers
+  if (cal.weather === 'rainy' && actId === 'attend_class') {
+    moneyMod -= 15; // Extra tricycle/payong commute
+  } else if (cal.weather === 'hot' && actId === 'work') {
+    eMod -= 2; // Summer heat fatigue
+  } else if (cal.weather === 'breezy' && (actId === 'socialize' || actId === 'rest')) {
+    mMod += 2; // Cool Amihan comfort
+  }
 
   // Anti-loophole diminishing returns on repeated actions in the same day
   if (actId === 'work' && state.workJobsCompletedThisWeek >= 1) {
@@ -522,6 +612,9 @@ export function performDailyAction(
   if (actId === 'rest' && countToday >= 1) {
     eMod = Math.round(eMod * 0.6);
     mMod = Math.round(mMod * 0.65);
+  }
+  if (actId === 'eat_meal' && countToday >= 2) {
+    eMod = Math.round(eMod * 0.7);
   }
 
   if (isHardcore && eMod < 0) {
@@ -567,11 +660,12 @@ export function performDailyAction(
     nextRelationships.aling_nena = clamp((nextRelationships.aling_nena ?? 0) + 2, 0, 100);
   }
 
+  const mealLabel = actId === 'eat_meal' ? getMealLabelForTime(startMinute) : null;
   const block: DailyScheduleBlock = {
     id: `blk_${Date.now()}_${(state.dayActions?.length ?? 0) + 1}`,
     actionId: actId,
-    label: cfg.label,
-    labelEn: cfg.labelEn,
+    label: mealLabel ? mealLabel.tl : cfg.label,
+    labelEn: mealLabel ? mealLabel.en : cfg.labelEn,
     startMinute,
     endMinute,
   };
@@ -581,9 +675,13 @@ export function performDailyAction(
     grade: roundGwa(nextStats.gwa + ((i % 3) - 1) * 0.08),
   }));
 
+  const moment = buildActionMoment(state, actId, startMinute, endMinute);
+
   const nextState = signSaveData({
     ...state,
     minuteOfDay: endMinute,
+    hasWokenUpToday: true,
+    currentMoment: moment,
     dayActions: [...(state.dayActions ?? []), block],
     pendingWeeklyActions: [...state.pendingWeeklyActions, actId],
     workJobsCompletedThisWeek:
@@ -618,7 +716,7 @@ export function finishDayAndAdvance(state: SaveData): WeekResolutionSummary {
     HOMETOWN_OPTIONS.find((h) => h.id === state.profile.hometown) ?? HOMETOWN_OPTIONS[0];
   const isCollege = state.chapter.startsWith('college');
   const isHardcore = state.profile.difficulty === 'hardcore';
-  const actionsDoneToday = state.dayActions?.length ?? state.pendingWeeklyActions.length;
+  const actionsDoneToday = state.pendingWeeklyActions.length;
 
   const sleepMeta = getSleepBonus(state.minuteOfDay ?? DAY_START_MINUTE, actionsDoneToday);
   const sleepBonus = sleepMeta.energyBonus;
@@ -644,25 +742,28 @@ export function finishDayAndAdvance(state: SaveData): WeekResolutionSummary {
       ? Math.max(25, Math.round(Math.abs(state.stats.money) * 0.05))
       : 0;
 
-  // Advance calendar
-  let nextWeek = state.week + 1;
-  let nextSemester = state.semester;
+  // Advance 365-day Philippine School Year Calendar (Jun 1 = Day 1 .. May 31 = Day 365)
+  const currentDayOfYear = normalizeDayOfYear(state.dayOfYear ?? 1);
+  let nextDayOfYear = currentDayOfYear + 1;
   let nextChapter = state.chapter;
   let semesterEnded = false;
 
-  if (nextWeek > WEEKS_PER_SEMESTER) {
+  if (currentDayOfYear === SEM1_DAYS) {
+    // Crossing Day 182 -> Day 183 ends Semester 1
     semesterEnded = true;
-    nextWeek = 1;
-    if (nextSemester === 1) {
-      nextSemester = 2;
-    } else {
-      nextSemester = 1;
-      const curIdx = CHAPTER_ORDER.indexOf(state.chapter);
-      if (curIdx >= 0 && curIdx < CHAPTER_ORDER.length - 1) {
-        nextChapter = CHAPTER_ORDER[curIdx + 1];
-      }
+  } else if (nextDayOfYear > DAYS_PER_YEAR) {
+    // Crossing Day 365 -> Day 1 ends Semester 2 and advances School Year
+    semesterEnded = true;
+    nextDayOfYear = 1;
+    const curIdx = CHAPTER_ORDER.indexOf(state.chapter);
+    if (curIdx >= 0 && curIdx < CHAPTER_ORDER.length - 1) {
+      nextChapter = CHAPTER_ORDER[curIdx + 1];
     }
   }
+
+  const semInfo = getSemesterAndPeriodFromDay(nextDayOfYear);
+  const nextSemester = semInfo.semester;
+  const nextWeek = semInfo.week;
 
   const nextStats: GameStats = {
     ...state.stats,
@@ -693,7 +794,7 @@ export function finishDayAndAdvance(state: SaveData): WeekResolutionSummary {
       scholarshipAlert = 'maintained';
       journal.unshift({
         id: `j_sch_ok_${Date.now()}`,
-        dateLabel: formatDateLabel(state.chapter, state.semester, state.week),
+        dateLabel: formatDateLabel(state.chapter, state.semester, state.week, currentDayOfYear),
         title: 'Scholarship Maintained!',
         titleEn: 'Scholarship Maintained!',
         summary: `Naabot mo ang maintaining GWA (${nextStats.gwa.toFixed(2)} ≤ ${scholarship.minGwa.toFixed(2)}) para sa ${scholarship.name}!`,
@@ -707,7 +808,7 @@ export function finishDayAndAdvance(state: SaveData): WeekResolutionSummary {
       flagSet.add('scholarship_lost');
       journal.unshift({
         id: `j_sch_lost_${Date.now()}`,
-        dateLabel: formatDateLabel(state.chapter, state.semester, state.week),
+        dateLabel: formatDateLabel(state.chapter, state.semester, state.week, currentDayOfYear),
         title: 'Scholarship Lost',
         titleEn: 'Scholarship Lost',
         summary: `Lumagpas ang GWA mo (${nextStats.gwa.toFixed(2)}) sa required na ${scholarship.minGwa.toFixed(2)}. Kailangan bumawi sa raket o mag-apply ulit.`,
@@ -762,7 +863,7 @@ export function finishDayAndAdvance(state: SaveData): WeekResolutionSummary {
       }
       journal.unshift({
         id: `j_chal_${Date.now()}`,
-        dateLabel: formatDateLabel(state.chapter, state.semester, state.week),
+        dateLabel: formatDateLabel(state.chapter, state.semester, state.week, currentDayOfYear),
         title: `Challenge Clear: ${activeChallenge.title}`,
         titleEn: `Challenge Clear: ${activeChallenge.titleEn}`,
         summary: `Naabot mo ang daily goal! Reward: +₱${activeChallenge.rewardMoney}, +${activeChallenge.rewardMental} Mental Health.`,
@@ -779,26 +880,32 @@ export function finishDayAndAdvance(state: SaveData): WeekResolutionSummary {
     nextStats.gwa
   );
 
+  const nextSaveBase: SaveData = {
+    ...state,
+    chapter: nextChapter,
+    semester: nextSemester,
+    week: nextWeek,
+    dayOfYear: nextDayOfYear,
+    totalWeeks: state.totalWeeks + 1,
+    minuteOfDay: DAY_START_MINUTE,
+    hasWokenUpToday: false,
+    currentMoment: null,
+    dayActions: [],
+    stats: nextStats,
+    subjects,
+    scholarship,
+    flags: Array.from(flagSet),
+    journal,
+    pendingWeeklyActions: [],
+    workJobsCompletedThisWeek: 0,
+    activeChallenge: pickWeeklyChallenge(state.totalWeeks + 1),
+    challengesCompleted,
+    studyStreak: nextStudyStreak,
+  };
+  nextSaveBase.currentMoment = buildMorningWakeUpMoment(nextSaveBase);
+
   return {
-    nextState: signSaveData({
-      ...state,
-      chapter: nextChapter,
-      semester: nextSemester,
-      week: nextWeek,
-      totalWeeks: state.totalWeeks + 1,
-      minuteOfDay: DAY_START_MINUTE,
-      dayActions: [],
-      stats: nextStats,
-      subjects,
-      scholarship,
-      flags: Array.from(flagSet),
-      journal,
-      pendingWeeklyActions: [],
-      workJobsCompletedThisWeek: 0,
-      activeChallenge: pickWeeklyChallenge(state.totalWeeks + 1),
-      challengesCompleted,
-      studyStreak: nextStudyStreak,
-    }),
+    nextState: signSaveData(nextSaveBase),
     allowanceReceived,
     livingCosts,
     debtInterest,
@@ -807,6 +914,16 @@ export function finishDayAndAdvance(state: SaveData): WeekResolutionSummary {
     scholarshipAlert,
     challengeCompleted,
   };
+}
+
+export function shouldTriggerStoryEventOnNewDay(prev: SaveData, next: SaveData): boolean {
+  if (next.stats.energy <= 0 || next.stats.mental <= 0) return true;
+  if (prev.chapter !== next.chapter || prev.semester !== next.semester || prev.week !== next.week) {
+    return true;
+  }
+  const cal = getCalendarDayInfo(next.dayOfYear ?? 1, next.totalWeeks);
+  if (cal.specialDayTl) return true;
+  return next.totalWeeks % 3 === 0;
 }
 
 export function resolveWeeklyPlan(
