@@ -1,0 +1,1051 @@
+[
+  {
+    "id": "prologue_morning",
+    "chapter": "prologue",
+    "once": true,
+    "scene": {
+      "background": "bg_provincial_house",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "right" },
+        { "id": "player", "sprite": "player_neutral", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Alas-singko y media ng umaga sa {hometown}. Amoy mainit na pandesal at 3-in-1 coffee. Nakasampay na ang bagong plantsang uniform mo para sa unang araw ng Senior High School — {strand} strand.",
+          "textEn": "5:30 AM in {hometown}. The scent of warm pandesal and 3-in-1 coffee fills the house. Your freshly ironed uniform hangs ready for Day 1 of Senior High School — {strand} strand."
+        },
+        {
+          "speaker": "Mama",
+          "text": "Gising na, {name}! Kumain ka muna ng sinangag bago ka umalis. Eto pala ang baon mo — pasensya na kung barya-barya muna, anak.",
+          "textEn": "Wake up, {name}! Eat some garlic rice before leaving. Here is your allowance — sorry if it is mostly coins for now."
+        },
+        {
+          "speaker": "{name}",
+          "text": "Okay lang po, Ma! Barya lang 'to ngayon, pero balang araw diploma ang kapalit nito.",
+          "textEn": "It is totally fine, Ma! Just loose coins today, but one day this turns into a diploma."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Magmano at yakapin si Mama bago umalis.",
+        "textEn": "Do mano and hug Mama before heading out.",
+        "hint": "+Family, +Mental",
+        "effects": {
+          "mental": 6,
+          "relationships": { "family": 8 },
+          "flagsAdd": ["respectful_start"],
+          "journal": {
+            "title": "Unang Araw ng SHS",
+            "titleEn": "First Day of SHS",
+            "summary": "Nagsimula ang laban mo sa Grade 11 ({strand}) dala ang basbas ni Mama at barya sa bulsa.",
+            "summaryEn": "Started Grade 11 ({strand}) with Mama's blessing and a handful of coins.",
+            "category": "milestone"
+          }
+        },
+        "next": "shs1_jeep_commute"
+      },
+      {
+        "text": "Mag-baon ng extra kanin at itlog para tipid sa canteen.",
+        "textEn": "Pack extra rice and boiled egg to save lunch money.",
+        "hint": "+₱80, +Tipid flag",
+        "effects": {
+          "money": 80,
+          "energy": -3,
+          "flagsAdd": ["baon_master"],
+          "journal": {
+            "title": "Tipid Baon Strategy",
+            "titleEn": "Packed Lunch Hustle",
+            "summary": "Unang araw pa lang, nag-baon ka na ng kanin at itlog para makatipid.",
+            "summaryEn": "Day one and you already packed rice and egg to stretch your budget.",
+            "category": "choice"
+          }
+        },
+        "next": "shs1_jeep_commute"
+      }
+    ]
+  },
+  {
+    "id": "shs1_jeep_commute",
+    "chapter": "shs_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_jeepney_interior",
+      "characters": [
+        { "id": "player", "sprite": "player_worried", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Siksikan sa jeep! May karatula sa harap: 'BARYA LANG PO SA UMAGA'. Pagtingin mo sa bulsa, isang lukot na ₱100 bill at dalawang piso lang ang nadampot mo.",
+          "textEn": "Packed morning jeepney! A sign hangs up front: 'EXACT COINS ONLY IN THE MORNING.' You reach into your pocket and find a crumpled ₱100 bill and two peso coins."
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Uy, {strand} ka rin?! Same uniform patch! Wait — ₱100 ibabayad mo kay Manong? Mapapagalitan ka niyan! Akin na, palitan ko ng barya. Ako si Miggy nga pala!",
+          "textEn": "Hey, you are in {strand} too?! Same patch! Wait — paying ₱100 to the driver? He will roast you! Here, let me break it into coins. I am Miggy by the way!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Salamat bro! Sabay na tayo pumasok sa gate.",
+        "textEn": "Thanks! Let us walk to the school gate together.",
+        "hint": "+Miggy, +Social",
+        "effects": {
+          "money": -13,
+          "social": 8,
+          "relationships": { "miggy": 12 },
+          "flagsAdd": ["met_miggy_jeep"]
+        },
+        "next": "shs1_gate_arrival"
+      },
+      {
+        "text": "Bayaran mo muna pamasahe niya bilang pasasalamat (-₱26 total).",
+        "textEn": "Cover his fare too as a thank you (-₱26 total).",
+        "hint": "-₱26, ++Miggy",
+        "effects": {
+          "money": -26,
+          "social": 10,
+          "relationships": { "miggy": 18 },
+          "flagsAdd": ["generous_to_miggy"]
+        },
+        "next": "shs1_gate_arrival"
+      }
+    ]
+  },
+  {
+    "id": "shs1_gate_arrival",
+    "chapter": "shs_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_neutral", "position": "left" },
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Nakatayo ka sa tapat ng school gate habang nakawagayway ang watawat ng Pilipinas. Ang init na kahit 7AM pa lang.",
+          "textEn": "You stand before the school gate as the Philippine flag flutters overhead. Already sweltering at 7 AM."
+        },
+        {
+          "speaker": "Bea",
+          "text": "Excuse me! Kayo ba sina {name} at Miggy? Section 1-{strand} tayo! Ako si Bea — dala ko na rin 'yung photocopy ng class schedule para hindi na kayo pumila.",
+          "textEn": "Excuse me! Are you {name} and Miggy? We are in Section 1-{strand}! I am Bea — I brought photocopies of our schedule so you do not have to queue."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bayaran ang ₱5 photocopy at purihin si Bea.",
+        "textEn": "Pay the ₱5 photocopy cost and thank Bea warmly.",
+        "hint": "-₱5, +Bea, +GWA",
+        "effects": {
+          "money": -5,
+          "gwa": -0.05,
+          "relationships": { "bea": 14 }
+        },
+        "next": "shs1_classroom_intro"
+      },
+      {
+        "text": "Picturan na lang sa phone — tipid mode muna!",
+        "textEn": "Just snap a photo on your phone — saving every peso!",
+        "hint": "Free, +Bea",
+        "effects": {
+          "relationships": { "bea": 6 },
+          "flagsAdd": ["frugal_notes"]
+        },
+        "next": "shs1_classroom_intro"
+      }
+    ]
+  },
+  {
+    "id": "shs1_classroom_intro",
+    "chapter": "shs_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_neutral", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Good morning, Grade 11! Ako si Sir Reyes, ang adviser ninyo. Sa {strand}, hindi sapat ang talino — kailangan ng sipag, disiplina, at kumpletong yellow pad.",
+          "textEn": "Good morning, Grade 11! I am Sir Reyes, your adviser. In {strand}, brains are not enough — you need grit, discipline, and your own yellow pad."
+        },
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Bago tayo magsimula, kailangan ng class beadle at magbibigay ng unang recitation. Sino ang magbo-volunteer?",
+          "textEn": "Before we begin, I need a class representative and our first recitation volunteer. Who is stepping up?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Taas kamay agad! 'Sir, ready po ako!'",
+        "textEn": "Raise your hand immediately! 'Sir, I am ready!'",
+        "hint": "+GWA, +Prof. Reyes, -Energy",
+        "effects": {
+          "energy": -8,
+          "gwa": -0.1,
+          "relationships": { "prof_reyes": 14 },
+          "flagsAdd": ["class_beadle"]
+        },
+        "next": "shs1_canteen_barkada"
+      },
+      {
+        "text": "Yuko nang bahagya at magsulat muna ng notes.",
+        "textEn": "Keep a low profile and take neat notes instead.",
+        "hint": "+Mental, +GWA",
+        "effects": {
+          "mental": 5,
+          "gwa": -0.05
+        },
+        "next": "shs1_canteen_barkada"
+      }
+    ]
+  },
+  {
+    "id": "shs1_canteen_barkada",
+    "chapter": "shs_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_canteen",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "carlo", "sprite": "carlo_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Recess time sa canteen! Puno ng amoy ng banana cue, turon, at mainit na pancit canton.",
+          "textEn": "Lunch break at the canteen! The air smells of caramelized banana cue, turon, and hot pancit canton."
+        },
+        {
+          "speaker": "Carlo",
+          "text": "Yo! Carlo pala, taga-student council at music org. Napansin ko kasama niyo si Bea — solid squad na kayo agad! Tara, hati-hati tayo sa malaking pancit at tig-iisa ng gulaman!",
+          "textEn": "Yo! I am Carlo from the student council and music org. Saw you hanging out with Bea — solid squad already! Let us split a big pancit tray and iced gulaman!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "G! Ambag ako ng ₱45 para sa barkada lunch!",
+        "textEn": "Count me in! Chip in ₱45 for barkada lunch!",
+        "hint": "-₱45, +Energy, +Carlo, +Social",
+        "effects": {
+          "money": -45,
+          "energy": 10,
+          "social": 10,
+          "relationships": { "carlo": 12, "miggy": 6, "bea": 6 },
+          "flagsAdd": ["barkada_formed"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "May baon ako eh, pero sasabay ako sa kwentuhan!",
+        "textEn": "I packed lunch, but I will sit and hang out with you guys!",
+        "hint": "Free, +Energy, +Social",
+        "effects": {
+          "energy": 8,
+          "social": 6,
+          "relationships": { "carlo": 8, "miggy": 5, "bea": 8 },
+          "flagsAdd": ["barkada_formed"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_family_money_crunch",
+    "chapter": "shs_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year1", "semester": 1, "week": 2 },
+    "scene": {
+      "background": "bg_provincial_house",
+      "characters": [
+        { "id": "mama", "sprite": "mama_worried", "position": "right" },
+        { "id": "player", "sprite": "player_worried", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Mama",
+          "text": "Anak, pasensya na ha... tumaas bigla ang bayarin sa kuryente at tubig ngayong buwan. Baka kalahati lang muna ang maibigay kong baon sa susunod na linggo.",
+          "textEn": "Sweetheart, I am so sorry... electric and water bills spiked this month. I might only manage half your usual allowance next week."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Nakita mo si Mama na paulit-ulit nagbibilang ng maliliit na barya sa lamesa habang hawak ang bill ng kuryente.",
+          "textEn": "You watch Mama recount small coins at the dining table beside the crumpled electric bill."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "'Huwag ka mag-alala Ma, maghahanap ako ng part-time raket!'",
+        "textEn": "'Do not worry Ma, I will find a part-time gig!'",
+        "hint": "+Family, unlocks Aling Nena offer",
+        "effects": {
+          "mental": -4,
+          "relationships": { "family": 12 },
+          "flagsAdd": ["promised_to_help_family", "working_student"]
+        },
+        "next": "shs1_first_job_offer"
+      },
+      {
+        "text": "Ibigay ang ₱150 mula sa ipon mo para sa kuryente.",
+        "textEn": "Hand Mama ₱150 from your pocket for the bill.",
+        "hint": "-₱150, ++Family, +Mental",
+        "effects": {
+          "money": -150,
+          "mental": 8,
+          "relationships": { "family": 20 },
+          "flagsAdd": ["helped_family_bill"]
+        },
+        "next": "shs1_first_job_offer"
+      },
+      {
+        "text": "Tahimik lang na tanggapin — magtipid na lang sa school.",
+        "textEn": "Accept quietly — you will just cut corners at school.",
+        "hint": "-Mental, +Family",
+        "effects": {
+          "mental": -6,
+          "relationships": { "family": 5 },
+          "flagsAdd": ["silent_struggle"]
+        },
+        "next": "shs1_first_job_offer"
+      }
+    ]
+  },
+  {
+    "id": "shs1_first_job_offer",
+    "chapter": "shs_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_carinderia",
+      "characters": [
+        { "id": "nena", "sprite": "nena_happy", "position": "right" },
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "Aling Nena! Eto na 'yung sinasabi ko — si {name}! Mabilis kumilos, magaling sa math, at hindi nangungupit ng lumpiang shanghai!",
+          "textEn": "Aling Nena! Here is {name} like I told you! Fast worker, good at math, and won't sneak extra lumpia!"
+        },
+        {
+          "speaker": "Aling Nena",
+          "text": "O sige nga, iho/iha! Kailangan ko ng taga-serve tuwing rush hour. May sahod ka na, may libreng kanin at sabaw pa. Try mo na ngayon?",
+          "textEn": "Alright then! I need a helper during lunch rush. You get cash pay plus free rice and soup. Want to try a shift right now?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Game po, Aling Nena! Mag-shift na ako ngayon! (Play Carinderia Rush)",
+        "textEn": "Count me in, Aling Nena! Let me start now! (Play Carinderia Rush)",
+        "hint": "Minigame: Earn ₱ + Aling Nena trust",
+        "effects": {
+          "relationships": { "aling_nena": 14 },
+          "flagsAdd": ["aling_nena_helper"]
+        },
+        "triggerMinigame": "carinderia",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Salamat po! Babalik ako sa bakanteng schedule ko sa planner.",
+        "textEn": "Thank you! I will drop by during my free planner slots.",
+        "hint": "+Aling Nena",
+        "effects": {
+          "relationships": { "aling_nena": 6 },
+          "flagsAdd": ["aling_nena_helper"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_midterms_week",
+    "chapter": "shs_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year1", "semester": 1, "week": 3 },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "bea", "sprite": "bea_worried", "position": "left" },
+        { "id": "crush", "sprite": "crush_neutral", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Midterm week na! Puno ang library at amoy kape at highlighter ang buong paligid.",
+          "textEn": "Midterm week is here! The library is packed with the scent of coffee and highlighters."
+        },
+        {
+          "speaker": "Jamie",
+          "text": "Hi {name}... napansin kong puyat ka na. Eto, may extra SkyFlakes at 3-in-1 ako. Gusto mo sabay tayo mag-review ng formulas?",
+          "textEn": "Hi {name}... noticed you look exhausted. Here, I have extra crackers and coffee. Want to review formulas together?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Oo naman, Jamie! Sabay tayo hanggang mag-close ang library.",
+        "textEn": "Yes please, Jamie! Let us study until the library closes.",
+        "hint": "+GWA, +Jamie, -Energy",
+        "effects": {
+          "energy": -10,
+          "mental": 8,
+          "gwa": -0.15,
+          "relationships": { "crush": 15 },
+          "flagsAdd": ["library_date_jamie"]
+        },
+        "next": "shs1_midterm_result"
+      },
+      {
+        "text": "Isama natin sina Bea at Miggy para group review!",
+        "textEn": "Invite Bea and Miggy too for a full group review!",
+        "hint": "+GWA, +Barkada, +Social",
+        "effects": {
+          "energy": -8,
+          "gwa": -0.12,
+          "social": 8,
+          "relationships": { "bea": 10, "miggy": 10, "crush": 6 }
+        },
+        "next": "shs1_midterm_result"
+      },
+      {
+        "text": "Salamat Jamie, pero kailangan ko mag-overtime sa trabaho mamaya.",
+        "textEn": "Thanks Jamie, but I have to work an extra shift tonight.",
+        "hint": "+₱250, -GWA, -Energy",
+        "effects": {
+          "money": 250,
+          "energy": -15,
+          "gwa": 0.1,
+          "relationships": { "crush": -3 }
+        },
+        "next": "shs1_midterm_result"
+      }
+    ]
+  },
+  {
+    "id": "shs1_midterm_result",
+    "chapter": "shs_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_neutral", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Tapos na ang unang midterm exam ng Grade 11! Tandaan: ang GWA niyo dito ang pundasyon ng scholarship niyo sa kolehiyo.",
+          "textEn": "First Grade 11 midterms are done! Remember: your GWA here is the foundation for college scholarships."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-check ang test paper at mag-note ng mali para bumawi.",
+        "textEn": "Review your mistakes carefully to improve next time.",
+        "hint": "+GWA",
+        "effects": { "gwa": -0.05 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_project_printing",
+    "chapter": "shs_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year1", "semester": 1, "week": 4 },
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_worried", "position": "left" },
+        { "id": "bea", "sprite": "bea_angry", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "Guys, deadline na ng group portfolio bukas! ₱180 ang color print plus binding. Hindi pa nag-aambag si Kevin — seen lang sa group chat!",
+          "textEn": "Guys, the group portfolio is due tomorrow! Color printing and binding costs ₱180. Kevin still has not chipped in — just left us on seen!"
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Classic freeloader! Paano na 'to, {name}? Hati-hati ba tayo o tanggalin na natin pangalan niya sa cover page?",
+          "textEn": "Classic freeloader! What do we do, {name}? Split the cost ourselves or drop his name from the cover page?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-ambag ng ₱90 at tanggalin ang freeloader sa cover page.",
+        "textEn": "Chip in ₱90 and remove the freeloader from the cover page.",
+        "hint": "-₱90, +GWA, +Bea",
+        "effects": {
+          "money": -90,
+          "gwa": -0.1,
+          "relationships": { "bea": 10 },
+          "flagsAdd": ["strict_groupmate"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "I-print na lang sa black-and-white (₱40) at pagandahin ang handwriting cover.",
+        "textEn": "Print in black-and-white (₱40) and craft a neat hand-drawn cover.",
+        "hint": "-₱40, +Creativity, -Energy",
+        "effects": {
+          "money": -40,
+          "energy": -8,
+          "gwa": -0.06,
+          "flagsAdd": ["diskarte_student"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Kausapin si Kevin nang maayos — baka wala lang din siyang pera.",
+        "textEn": "Talk to Kevin privately — maybe he is broke too.",
+        "hint": "+Social, +Mental, +helped_classmate",
+        "effects": {
+          "money": -60,
+          "social": 10,
+          "mental": 6,
+          "flagsAdd": ["helped_classmate"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_sem1_finals",
+    "chapter": "shs_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year1", "semester": 1, "week": 6 },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "bea", "sprite": "bea_happy", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Tapos na ang 1st Semester Finals ng Grade 11! Sabay-sabay naghihiyawan ang buong klase paglabas ng room.",
+          "textEn": "Grade 11 1st Semester Finals are finally over! The whole class cheers as everyone pours out of the room."
+        },
+        {
+          "speaker": "Miggy",
+          "text": "WOOH! Buhay pa tayo! Tara, fishball at kwek-kwek celebration sa kanto! Kahit ₱20 lang solve na!",
+          "textEn": "WOOH! We survived! Let us celebrate with fishballs and kwek-kwek at the corner! Even ₱20 hits the spot!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tara! Deserve natin ng kwek-kwek! (-₱35)",
+        "textEn": "Let us go! We earned those kwek-kwek! (-₱35)",
+        "hint": "-₱35, +Mental, +Barkada",
+        "effects": {
+          "money": -35,
+          "mental": 14,
+          "social": 8,
+          "relationships": { "miggy": 8, "bea": 8 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Pass muna ako, diretso uwi para magpahinga.",
+        "textEn": "I will pass and head straight home to recharge.",
+        "hint": "+Energy",
+        "effects": {
+          "energy": 16,
+          "mental": 6
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_sem2_start",
+    "chapter": "shs_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year1", "semester": 2, "week": 1 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_happy", "position": "left" },
+        { "id": "player", "sprite": "player_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "Welcome back sa 2nd Semester, {name}! Mas mabigat ang subjects ngayon — may Practical Research 1 na! Sumali ka ba sa club fair mamaya?",
+          "textEn": "Welcome back to 2nd Semester, {name}! Heavier subjects this term — Practical Research 1 starts now! Checking out the club fair later?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sumali sa student org ni Carlo para sa connections at leadership!",
+        "textEn": "Join Carlo's student org for leadership and connections!",
+        "hint": "+Carlo, +Social, +org_member",
+        "effects": {
+          "social": 12,
+          "energy": -6,
+          "relationships": { "carlo": 15 },
+          "flagsAdd": ["org_member"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-focus muna sa studies at part-time gigs.",
+        "textEn": "Stay focused on studies and part-time gigs for now.",
+        "hint": "+GWA",
+        "effects": {
+          "gwa": -0.06
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_sari_sari_opportunity",
+    "chapter": "shs_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year1", "semester": 2, "week": 2 },
+    "scene": {
+      "background": "bg_sari_sari",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "Psst, {name}! Ang daming estudyanteng laging nakakalimot ng yellow pad, ballpen, at naghahanap ng chichirya sa classroom. Magtinda kaya tayo ng school supplies at tusok-tusok pag uwian?",
+          "textEn": "Psst, {name}! Students always forget yellow pad and pens, and everyone craves snacks after class. Want to sell supplies and street snacks after dismissal?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Magandang diskarte 'yan! Subukan natin! (Play Tusok-Tusok)",
+        "textEn": "Smart hustle! Let us try it! (Play Street Snacks)",
+        "hint": "Minigame + Entrepreneur flag",
+        "effects": {
+          "flagsAdd": ["student_hustler"],
+          "relationships": { "miggy": 10 }
+        },
+        "triggerMinigame": "tusok",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Baka mahuli ng guidance — stick na lang ako sa regular part-time.",
+        "textEn": "Might get caught by guidance — I will stick to regular part-time work.",
+        "hint": "+Prof. Reyes",
+        "effects": {
+          "relationships": { "prof_reyes": 6 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_sem2_midterms",
+    "chapter": "shs_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year1", "semester": 2, "week": 3 },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_worried", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Midterms ng 2nd Semester! Malapit na matapos ang Grade 11. Sino dito ang nagbabalak mag-apply ng academic scholarship para sa kolehiyo?",
+          "textEn": "2nd Semester Midterms! Grade 11 is almost over. Who here plans to apply for a college academic scholarship?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-all-nighter review para mahatak pataas ang GWA!",
+        "textEn": "Pull an all-nighter to boost your GWA!",
+        "hint": "++GWA, -Energy, -Mental",
+        "effects": {
+          "gwa": -0.18,
+          "energy": -18,
+          "mental": -8,
+          "flagsAdd": ["honor_grinder"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Balanced study + sapat na tulog para malinaw ang utak bukas.",
+        "textEn": "Balanced review plus proper sleep so your mind stays sharp.",
+        "hint": "+GWA, +Mental",
+        "effects": {
+          "gwa": -0.09,
+          "mental": 6,
+          "energy": 4
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_fiesta_break",
+    "chapter": "shs_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year1", "semester": 2, "week": 4 },
+    "scene": {
+      "background": "bg_fiesta_night",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "left" },
+        { "id": "tatay", "sprite": "tatay_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Fiesta sa barangay! Puno ng makukulay na banderitas, tugtugan ng brass band, at amoy ng inihaw na liempo sa buong kalye.",
+          "textEn": "Barangay fiesta night! Colorful buntings crisscross the street while brass bands play and grilled pork smoke drifts overhead."
+        },
+        {
+          "speaker": "Tatay",
+          "text": "Kahit simple lang ang handa natin, {name}, imbitahin mo ang barkada mo! Minsan lang tayo makapag-pahinga sa gastusin.",
+          "textEn": "Even if our spread is simple, {name}, invite your friends over! It is rare we get to pause and breathe."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Imbitahin ang buong barkada at si Jamie sa bahay!",
+        "textEn": "Invite the whole barkada and Jamie over!",
+        "hint": "+Mental, ++All Friends, +Family",
+        "effects": {
+          "money": -60,
+          "mental": 16,
+          "social": 14,
+          "relationships": { "family": 10, "miggy": 10, "bea": 10, "carlo": 8, "crush": 12 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Tumulong muna sa food stall ng kapitbahay para kumita habang fiesta (+₱320).",
+        "textEn": "Help man the neighbor's barbecue stall during fiesta (+₱320).",
+        "hint": "+₱320, -Energy",
+        "effects": {
+          "money": 320,
+          "energy": -14,
+          "mental": 4,
+          "flagsAdd": ["fiesta_hustler"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_year_end",
+    "chapter": "shs_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year1", "semester": 2, "week": 6 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "bea", "sprite": "bea_happy", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "Nagawa natin! Tapos na ang Grade 11! Isang taon na lang, kolehiyo na tayo!",
+          "textEn": "We did it! Grade 11 is done! One more year and we are off to college!"
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Bago mag-bakasyon, napatingin ka sa wallet mo at sa report card mo. Grade 12 na ang susunod — mas malapit na sa pangarap mong {course}.",
+          "textEn": "Before summer break, you glance at your wallet and report card. Grade 12 is next — one step closer to your dream {course} degree."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-summer raket para may ipon sa Grade 12 (+₱450, -Energy).",
+        "textEn": "Take a summer hustle to save for Grade 12 (+₱450, -Energy).",
+        "hint": "+₱450, -Energy",
+        "effects": {
+          "money": 450,
+          "energy": -10,
+          "flagsAdd": ["summer_worker"],
+          "journal": {
+            "title": "Tapos na ang Grade 11!",
+            "titleEn": "Grade 11 Completed!",
+            "summary": "Nalampasan mo ang unang taon ng SHS at nag-ipon para sa Grade 12.",
+            "summaryEn": "Survived your first year of SHS and saved up for Grade 12.",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Magpahinga at mag-advance reading para sa CETs (+Energy, +Mental, +GWA).",
+        "textEn": "Rest up and advance-read for college entrance exams.",
+        "hint": "+Energy, +Mental, +GWA",
+        "effects": {
+          "energy": 20,
+          "mental": 15,
+          "gwa": -0.08,
+          "flagsAdd": ["cet_prepared"],
+          "journal": {
+            "title": "Tapos na ang Grade 11!",
+            "titleEn": "Grade 11 Completed!",
+            "summary": "Nagpahinga ka at nag-review para sa paparating na College Entrance Tests.",
+            "summaryEn": "Recharged and prepared early for upcoming College Entrance Tests.",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_strand_stem_lab",
+    "chapter": "shs_year1",
+    "weight": 3,
+    "once": true,
+    "conditions": { "strand": ["STEM"] },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "bea", "sprite": "bea_surprised", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "STEM life! Naghahanap si Ma'am ng tutulong mag-tutor sa Grade 9 Algebra tuwing Biyernes. May ₱220 honorarium per session daw!",
+          "textEn": "STEM perks! Ma'am is looking for someone to tutor Grade 9 Algebra on Fridays. Pays a ₱220 honorarium!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Kunin ang tutoring slot! (Play Tutoring Quiz)",
+        "textEn": "Take the tutoring slot! (Play Tutoring Quiz)",
+        "hint": "Minigame + GWA boost",
+        "effects": { "gwa": -0.06, "flagsAdd": ["stem_tutor"] },
+        "triggerMinigame": "tutoring",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Ibigay na lang kay Bea — busy ako sa lab report.",
+        "textEn": "Pass it to Bea — swamped with lab reports.",
+        "hint": "+Bea, +Energy",
+        "effects": { "relationships": { "bea": 10 }, "energy": 6 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_strand_abm_bookkeeping",
+    "chapter": "shs_year1",
+    "weight": 3,
+    "once": true,
+    "conditions": { "strand": ["ABM"] },
+    "scene": {
+      "background": "bg_sari_sari",
+      "characters": [
+        { "id": "nena", "sprite": "nena_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Aling Nena",
+          "text": "{name}, ABM ka 'di ba? Gulong-gulo na 'yung listahan ko ng utang at benta sa sari-sari store! Pwede mo bang i-ledger at i-Excel? Babayaran kita!",
+          "textEn": "{name}, you are in ABM right? My sari-sari store credit ledger is a total mess! Could you organize it in a spreadsheet? I will pay you!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sige po, Aling Nena! Ayusin ko ang cashflow niyo! (Play Freelance Task)",
+        "textEn": "Sure Aling Nena! I will clean up your cashflow! (Play Freelance Task)",
+        "hint": "Minigame + Business flag",
+        "effects": {
+          "relationships": { "aling_nena": 14 },
+          "flagsAdd": ["abm_bookkeeper", "business_instinct"]
+        },
+        "triggerMinigame": "freelance",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Turuan ko na lang po kayo nang libre gamit ang notebook.",
+        "textEn": "Teach her a simple notebook system for free.",
+        "hint": "++Aling Nena, +Mental",
+        "effects": {
+          "relationships": { "aling_nena": 20 },
+          "mental": 10,
+          "flagsAdd": ["abm_bookkeeper"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_strand_ict_repair",
+    "chapter": "shs_year1",
+    "weight": 3,
+    "once": true,
+    "conditions": { "strand": ["TVL-ICT"] },
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [
+        { "id": "employer", "sprite": "employer_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Kuya Jun (ComShop Owner)",
+          "text": "Uy, TVL-ICT! Nasira tatlong PC sa shop ko bago mag-Valorant tournament. Kaya mo bang i-reformat at ayusin ang LAN? ₱400 cash agad!",
+          "textEn": "Hey, TVL-ICT! Three PCs crashed at my shop right before a tournament. Can you troubleshoot and fix the LAN? ₱400 cash right away!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Akin na screwdriver at USB! (Play Freelance Task)",
+        "textEn": "Hand me the screwdriver and bootable USB! (Play Freelance Task)",
+        "hint": "Minigame + Tech Raket flag",
+        "effects": { "flagsAdd": ["ict_freelancer", "owns_laptop_fund"] },
+        "triggerMinigame": "freelance",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Bigyan ko muna ng quick diagnosis (+₱150, tipid energy).",
+        "textEn": "Give a quick diagnosis only (+₱150, saves energy).",
+        "hint": "+₱150",
+        "effects": { "money": 150, "flagsAdd": ["ict_freelancer"] },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_strand_humss_debate",
+    "chapter": "shs_year1",
+    "weight": 3,
+    "once": true,
+    "conditions": { "strand": ["HUMSS"] },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "HUMSS represent! May inter-school essay at debate contest sa bayan — ₱500 cash prize at certificate para sa college scholarship application!",
+          "textEn": "HUMSS represent! There is a municipal essay and debate contest — ₱500 cash prize plus a certificate that boosts college scholarship apps!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sumali at ipanalo ang school! (-Energy, +₱400, +GWA)",
+        "textEn": "Join and represent the school! (-Energy, +₱400, +GWA)",
+        "hint": "+₱400, +GWA, +Social",
+        "effects": {
+          "money": 400,
+          "energy": -14,
+          "gwa": -0.14,
+          "social": 12,
+          "flagsAdd": ["debate_winner"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-research support na lang para kay Carlo.",
+        "textEn": "Help Carlo as his debate researcher.",
+        "hint": "+Carlo, +GWA",
+        "effects": { "relationships": { "carlo": 14 }, "gwa": -0.06 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_strand_he_kitchen",
+    "chapter": "shs_year1",
+    "weight": 3,
+    "once": true,
+    "conditions": { "strand": ["TVL-HE"] },
+    "scene": {
+      "background": "bg_canteen",
+      "characters": [
+        { "id": "nena", "sprite": "nena_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Aling Nena",
+          "text": "TVL-HE ka pala! Ang sarap nung graham balls at baked mac na ginawa niyo sa Cookery! Gusto mo bang i-display dito sa canteen at hati tayo sa kita?",
+          "textEn": "You are in TVL-HE! Those graham balls and baked mac from Cookery were amazing! Want to sell them at my counter and split the profits?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Yes po! Simulan natin ang food hustle! (Play Tusok-Tusok)",
+        "textEn": "Yes! Let us launch the food hustle! (Play Street Snacks)",
+        "hint": "Minigame + Entrepreneur flag",
+        "effects": {
+          "relationships": { "aling_nena": 12 },
+          "flagsAdd": ["food_entrepreneur", "business_instinct"]
+        },
+        "triggerMinigame": "tusok",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-part-time na lang muna sa kusina niyo (+₱280).",
+        "textEn": "Just take a paid kitchen prep shift (+₱280).",
+        "hint": "+₱280, -Energy",
+        "effects": { "money": 280, "energy": -10 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs1_strand_gas_explore",
+    "chapter": "shs_year1",
+    "weight": 3,
+    "once": true,
+    "conditions": { "strand": ["GAS"] },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "prof", "sprite": "prof_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Sa GAS, ang lakas ninyo ay versatility. Huwag magpadala sa nagsasabing 'GAS lang' — maraming nagiging Topnotcher at entrepreneur galing dito.",
+          "textEn": "In GAS, versatility is your superpower. Ignore anyone belittling it — plenty of board topnotchers and founders start here."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Salamat Sir! Gagamitin ko 'yan para ihanda ang {course} path ko.",
+        "textEn": "Thank you Sir! I will use it to prepare for {course}.",
+        "hint": "+Mental, +GWA, +Prof. Reyes",
+        "effects": {
+          "mental": 12,
+          "gwa": -0.08,
+          "relationships": { "prof_reyes": 10 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

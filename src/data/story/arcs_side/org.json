@@ -1,0 +1,67 @@
+[
+  {
+    "id": "side_org_event_lead",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "flagsAny": ["org_member", "college_org_member"] },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [{ "id": "carlo", "sprite": "carlo_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "{name}! Ikaw ang na-nominate na Finance / Logistics Officer ng org! Malaking tulong 'to sa leadership resume mo at may libreng snacks tuwing event!",
+          "textEn": "{name}! You got nominated as Org Finance & Logistics Officer! Huge resume boost plus free event meals!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin ang officer role! (-Energy, ++Social, ++Carlo, +org_officer)",
+        "textEn": "Accept the officer role! (-Energy, ++Social, ++Carlo, +org_officer)",
+        "hint": "+Social, +Carlo, +business_instinct",
+        "effects": {
+          "energy": -10,
+          "social": 16,
+          "relationships": { "carlo": 16 },
+          "flagsAdd": ["org_officer", "business_instinct"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Active member na lang muna — kailangan ko bantayan ang GWA.",
+        "textEn": "Stay an active member — need to guard my GWA first.",
+        "effects": { "gwa": -0.05, "relationships": { "carlo": 5 } },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "side_org_fundraiser",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "flagsAll": ["org_officer"] },
+    "scene": {
+      "background": "bg_fiesta_night",
+      "characters": [{ "id": "carlo", "sprite": "carlo_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "Tagumpay ang org fundraising fair natin! Nag-iwan ang sponsor ng honorarium para sa organizing committee — ₱350 share mo!",
+          "textEn": "Our org fundraiser crushed its goal! The sponsor gave an honorarium to the committee — ₱350 is your share!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin ang honorarium at i-log sa budget! (+₱350, +Social)",
+        "textEn": "Claim the honorarium and celebrate with the team! (+₱350, +Social)",
+        "hint": "+₱350, +Social, +Mental",
+        "effects": { "money": 350, "social": 10, "mental": 10 },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

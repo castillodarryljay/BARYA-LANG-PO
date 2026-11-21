@@ -1,0 +1,708 @@
+[
+  {
+    "id": "shs2_opening",
+    "chapter": "shs_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year2", "semester": 1, "week": 1 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_neutral", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Grade 12 na! Huling taon sa Senior High School. Biglang ramdam ang pressure: Work Immersion, Research Defense, College Entrance Tests (CETs), at scholarship deadlines.",
+          "textEn": "Grade 12! Your final year of Senior High School. Suddenly everything hits at once: Work Immersion, Research Defense, College Entrance Tests, and scholarship deadlines."
+        },
+        {
+          "speaker": "Bea",
+          "text": "Ready na ba kayo sa CET applications? Ang mahal ng exam fee sa ibang university — pero libre sa State U kung maaga tayo magpapasa!",
+          "textEn": "Ready for CET applications? Private university exam fees are pricey — but State U is free if we file early!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-apply sa State U at mag-review nang todo!",
+        "textEn": "Apply to State U and review hard!",
+        "hint": "+GWA, +state_u_applicant",
+        "effects": {
+          "gwa": -0.08,
+          "flagsAdd": ["state_u_applicant"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-apply sa 3 universities para may backup (-₱350 exam fees).",
+        "textEn": "Apply to 3 universities for backup (-₱350 exam fees).",
+        "hint": "-₱350, +Mental, +backup_uni",
+        "effects": {
+          "money": -350,
+          "mental": 8,
+          "flagsAdd": ["state_u_applicant", "multiple_cet_apps"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_cet_review",
+    "chapter": "shs_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year2", "semester": 1, "week": 2 },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "bea", "sprite": "bea_happy", "position": "left" },
+        { "id": "crush", "sprite": "crush_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "Nakahiram ako ng lumang CET reviewer mula sa pinsan ko! Pass-the-reviewer culture to the rescue — walang pambayad sa review center eh!",
+          "textEn": "I borrowed an old CET reviewer from my cousin! Pass-the-reviewer culture to the rescue — none of us can afford a review center!"
+        },
+        {
+          "speaker": "Jamie",
+          "text": "Photocopy natin sa labas tapos mag-mock exam tayo ngayong hapon, {name}?",
+          "textEn": "Let us photocopy it outside and run a timed mock exam this afternoon, {name}?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "G! Mag-mock exam kasama sina Bea at Jamie (-₱45 photocopy).",
+        "textEn": "Yes! Run the mock exam with Bea and Jamie (-₱45 photocopy).",
+        "hint": "-₱45, ++GWA, +Jamie, +Bea",
+        "effects": {
+          "money": -45,
+          "energy": -10,
+          "gwa": -0.14,
+          "relationships": { "bea": 10, "crush": 12 },
+          "flagsAdd": ["passed_mock_cet"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Kopyahin ko na lang sa notebook para zero gastos (-Energy).",
+        "textEn": "Copy the key problems by hand to spend zero pesos (-Energy).",
+        "hint": "Free, -Energy, +GWA",
+        "effects": {
+          "energy": -15,
+          "gwa": -0.1,
+          "flagsAdd": ["passed_mock_cet"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_cet_exam_day",
+    "chapter": "shs_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year2", "semester": 1, "week": 3 },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "player", "sprite": "player_worried", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Araw ng College Entrance Test! Malamig ang testing room, hawak mo ang Mongol #2 pencil na sinabihan ni Mama na huwag ihuhulog.",
+          "textEn": "College Entrance Test day! Freezing testing room, gripping your Mongol #2 pencil that Mama warned you never to drop."
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Bro, 5 minutes na lang sa Math portion at may 10 items pa akong blangko! Dasal na lang talaga at letter C!",
+          "textEn": "Bro, 5 minutes left on Math and I still have 10 blanks! Pure prayers and letter C at this point!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Huminga nang malalim at tapusin nang maayos ang bawat tanong.",
+        "textEn": "Take a deep breath and methodically solve each remaining item.",
+        "hint": "+GWA, +cet_passed",
+        "effects": {
+          "energy": -12,
+          "gwa": -0.12,
+          "flagsAdd": ["cet_passed"],
+          "journal": {
+            "title": "College Entrance Test",
+            "titleEn": "College Entrance Test",
+            "summary": "Hinarap mo ang CET dala ang Mongol #2 pencil at reviewer ng barkada.",
+            "summaryEn": "Tackled the College Entrance Test armed with a Mongol #2 pencil and shared reviewers.",
+            "category": "milestone"
+          }
+        },
+        "next": "shs2_cet_aftermath"
+      },
+      {
+        "text": "Mag-speed run sa dulo para walang maiwang blanko.",
+        "textEn": "Speed-run the final items so nothing stays blank.",
+        "hint": "+Mental, +cet_passed",
+        "effects": {
+          "energy": -8,
+          "mental": 4,
+          "gwa": -0.05,
+          "flagsAdd": ["cet_passed"]
+        },
+        "next": "shs2_cet_aftermath"
+      }
+    ]
+  },
+  {
+    "id": "shs2_cet_aftermath",
+    "chapter": "shs_year2",
+    "once": true,
+    "scene": {
+      "background": "bg_carinderia",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "Tapos na ang CET! Kahit anong resulta, proud ako sa atin. Sabay-sabay tayong lalaban sa college!",
+          "textEn": "CET is done! Whatever the result, I am proud of us. We are fighting through college together!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Cheers ng iced water at sisig rice! (-₱65)",
+        "textEn": "Cheers with iced water and sisig rice! (-₱65)",
+        "hint": "-₱65, +Mental, +Energy",
+        "effects": {
+          "money": -65,
+          "energy": 10,
+          "mental": 12
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Babalik muna ako sa trabaho para bawiin ang pamasahe.",
+        "textEn": "Heading straight to a shift to earn back the fare.",
+        "hint": "Play Jeepney Fare Pass",
+        "triggerMinigame": "jeepney",
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_scholarship_application",
+    "chapter": "shs_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year2", "semester": 1, "week": 4 },
+    "scene": {
+      "background": "bg_barangay_street",
+      "characters": [
+        { "id": "prof", "sprite": "prof_happy", "position": "left" },
+        { "id": "mama", "sprite": "mama_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "{name}, bukas na ang application para sa Iskolar ng Bayan / CHED College Scholarship! Kung mapasa mo ang documents, essay, at interview, malaking bawas 'to sa tuition mo sa {course}!",
+          "textEn": "{name}, applications just opened for the Iskolar ng Bayan / CHED College Scholarship! Pass the documents, essay, and interview and it covers a huge chunk of your {course} tuition!"
+        },
+        {
+          "speaker": "Mama",
+          "text": "Subukan mo na, anak! Kahit maglakad tayo sa munisipyo para kumuha ng Certificate of Indigency, sasamahan kita.",
+          "textEn": "Go for it, anak! Even if we have to walk to city hall for the Certificate of Indigency, I will go with you."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-apply ngayon! (Start Scholarship Application Quest)",
+        "textEn": "Apply now! (Start Scholarship Application Quest)",
+        "hint": "Minigame: Win College Scholarship!",
+        "effects": {
+          "flagsAdd": ["applied_scholarship"]
+        },
+        "triggerMinigame": "scholarship",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Paghandaan ko muna ang grades ko — sa college na lang ako mag-apply.",
+        "textEn": "I will focus on my grades first and apply during college.",
+        "hint": "+Energy, +GWA",
+        "effects": {
+          "energy": 8,
+          "gwa": -0.05
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_christmas_parol",
+    "chapter": "shs_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year2", "semester": 1, "week": 6 },
+    "scene": {
+      "background": "bg_christmas_parol",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "left" },
+        { "id": "crush", "sprite": "crush_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Disyembre na! Kumikislap ang mga capiz parol sa buong kalye at amoy bibingka at puto bumbong pagkatapos ng Simbang Gabi.",
+          "textEn": "December has arrived! Capiz parol lanterns glow down the block, and warm bibingka and puto bumbong perfume the dawn air after Simbang Gabi."
+        },
+        {
+          "speaker": "Jamie",
+          "text": "Merry Christmas, {name}! Eto, maliit na regalo lang — lucky ballpen at pouch para sa college natin next year.",
+          "textEn": "Merry Christmas, {name}! Here is a small gift — a lucky pen and pouch for college next year."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bilhan ng mainit na bibingka si Jamie at mag-uwi rin kay Mama (-₱110).",
+        "textEn": "Buy warm bibingka for Jamie and bring some home for Mama (-₱110).",
+        "hint": "-₱110, +Jamie, +Family, +Mental",
+        "effects": {
+          "money": -110,
+          "mental": 16,
+          "relationships": { "crush": 14, "family": 10 },
+          "flagsAdd": ["christmas_with_jamie"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-part-time Christmas rush shift sa fastfood (+₱450).",
+        "textEn": "Work the holiday rush shift at fastfood (+₱450).",
+        "hint": "Play Fastfood Crew",
+        "effects": { "flagsAdd": ["holiday_worker"] },
+        "triggerMinigame": "fastfood",
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_research_defense",
+    "chapter": "shs_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year2", "semester": 2, "week": 2 },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_angry", "position": "left" },
+        { "id": "bea", "sprite": "bea_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Practical Research 2 Defense! Panelist ako ngayon. Ipaliwanag niyo kung bakit valid ang sample size ninyo — walang binabasa sa PowerPoint!",
+          "textEn": "Practical Research 2 Defense! I am on the panel today. Defend your sample size — no reading off the slides!"
+        },
+        {
+          "speaker": "Bea",
+          "text": "{name}, ikaw na mag-deliver ng methodology! Nanginginig na tuhod ko!",
+          "textEn": "{name}, take the methodology section! My knees are shaking!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tumayo nang tuwid at ipagtanggol ang research nang malinaw!",
+        "textEn": "Stand tall and defend the methodology with confidence!",
+        "hint": "++GWA, +Prof. Reyes, +Bea",
+        "effects": {
+          "energy": -14,
+          "gwa": -0.18,
+          "relationships": { "prof_reyes": 14, "bea": 12 },
+          "flagsAdd": ["shs_best_presenter"]
+        },
+        "next": "shs2_research_verdict"
+      },
+      {
+        "text": "Hatiin niyo ni Bea ang sagot para pareho kayong makabawi.",
+        "textEn": "Split the answers with Bea so both of you shine.",
+        "hint": "+GWA, ++Bea, +Mental",
+        "effects": {
+          "energy": -10,
+          "gwa": -0.1,
+          "mental": 6,
+          "relationships": { "bea": 16 }
+        },
+        "next": "shs2_research_verdict"
+      }
+    ]
+  },
+  {
+    "id": "shs2_research_verdict",
+    "chapter": "shs_year2",
+    "once": true,
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_happy", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Approved with minor revisions! Congratulations, group! Handa na kayo sa totoong thesis sa college.",
+          "textEn": "Approved with minor revisions! Congratulations, group! You are ready for real college thesis battles."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Magdiwang nang mabilis at i-bind na ang final manuscript (-₱85).",
+        "textEn": "Celebrate briefly and print-bind the final manuscript (-₱85).",
+        "hint": "-₱85, +Mental",
+        "effects": { "money": -85, "mental": 12 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_work_immersion",
+    "chapter": "shs_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year2", "semester": 2, "week": 3 },
+    "scene": {
+      "background": "bg_barangay_street",
+      "characters": [
+        { "id": "employer", "sprite": "employer_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Supervisor",
+          "text": "Magaling ka sa SHS Work Immersion mo, {name}! Nag-iwan ka ng magandang impresyon. Kung gusto mo ng part-time bago ka mag-college, bukas ang pinto namin.",
+          "textEn": "Great job on your SHS Work Immersion, {name}! You left a strong impression. If you need part-time hours before college, our door is open."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin ang referral letter at extra weekend shift (+₱380).",
+        "textEn": "Accept the recommendation letter and a paid weekend shift (+₱380).",
+        "hint": "+₱380, -Energy, +immersion_commendation",
+        "effects": {
+          "money": 380,
+          "energy": -14,
+          "flagsAdd": ["immersion_commendation"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Kunin ang recommendation letter at umuwi para magpahinga.",
+        "textEn": "Take the recommendation letter and head home to rest.",
+        "hint": "+Energy, +Mental",
+        "effects": {
+          "energy": 14,
+          "mental": 8,
+          "flagsAdd": ["immersion_commendation"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_grad_fee_dilemma",
+    "chapter": "shs_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year2", "semester": 2, "week": 4 },
+    "scene": {
+      "background": "bg_provincial_house",
+      "characters": [
+        { "id": "mama", "sprite": "mama_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Mama",
+          "text": "Anak, dumating na ang sulat para sa SHS Graduation toga rental at grad pic — ₱650 lahat. Tapos next month, enrollan na rin sa college...",
+          "textEn": "Anak, the letter arrived for SHS Graduation toga rental and grad photos — ₱650 total. And next month is college enrollment..."
+        },
+        {
+          "speaker": "Mama",
+          "text": "Sigurado ka bang itutuloy mo ang {course} sa college? Kung gusto mo muna mag-trabaho ng isang taon, maiintindihan naman namin ni Tatay...",
+          "textEn": "Are you sure about pursuing {course} right away? If you want to work first, Tatay and I would understand..."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "'Itutuloy ko ang {course}, Ma! Ako na magbabayad ng toga rental ko!' (-₱650)",
+        "textEn": "'I am pushing through with {course}, Ma! I will cover my own toga fee!' (-₱650)",
+        "hint": "-₱650, ++Family, +Mental",
+        "effects": {
+          "money": -650,
+          "mental": 12,
+          "relationships": { "family": 16 },
+          "flagsAdd": ["self_paid_shs_grad"]
+        },
+        "next": "shs2_grad_decision_commit"
+      },
+      {
+        "text": "Manghiram muna ng toga sa nakaraang batch — ipon natin sa college enrollment! (-₱150)",
+        "textEn": "Borrow a toga from an older batchmate — save the rest for college! (-₱150)",
+        "hint": "-₱150, +Family, +diskarte",
+        "effects": {
+          "money": -150,
+          "mental": 6,
+          "relationships": { "family": 12 },
+          "flagsAdd": ["borrowed_toga"]
+        },
+        "next": "shs2_grad_decision_commit"
+      },
+      {
+        "text": "'Baka mag-stop muna ako para mag-full time trabaho, Ma...'",
+        "textEn": "'Maybe I should stop and work full-time for our family, Ma...'",
+        "hint": "Warning: Leads to Stop-and-Work Ending",
+        "effects": {
+          "flagsAdd": ["stopped_after_shs"],
+          "relationships": { "family": 10 }
+        },
+        "next": "shs2_stop_confirm"
+      }
+    ]
+  },
+  {
+    "id": "shs2_stop_confirm",
+    "chapter": "shs_year2",
+    "once": true,
+    "scene": {
+      "background": "bg_provincial_house",
+      "characters": [
+        { "id": "mama", "sprite": "mama_sad", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Mama",
+          "text": "Anak, sigurado ka ba? Hindi kita pipilitin kung pagod ka na sa gastos — pero pwede pa tayong lumaban kung gusto mong ituloy ang college.",
+          "textEn": "Are you truly sure, anak? I will not force you if the costs feel too heavy — but we can still fight for college if you want to try."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Hindi, Ma — lalaban ako! Papasok ako sa college!",
+        "textEn": "No, Ma — I will fight! I am going to college!",
+        "hint": "Continue to College",
+        "effects": {
+          "flagsRemove": ["stopped_after_shs"],
+          "mental": 8
+        },
+        "next": "shs2_grad_decision_commit"
+      },
+      {
+        "text": "Buo na ang loob ko, Ma. Magtatrabaho muna ako para makabangon tayo.",
+        "textEn": "My mind is made up, Ma. I will work first to lift our family up.",
+        "hint": "Triggers Stop-and-Work Ending",
+        "effects": {
+          "flagsAdd": ["chose_work_over_school"]
+        },
+        "next": "END:stop_and_work"
+      }
+    ]
+  },
+  {
+    "id": "shs2_grad_decision_commit",
+    "chapter": "shs_year2",
+    "once": true,
+    "scene": {
+      "background": "bg_provincial_house",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Mama",
+          "text": "Nakakaiyak ka naman, {name}! Sige, ilaban natin 'yang {course} mo. Kahit barya-barya, makakarating ka rin sa entablado!",
+          "textEn": "You are going to make me cry, {name}! Alright, let us fight for your {course} degree. Even coin by coin, you will reach that stage!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Maghanda na para sa SHS Graduation!",
+        "textEn": "Get ready for SHS Graduation!",
+        "effects": { "mental": 8 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_graduation_day",
+    "chapter": "shs_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "shs_year2", "semester": 2, "week": 6 },
+    "scene": {
+      "background": "bg_graduation_stage",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "SHS GRADUATION DAY! Suot mo ang toga, may sampaguita lei sa leeg, at tinawag ang pangalan mo sa entablado: '{name} — {strand}!'",
+          "textEn": "SHS GRADUATION DAY! Wearing your toga with a fragrant sampaguita lei, your name echoes across the gym: '{name} — {strand}!'"
+        },
+        {
+          "speaker": "Mama",
+          "text": "Anak, ang galing mo! Unang hakbang pa lang 'yan — susunod na ang kolehiyo!",
+          "textEn": "You did amazing, anak! Just the first milestone — next stop, college!"
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Group pic muna! Tandaan niyo, kahit magkahiwa-hiwalay ng course sa college, walang iwanan sa GC ha!",
+          "textEn": "Group photo first! Remember, even with different college courses, nobody leaves the group chat!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Pasalamatan si Mama, barkada, at si Prof. Reyes — College na tayo!",
+        "textEn": "Thank Mama, the barkada, and Prof. Reyes — on to College!",
+        "hint": "+Mental, +Energy, +₱500 graduation gift",
+        "effects": {
+          "money": 500,
+          "energy": 25,
+          "mental": 20,
+          "relationships": { "family": 12, "miggy": 10, "bea": 10, "carlo": 8, "crush": 10 },
+          "flagsAdd": ["shs_graduate"],
+          "journal": {
+            "title": "SHS Graduate!",
+            "titleEn": "SHS Graduate!",
+            "summary": "Nagtapos ka sa Senior High School ({strand})! Handa ka na sa bagong laban sa {course}.",
+            "summaryEn": "Graduated from Senior High School ({strand})! Ready for the {course} chapter.",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_prom_or_shift",
+    "chapter": "shs_year2",
+    "weight": 2,
+    "once": true,
+    "conditions": { "week": { "gte": 3 } },
+    "scene": {
+      "background": "bg_fiesta_night",
+      "characters": [
+        { "id": "crush", "sprite": "crush_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Jamie",
+          "text": "{name}, a-attend ka ba ng Senior Night? ₱450 ang ticket... pero sabi nila once in a lifetime daw 'to.",
+          "textEn": "{name}, are you going to Senior Night? Tickets are ₱450... everyone says it is once in a lifetime."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Oo, Jamie! Sasayaw tayo kahit hiram ang polo/dress! (-₱450)",
+        "textEn": "Yes, Jamie! Let us dance even in borrowed outfits! (-₱450)",
+        "hint": "-₱450, ++Jamie, ++Mental",
+        "effects": {
+          "money": -450,
+          "mental": 18,
+          "social": 12,
+          "relationships": { "crush": 18 },
+          "flagsAdd": ["prom_dance_jamie"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-street food date na lang tayo pagkatapos ng shift ko — mas masaya at tipid! (-₱80)",
+        "textEn": "Let us do a street food hangout after my shift instead — more fun and budget-friendly! (-₱80)",
+        "hint": "-₱80, +Jamie, +Mental",
+        "effects": {
+          "money": -80,
+          "mental": 12,
+          "relationships": { "crush": 14 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_strand_bridge_prep",
+    "chapter": "shs_year2",
+    "weight": 2,
+    "once": true,
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [
+        { "id": "bea", "sprite": "bea_neutral", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "Uy, tiningnan mo na ba ang curriculum ng {course}? May libreng online PDF modules na binigay 'yung alumni natin!",
+          "textEn": "Hey, have you checked the {course} curriculum yet? Our alumni shared free PDF intro modules!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-download at basahin nang maaga para hindi ma-culture shock sa college!",
+        "textEn": "Save and read them early so college doesn't blindside you!",
+        "hint": "+GWA, -Energy",
+        "effects": {
+          "gwa": -0.1,
+          "energy": -8,
+          "flagsAdd": ["college_headstart"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Salamat Bea! Save ko muna sa flash drive.",
+        "textEn": "Thanks Bea! Saving them on my flash drive for later.",
+        "hint": "+Bea",
+        "effects": { "relationships": { "bea": 6 } },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "shs2_family_sendoff",
+    "chapter": "shs_year2",
+    "weight": 2,
+    "once": true,
+    "conditions": { "isProvincial": true, "semester": { "eq": 2 } },
+    "scene": {
+      "background": "bg_provincial_house",
+      "characters": [
+        { "id": "tatay", "sprite": "tatay_worried", "position": "left" },
+        { "id": "mama", "sprite": "mama_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Tatay",
+          "text": "Malapit ka nang lumuwas mula {hometown} papuntang Manila para sa college, {name}. Ingat ka sa mandurukot at lagi kang kumain sa oras ha.",
+          "textEn": "Soon you will leave {hometown} for Manila for college, {name}. Watch out for pickpockets and always eat on time."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Promise po, Tay, Nay! Araw-araw ako magte-text pag-uwi sa boarding house.",
+        "textEn": "I promise, Tay, Nay! I will message every night when I get back to the boarding house.",
+        "hint": "++Family, +Mental",
+        "effects": {
+          "mental": 10,
+          "relationships": { "family": 14 },
+          "flagsAdd": ["provincial_promise"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "course_educ_demo_teaching",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["Education"], "chapter": ["college_year2", "college_year3", "college_year4"] },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [{ "id": "prof", "sprite": "prof_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Demo Teaching Day! Handa na ba ang manila paper, cartolina visual aids, at lesson plan mo, future Teacher {name}?",
+          "textEn": "Demo Teaching Day! Are your handmade visual aids and lesson plan ready, future Teacher {name}?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-deliver ng masiglang interactive lesson! (-₱90 cartolina, ++GWA, +Social)",
+        "textEn": "Deliver an energetic interactive lesson! (-₱90 visual aids, ++GWA, +Social)",
+        "hint": "-₱90, ++GWA, +tutoring_pro",
+        "effects": {
+          "money": -90,
+          "energy": -10,
+          "gwa": -0.15,
+          "social": 12,
+          "flagsAdd": ["tutoring_pro"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-practice pa sa pamamagitan ng paid tutoring gig! (Play Tutoring Quiz)",
+        "textEn": "Sharpen your teaching via a paid tutoring session! (Play Tutoring Quiz)",
+        "hint": "Minigame: +35% Educ Bonus!",
+        "effects": { "gwa": -0.08, "flagsAdd": ["tutoring_pro"] },
+        "triggerMinigame": "tutoring",
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

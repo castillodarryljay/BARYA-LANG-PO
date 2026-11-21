@@ -1,0 +1,5 @@
+{
+  "note": "Drop real PNG files into /public/assets/ matching src/assets/manifest.json filenames and map their IDs here (e.g. \"bg_school_gate\": \"/assets/bg_school_gate.png\") to auto-override the procedural pixel-art renderer.",
+  "backgrounds": {},
+  "sprites": {}
+}

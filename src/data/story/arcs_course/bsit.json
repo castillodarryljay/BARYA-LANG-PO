@@ -1,0 +1,63 @@
+[
+  {
+    "id": "course_bsit_hackathon",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["BSIT"], "chapter": ["college_year1", "college_year2", "college_year3"] },
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [{ "id": "carlo", "sprite": "carlo_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "BSIT Hackathon Alert! 24-hour barangay app challenge — may libreng pizza, kape, at ₱600 cash prize sa Top 3!",
+          "textEn": "BSIT Hackathon Alert! 24-hour barangay app challenge — free pizza, coffee, and ₱600 cash prize for Top 3!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sumali at mag-code buong gabi! (Play Freelance Task)",
+        "textEn": "Join and code through the night! (Play Freelance Task)",
+        "hint": "Minigame + GWA boost + Tech Flag",
+        "effects": { "gwa": -0.1, "flagsAdd": ["hackathon_coder", "ict_freelancer"] },
+        "triggerMinigame": "freelance",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Manood lang ng demos para sa capstone ideas (+GWA).",
+        "textEn": "Watch the demos for capstone inspiration (+GWA).",
+        "effects": { "gwa": -0.05 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "course_bsit_capstone_bug",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["BSIT"], "chapter": ["college_year3", "college_year4"] },
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [{ "id": "bea", "sprite": "bea_worried", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "EMERGENCY! Ayaw gumana ng database migration ng capstone system natin — isang oras na lang bago mock demo!",
+          "textEn": "EMERGENCY! Our capstone database migration just broke one hour before the mock demo!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-debug ang SQL schema at i-restore ang backup! (-Energy, ++GWA)",
+        "textEn": "Debug the schema and restore the local backup! (-Energy, ++GWA)",
+        "hint": "-Energy, ++GWA",
+        "effects": { "energy": -12, "gwa": -0.14, "relationships": { "bea": 10 } },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

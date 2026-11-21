@@ -1,0 +1,70 @@
+[
+  {
+    "id": "course_nursing_capping",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["Nursing"], "chapter": ["college_year2", "college_year3"] },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "left" },
+        { "id": "player", "sprite": "player_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "CAPPING & PINNING CEREMONY! Hawak mo ang maliit na ilawang lampara sa puting clinical uniform mo — opisyal ka nang sasabak sa hospital RLE duty!",
+          "textEn": "CAPPING & PINNING CEREMONY! Holding the Nightingale lamp in your crisp white clinical uniform — you are officially cleared for hospital RLE duty!"
+        },
+        {
+          "speaker": "Mama",
+          "text": "Ang linis tingnan ng puting uniform mo, anak! Ingat lagi sa night shift duty sa ospital ha.",
+          "textEn": "You look radiant in that white uniform, anak! Stay safe on every hospital night shift."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bumili ng matibay na stethoscope at clinical kit (-₱380, ++GWA, +Mental).",
+        "textEn": "Invest in a reliable stethoscope and clinical kit (-₱380, ++GWA, +Mental).",
+        "hint": "-₱380, ++GWA, +nursing_pinned",
+        "effects": {
+          "money": -380,
+          "gwa": -0.14,
+          "mental": 14,
+          "relationships": { "family": 12 },
+          "flagsAdd": ["nursing_pinned"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "course_nursing_rle_duty",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["Nursing"], "chapter": ["college_year3", "college_year4"] },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [{ "id": "prof", "sprite": "prof_worried", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Clinical Instructor",
+          "text": "Return Demonstration at 12-hour Ward Duty! Huwag kakabahan sa vital signs at charting — buhay ng pasyente ang nakasalalay!",
+          "textEn": "Return Demonstration and 12-hour Ward Duty! Keep steady hands on vital signs and charting — patient lives depend on accuracy!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tapusin ang ward duty nang may malasakit at focus (-Energy, ++GWA).",
+        "textEn": "Complete the ward shift with empathy and precision (-Energy, ++GWA).",
+        "hint": "-Energy, ++GWA, +Mental",
+        "effects": { "energy": -16, "gwa": -0.16, "mental": 10, "flagsAdd": ["rle_excellence"] },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

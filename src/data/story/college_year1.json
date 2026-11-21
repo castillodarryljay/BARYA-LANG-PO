@@ -1,0 +1,1089 @@
+[
+  {
+    "id": "college1_arrival",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 1, "week": 1 },
+    "scene": {
+      "background": "bg_manila_street",
+      "characters": [
+        { "id": "player", "sprite": "player_surprised", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "COLLEGE YEAR 1! Maingay ang busina ng jeepney sa U-Belt, malakas ang hangin mula sa LRT, at nakasabit na sa leeg mo ang bagong University ID lanyard para sa {course}!",
+          "textEn": "COLLEGE YEAR 1! Jeepney horns echo down U-Belt, the LRT rattles overhead, and your shiny new {course} university ID lanyard hangs around your neck!"
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Freshie na tayo, {name}! Tingnan mo 'yung pila sa Registrar at Accounting — mas mahaba pa sa pila ng libreng lugaw!",
+          "textEn": "We are officially freshies, {name}! Look at the Registrar and Accounting queue — longer than a free lugaw line!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Pumila nang maaga sa Registrar para makakuha ng magandang schedule!",
+        "textEn": "Queue early at the Registrar to grab good class schedules!",
+        "hint": "-Energy, +GWA, +early_enrollee",
+        "effects": {
+          "energy": -10,
+          "gwa": -0.06,
+          "flagsAdd": ["early_enrollee"],
+          "journal": {
+            "title": "College Freshman ({course})",
+            "titleEn": "College Freshman ({course})",
+            "summary": "Nagsimula ang buhay kolehiyo mo sa {course}! Handa na sa bagong hamon.",
+            "summaryEn": "Started college life in {course}! Ready for the biggest journey yet.",
+            "category": "milestone"
+          }
+        },
+        "next": "college1_boarding_check"
+      },
+      {
+        "text": "Mag-campus tour muna kasama si Miggy para hanapin ang pinakamura na kainan!",
+        "textEn": "Scout campus with Miggy to find the cheapest meal spots first!",
+        "hint": "+Social, +Miggy, +cheap_eats_map",
+        "effects": {
+          "social": 8,
+          "relationships": { "miggy": 10 },
+          "flagsAdd": ["cheap_eats_map"]
+        },
+        "next": "college1_boarding_check"
+      }
+    ]
+  },
+  {
+    "id": "college1_boarding_check",
+    "chapter": "college_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [
+        { "id": "nena", "sprite": "nena_neutral", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Aling Nena",
+          "text": "O, {name}! May bakante pa akong bedspace malapit sa gate — at kung uwian ka naman, bukas pa rin ang carinderia ko para sa budget meals at part-time shifts!",
+          "textEn": "Hey, {name}! I have a bedspace slot near the campus gate — and if you commute, my carinderia is still open for budget meals and shifts!"
+        },
+        {
+          "speaker": "Aling Nena",
+          "text": "Tandaan mo lang ha: bawal ang electric kettle na patago, at bawal ang laging late sa bayad. Pero kapag masipag ka, aalagaan kita.",
+          "textEn": "Just remember: no secret electric kettles, and no skipping rent. Work hard and I will look out for you."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Magbayad ng deposit / meal card nang maayos (-₱400).",
+        "textEn": "Pay the initial deposit / student meal pass cleanly (-₱400).",
+        "hint": "-₱400, +Aling Nena, +Mental",
+        "effects": {
+          "money": -400,
+          "mental": 8,
+          "relationships": { "aling_nena": 14 },
+          "flagsAdd": ["good_tenant"]
+        },
+        "next": "college1_first_day_class"
+      },
+      {
+        "text": "Makiusap na hulugan sa susunod na linggo — kapalit ng tulong sa carinderia.",
+        "textEn": "Ask to pay in installments next week in exchange for kitchen help.",
+        "hint": "Save cash, +Aling Nena, -Energy",
+        "effects": {
+          "energy": -8,
+          "relationships": { "aling_nena": 10 },
+          "flagsAdd": ["carinderia_installment"]
+        },
+        "next": "college1_first_day_class"
+      }
+    ]
+  },
+  {
+    "id": "college1_first_day_class",
+    "chapter": "college_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_neutral", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Welcome sa {course}! Kung akala niyo mahirap na ang SHS, dito niyo makikita ang tunay na laban. Singko kung hindi nag-aaral, uno kung pursigido.",
+          "textEn": "Welcome to {course}! If you thought SHS was tough, wait until midterms here. 5.0 if you slack off, 1.0 if you earn it."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Umupo sa front row at magtanong tungkol sa grading syllabus!",
+        "textEn": "Sit in the front row and ask smart questions about the syllabus!",
+        "hint": "+Prof. Reyes, +GWA",
+        "effects": {
+          "gwa": -0.08,
+          "relationships": { "prof_reyes": 12 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Umupo malapit sa electric fan sa likod — survive muna ang init!",
+        "textEn": "Grab a seat beside the wall fan in back — survive the tropical heat!",
+        "hint": "+Energy, +Mental",
+        "effects": {
+          "energy": 6,
+          "mental": 5
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_org_recruitment",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 1, "week": 2 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_happy", "position": "left" },
+        { "id": "crush", "sprite": "crush_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "ORG FAIR WEEK! {name}, sumali ka sa {course} Society at Student Volunteers! May libreng reviewers mula sa seniors, plus network para sa OJT at scholarships!",
+          "textEn": "ORG FAIR WEEK! {name}, join the {course} Society and Student Volunteers! Free senior reviewers, plus OJT and scholarship connections!"
+        },
+        {
+          "speaker": "Jamie",
+          "text": "Sasali din ako, {name}... ₱120 lang naman ang org fee plus libre na raw ang lanyard!",
+          "textEn": "I am signing up too, {name}... membership is only ₱120 and comes with a lanyard!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sumali sa org kasama sina Carlo at Jamie! (-₱120)",
+        "textEn": "Join the org with Carlo and Jamie! (-₱120)",
+        "hint": "-₱120, +Social, +Carlo, +Jamie, +college_org",
+        "effects": {
+          "money": -120,
+          "social": 14,
+          "relationships": { "carlo": 14, "crush": 12 },
+          "flagsAdd": ["college_org_member"]
+        },
+        "next": "college1_org_welcome"
+      },
+      {
+        "text": "Mag-volunteer sa booth kapalit ng waived membership fee!",
+        "textEn": "Volunteer to run their booth so they waive your membership fee!",
+        "hint": "Free, -Energy, +Carlo, +Social",
+        "effects": {
+          "energy": -10,
+          "social": 12,
+          "relationships": { "carlo": 16 },
+          "flagsAdd": ["college_org_member", "org_volunteer"]
+        },
+        "next": "college1_org_welcome"
+      },
+      {
+        "text": "Pass muna — kailangan ko tipirin ang oras para sa part-time work.",
+        "textEn": "Pass for now — I need every hour for part-time work.",
+        "hint": "+Energy",
+        "effects": {
+          "energy": 8,
+          "relationships": { "carlo": -2 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_org_welcome",
+    "chapter": "college_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_canteen",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_happy", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "Welcome sa org! Eto agad ang secret weapon: Google Drive dump ng past exams at reviewers! Huwag mo lang ipagkalat kay Sir Reyes ha!",
+          "textEn": "Welcome to the org! Here is our secret weapon: an offline archive of past exams and study guides! Just do not tell Sir Reyes!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Salamat Carlo! Solid 'to para sa midterms!",
+        "textEn": "Thanks Carlo! Huge boost for midterms!",
+        "hint": "+GWA",
+        "effects": { "gwa": -0.09, "flagsAdd": ["has_org_reviewers"] },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_first_major_exam",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 1, "week": 3 },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_angry", "position": "left" },
+        { "id": "bea", "sprite": "bea_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "UNANG MAJOR EXAM SA COLLEGE! Tahimik ang buong hall maliban sa tunog ng calculator at electric fan. Parang alien language 'yung Number 4 at 5!",
+          "textEn": "FIRST MAJOR COLLEGE EXAM! The room is dead silent except for clicking calculators and humming fans. Questions 4 and 5 look like alien hieroglyphics!"
+        },
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Ten minutes remaining! Walang titingin sa katabi. Ipakita ninyo kung karapat-dapat kayo sa {course}.",
+          "textEn": "Ten minutes remaining! Eyes on your own booklet. Show me you belong in {course}."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Gamitin ang lahat ng natutunan at i-double check ang bawat solusyon.",
+        "textEn": "Stay calm and double-check every solution methodically.",
+        "hint": "+GWA, -Energy",
+        "effects": {
+          "energy": -12,
+          "gwa": -0.14,
+          "flagsAdd": ["survived_first_major"]
+        },
+        "next": "college1_exam_debrief"
+      },
+      {
+        "text": "Magsulat ng partial credit solutions sa lahat ng hirap na items!",
+        "textEn": "Write neat partial-credit workings on every tough question!",
+        "hint": "+GWA, +Mental",
+        "effects": {
+          "energy": -8,
+          "gwa": -0.08,
+          "mental": 4,
+          "flagsAdd": ["survived_first_major"]
+        },
+        "next": "college1_exam_debrief"
+      }
+    ]
+  },
+  {
+    "id": "college1_exam_debrief",
+    "chapter": "college_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_canteen",
+      "characters": [
+        { "id": "bea", "sprite": "bea_happy", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_sad", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "Grabe 'yung exam na 'yun, parang sinampal ako ng realidad! Tara, mag-palit tayo ng notes bago mag-finals!",
+          "textEn": "That exam slapped my soul straight out of my body! Let us trade notes before finals!"
+        },
+        {
+          "speaker": "Bea",
+          "text": "Okay lang 'yan! Basta hindi tres pababa, buhay pa ang pangarap. Tulungan tayo sa group study!",
+          "textEn": "Deep breaths! As long as we pass, the dream lives. We will carry each other in group study!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-share ang notes mo at patawanin si Miggy.",
+        "textEn": "Share your notes and cheer Miggy up.",
+        "hint": "+Miggy, +Bea, +Mental",
+        "effects": {
+          "mental": 10,
+          "relationships": { "miggy": 10, "bea": 8 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_tuition_deadline",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 1, "week": 4 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "mama", "sprite": "mama_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "TUITION DEADLINE WEEK! May notice sa student portal: 'No Exam Permit without Partial Payment.' Nakipag-video call ka kay Mama sa labas ng gate.",
+          "textEn": "TUITION DEADLINE WEEK! The portal flashes red: 'No Exam Permit without Partial Payment.' You call Mama right outside the school gate."
+        },
+        {
+          "speaker": "Mama",
+          "text": "Anak, may konting pera kami pero kulang pa para sa tuition mo sa {course}. Pasensya na, {name}... susubukan ni Tatay mag-overtime ngayong weekend.",
+          "textEn": "Anak, we scraped some money together, but it is still short for your {course} tuition. I am so sorry, {name}... Tatay is trying to pick up weekend overtime."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-part-time ako ngayong linggo para punan ang kulang! (Working Student)",
+        "textEn": "I will take part-time shifts this week to cover the balance!",
+        "hint": "-Energy, unlocks Job Offer",
+        "effects": {
+          "energy": -12,
+          "relationships": { "family": 12 },
+          "flagsAdd": ["working_student"]
+        },
+        "next": "college1_job_offer"
+      },
+      {
+        "text": "Mangutang muna sa kaklase at mag-promissory note sa Accounting (+₱1,500, utang).",
+        "textEn": "Borrow from a classmate and file a promissory note (+₱1,500 cash now).",
+        "hint": "+₱1,500, -Social, +borrowed_money",
+        "effects": {
+          "money": 1500,
+          "social": -6,
+          "mental": -6,
+          "flagsAdd": ["borrowed_money"]
+        },
+        "next": "college1_utang_consequence"
+      },
+      {
+        "text": "Bayaran agad mula sa sarili mong ipon (-₱1,800).",
+        "textEn": "Pay directly out of your own hard-earned savings (-₱1,800).",
+        "hint": "-₱1,800, ++Family, +Mental",
+        "conditions": { "money": { "gte": 1800 } },
+        "effects": {
+          "money": -1800,
+          "mental": 14,
+          "relationships": { "family": 18 },
+          "flagsAdd": ["tuition_paid_cash"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_job_offer",
+    "chapter": "college_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_manila_street",
+      "characters": [
+        { "id": "employer", "sprite": "employer_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Shift Manager",
+          "text": "Hiring kami ng student crew ngayon! Flexible sa class schedule, may meal stub pa bawat shift. Kaya mo ba ang lunch rush ng fastfood?",
+          "textEn": "We are hiring working-student crew right now! Flexible around classes, plus a free meal stub every shift. Can you handle the lunch rush?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin at mag-trial shift ngayon! (Play Fastfood Crew)",
+        "textEn": "Accept and jump straight into the trial shift! (Play Fastfood Crew)",
+        "hint": "Minigame: Earn ₱ + Crew Flag",
+        "effects": {
+          "flagsAdd": ["fastfood_crew", "working_student"]
+        },
+        "triggerMinigame": "fastfood",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Salamat po! I-schedule ko 'to sa weekly planner ko.",
+        "textEn": "Thank you! I will schedule shifts in my weekly planner.",
+        "hint": "Unlocks Fastfood shifts",
+        "effects": {
+          "flagsAdd": ["fastfood_crew", "working_student"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_utang_consequence",
+    "chapter": "college_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_canteen",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "Bro, alam kong mabigat ang tuition, pero ingat ka sa utang ha — nakakastress 'yan pag sabay-sabay na ang singilan bago finals. Sabihan mo ako pag kailangan mo ng raket!",
+          "textEn": "Hey, I know tuition is brutal, just be careful with borrowing — repayment stress hits hard before finals. Tell me whenever you need a side hustle!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Salamat Miggy, babayaran ko agad 'to sa unang kita ko.",
+        "textEn": "Thanks Miggy, I will pay this back the moment I earn.",
+        "hint": "+Miggy",
+        "effects": { "relationships": { "miggy": 6 } },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_crush_rain",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 1, "week": 5 },
+    "scene": {
+      "background": "bg_rainy_flood",
+      "characters": [
+        { "id": "crush", "sprite": "crush_worried", "position": "right" },
+        { "id": "player", "sprite": "player_neutral", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Biglang bumuhos ang malakas na ulan paglabas ng 6PM class! Stranded ang lahat sa waiting shed at abot-sakong na ang baha sa kanto.",
+          "textEn": "A sudden monsoon downpour hits right after your 6 PM lecture! Everyone crowds under the waiting shed as ankle-deep floodwater pools on the avenue."
+        },
+        {
+          "speaker": "Jamie",
+          "text": "{name}! Wala akong dalang payong at basang-basa na 'yung notes ko... pwedeng makisukob hanggang sakayan ng jeep?",
+          "textEn": "{name}! I forgot my umbrella and my notebooks are soaking... could I share yours to the jeepney stop?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Syempre! I-share ang payong at ilibre ng mainit na sopas sa kanto (-₱70).",
+        "textEn": "Of course! Share your umbrella and grab hot sopas together (-₱70).",
+        "hint": "-₱70, ++Jamie, ++Mental",
+        "effects": {
+          "money": -70,
+          "mental": 14,
+          "relationships": { "crush": 18 },
+          "flagsAdd": ["shared_umbrella_jamie"]
+        },
+        "next": "college1_crush_talk"
+      },
+      {
+        "text": "Ibigay kay Jamie ang payong mo at tumakbo ka sa ulan para protektahan ang notes niya!",
+        "textEn": "Hand Jamie your umbrella and dash through the rain to protect their notes!",
+        "hint": "-Energy, ++Jamie",
+        "effects": {
+          "energy": -14,
+          "mental": 10,
+          "relationships": { "crush": 20 },
+          "flagsAdd": ["shared_umbrella_jamie"]
+        },
+        "next": "college1_crush_talk"
+      }
+    ]
+  },
+  {
+    "id": "college1_crush_talk",
+    "chapter": "college_year1",
+    "once": true,
+    "scene": {
+      "background": "bg_carinderia",
+      "characters": [
+        { "id": "crush", "sprite": "crush_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Jamie",
+          "text": "Alam mo, {name}, sobrang hanga ako sa'yo. Kahit ang hirap ng schedule at budget, hindi ka nagrereklamo nang sobra — laging may ngiti pa rin. Sana sabay tayo hanggang graduation.",
+          "textEn": "You know, {name}, I really admire you. Even with impossible schedules and tight budgets, you still keep smiling. I hope we walk that graduation stage together."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "'Promise, Jamie — sabay tayong mag-toga balang araw!'",
+        "textEn": "'Promise, Jamie — we are wearing those togas together someday!'",
+        "hint": "+Mental, +Jamie",
+        "effects": {
+          "mental": 10,
+          "relationships": { "crush": 10 },
+          "flagsAdd": ["jamie_promise"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_sem1_finals",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 1, "week": 6 },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "bea", "sprite": "bea_happy", "position": "left" },
+        { "id": "prof", "sprite": "prof_neutral", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Tapos na ang 1st Semester Finals ng College Year 1! Nakapaskil na ang class cards at portal grades.",
+          "textEn": "College Year 1, 1st Semester Finals are complete! Grades are posting on the student portal."
+        },
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Unang semestre pa lang 'to, pero malinaw na kung sino ang may grit. Good job sa mga nakapasa — bawi naman sa 2nd sem ang mga nag-alanganin!",
+          "textEn": "Only the first semester, yet grit already shows. Well done to those who passed — bounce back next term if you stumbled!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-check ng grades at magpasalamat sa barkada!",
+        "textEn": "Check your grades and celebrate with the barkada!",
+        "hint": "+Mental, +Social",
+        "effects": {
+          "mental": 12,
+          "social": 8
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_sem2_enrollment",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 2, "week": 1 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "carlo", "sprite": "carlo_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "2nd Semester na! Nakakuha ka ba ng magandang profs? Sabay-sabay na ang minor at major subjects ngayon!",
+          "textEn": "2nd Semester! Did you snag good professors? Majors and minors are stacking up now!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bumili ng secondhand textbooks sa Recto / seniors (-₱280, +GWA).",
+        "textEn": "Buy secondhand textbooks from seniors (-₱280, +GWA).",
+        "hint": "-₱280, +GWA",
+        "effects": {
+          "money": -280,
+          "gwa": -0.1
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Hiram muna sa library at makishare ng PDF sa barkada (Free).",
+        "textEn": "Borrow from the library and share PDFs with friends (Free).",
+        "hint": "Free, +Bea",
+        "effects": {
+          "relationships": { "bea": 6 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_dorm_blackout",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 2, "week": 2 },
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [
+        { "id": "player", "sprite": "player_worried", "position": "left" },
+        { "id": "nena", "sprite": "nena_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "11:30 PM — biglang nag-brownout sa buong street habang may 12AM online submission ka! 14% na lang ang battery ng phone mo!",
+          "textEn": "11:30 PM — sudden brownout hits the entire street with a midnight online submission looming! Your phone is at 14% battery!"
+        },
+        {
+          "speaker": "Aling Nena",
+          "text": "Naku, may emergency powerbank ako dito, {name}! O kaya tumakbo ka muna sa 24-hour study cafe sa kanto!",
+          "textEn": "Oh dear, I have a spare powerbank here, {name}! Or run to the 24-hour study cafe down the block!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Hiramin ang powerbank ni Aling Nena at mag-tether ng mobile data (-₱50 load).",
+        "textEn": "Borrow Aling Nena's powerbank and tether prepaid data (-₱50 load).",
+        "hint": "-₱50, +GWA, +Aling Nena",
+        "effects": {
+          "money": -50,
+          "gwa": -0.07,
+          "relationships": { "aling_nena": 8 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Pumunta sa 24-hour cafe para matapos nang pulido (-₱140 coffee, -Energy).",
+        "textEn": "Head to the 24-hour cafe to polish the paper (-₱140 coffee, -Energy).",
+        "hint": "-₱140, ++GWA, -Energy",
+        "effects": {
+          "money": -140,
+          "energy": -12,
+          "gwa": -0.14
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_sem2_midterms",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 2, "week": 3 },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "bea", "sprite": "bea_neutral", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "Midterms ng 2nd Sem! Ang sabi ng registrar, nag-open ulit ng Academic Scholarship slots para sa may GWA na 1.75 pababa!",
+          "textEn": "2nd Sem Midterms! The registrar announced new Academic Scholarship slots for students maintaining 1.75 GWA or better!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Subukan ang Scholarship Application Quest ngayon!",
+        "textEn": "Attempt the Scholarship Application Quest right now!",
+        "hint": "Minigame: Earn/Renew Scholarship!",
+        "triggerMinigame": "scholarship",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-focus muna sa pagpasa ng midterm exams (+GWA, -Energy).",
+        "textEn": "Focus purely on acing your midterm exams (+GWA, -Energy).",
+        "hint": "+GWA, -Energy",
+        "effects": {
+          "gwa": -0.12,
+          "energy": -10
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_sem2_tuition",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 2, "week": 4 },
+    "scene": {
+      "background": "bg_manila_street",
+      "characters": [
+        { "id": "player", "sprite": "player_worried", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Singilan na naman ng 2nd Semester balance bago Finals! Hawak mo ang assessment form habang nagkukwenta ng bawat barya.",
+          "textEn": "2nd Semester tuition balance is due before Finals! You study the assessment slip, counting every peso."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bayaran ang tuition installment ngayon (-₱1,400).",
+        "textEn": "Pay the tuition installment right now (-₱1,400).",
+        "hint": "-₱1,400, +Mental",
+        "effects": {
+          "money": -1400,
+          "mental": 10,
+          "flagsAdd": ["sem2_tuition_settled"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-raket muna bilang jeepney konduktor / crew para pandagdag! (Play Jeepney Fare)",
+        "textEn": "Hustle an emergency shift to raise cash first! (Play Jeepney Fare)",
+        "hint": "Minigame + Partial payment (-₱800)",
+        "effects": {
+          "money": -800,
+          "flagsAdd": ["promissory_note_used"]
+        },
+        "triggerMinigame": "jeepney",
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_year_end",
+    "chapter": "college_year1",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year1", "semester": 2, "week": 6 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "SURVIVED COLLEGE YEAR 1! Mula sa nakakaligaw na unang araw hanggang sa mga gabing walang tulog — sophomore ka na next sem!",
+          "textEn": "SURVIVED COLLEGE YEAR 1! From getting lost on day one to sleepless exam weeks — you are officially a sophomore next term!"
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Hindi na tayo freshies, {name}! Tatlong taon na lang, martsa na!",
+          "textEn": "No longer freshies, {name}! Three more years and we march!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Magdiwang kasama ang barkada at umuwi muna kay Mama (+Mental, +Energy).",
+        "textEn": "Celebrate with the barkada and visit Mama (+Mental, +Energy).",
+        "hint": "+Mental, +Energy, +Family",
+        "effects": {
+          "energy": 25,
+          "mental": 18,
+          "relationships": { "family": 10, "miggy": 8, "bea": 8 },
+          "flagsAdd": ["survived_year1"],
+          "journal": {
+            "title": "Tapos na ang 1st Year College!",
+            "titleEn": "College Year 1 Complete!",
+            "summary": "Nalampasan mo ang unang taon sa {course} sa kabila ng tuition, puyat, at barya-baryang budget.",
+            "summaryEn": "Survived Freshman year in {course} through tuition crunches, late nights, and tight coins.",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_siomai_survival",
+    "chapter": "college_year1",
+    "weight": 2,
+    "once": true,
+    "conditions": { "money": { "lt": 600 } },
+    "scene": {
+      "background": "bg_carinderia",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "Petsa de peligro na naman! ₱35 siomai rice na may unli chili garlic at sabaw — ang pambansang ulam ng mga college student!",
+          "textEn": "End-of-week broke era again! ₱35 siomai rice with unlimited chili garlic and soup — the national dish of Filipino college students!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Order ng isang siomai rice + extra sabaw (-₱35).",
+        "textEn": "Order siomai rice with free extra soup (-₱35).",
+        "hint": "-₱35, +Energy, +Mental",
+        "effects": { "money": -35, "energy": 14, "mental": 8 },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Tumulong maghugas ng plato kapalit ng libreng adobo meal!",
+        "textEn": "Wash dishes for 20 minutes in exchange for a full adobo meal!",
+        "hint": "Free, ++Energy, +Aling Nena",
+        "effects": { "energy": 16, "relationships": { "aling_nena": 10 } },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_secondhand_laptop",
+    "chapter": "college_year1",
+    "weight": 2,
+    "once": true,
+    "conditions": { "money": { "gte": 1200 }, "flagsNone": ["owns_laptop"] },
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "{name}! Binebenta ng graduating senior natin 'yung secondhand laptop niya sa ₱1,500 lang (hulugan o cash) — may konting gasgas pero mabilis pa pang-Word, Excel, at freelance!",
+          "textEn": "{name}! A graduating senior is selling a secondhand laptop for just ₱1,500 — scratched lid, but still fast for papers and freelance gigs!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bilhin ang secondhand laptop! (-₱1,500, unlocks Freelance Gigs!)",
+        "textEn": "Buy the secondhand laptop! (-₱1,500, unlocks Freelance Gigs!)",
+        "hint": "-₱1,500, Unlocks Freelance + GWA boost",
+        "effects": {
+          "money": -1500,
+          "gwa": -0.1,
+          "flagsAdd": ["owns_laptop"],
+          "journal": {
+            "title": "Unang Secondhand Laptop",
+            "titleEn": "First Secondhand Laptop",
+            "summary": "Nakabili ka ng secondhand laptop mula sa senior — bukas na ang freelance gigs!",
+            "summaryEn": "Bought a secondhand laptop from a senior — freelance gigs are now unlocked!",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Pass muna — stick na lang sa computer lab ng school.",
+        "textEn": "Pass for now — I will keep using the campus computer lab.",
+        "effects": { "mental": 2 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_classmate_in_need",
+    "chapter": "college_year1",
+    "weight": 2,
+    "once": true,
+    "scene": {
+      "background": "bg_jeepney_interior",
+      "characters": [
+        { "id": "bea", "sprite": "bea_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "{name}, naiwan ko sa boarding house 'yung coin purse ko! Pwede bang makihiram ng ₱100 pamasahe at pang-photocopy? Babayaran ko rin sa Lunes!",
+          "textEn": "{name}, I left my coin purse at the dorm! Could I borrow ₱100 for fare and photocopies? I will pay you back Monday!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Eto ₱100, Bea! Tulungan tayo dito.",
+        "textEn": "Here is ₱100, Bea! We have each other's backs.",
+        "hint": "-₱100, ++Bea, +helped_classmate",
+        "effects": {
+          "money": -100,
+          "relationships": { "bea": 16 },
+          "flagsAdd": ["helped_classmate"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "₱40 lang kaya ko i-share ngayon, sakto lang din pera ko eh.",
+        "textEn": "I can only spare ₱40 right now, my wallet is razor-thin too.",
+        "hint": "-₱40, +Bea",
+        "effects": {
+          "money": -40,
+          "relationships": { "bea": 8 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_prof_mentorship",
+    "chapter": "college_year1",
+    "weight": 2,
+    "once": true,
+    "conditions": { "gwa": { "lte": 2.0 } },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "prof", "sprite": "prof_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "{name}, maganda ang class standing mo ngayong semestre. May student assistant opening sa department next week — may maliit na allowance at free printing!",
+          "textEn": "{name}, your standing this semester is impressive. There is a student assistant opening next week — comes with a stipend and free printing!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin ang Student Assistant gig! (+₱420, +GWA, -Energy)",
+        "textEn": "Accept the Student Assistant gig! (+₱420, +GWA, -Energy)",
+        "hint": "+₱420, +Prof. Reyes, +GWA",
+        "effects": {
+          "money": 420,
+          "energy": -12,
+          "gwa": -0.08,
+          "relationships": { "prof_reyes": 15 },
+          "flagsAdd": ["student_assistant"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Magpasalamat pero ipaubaya sa mas nangangailangan.",
+        "textEn": "Thank Sir kindly and pass it to a classmate who needs it more.",
+        "hint": "+Mental, +Social",
+        "effects": { "mental": 10, "social": 8, "relationships": { "prof_reyes": 6 } },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_barkada_karaoke",
+    "chapter": "college_year1",
+    "weight": 2,
+    "once": true,
+    "scene": {
+      "background": "bg_fiesta_night",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "carlo", "sprite": "carlo_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "Stress reliever! ₱5 per song lang sa videoke sa kanto — kakanta daw si Carlo ng Eraserheads!",
+          "textEn": "Stress relief time! ₱5 per song at the corner videoke — Carlo is about to belt Eraserheads!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Maki-duet at mag-enjoy nang isang oras! (-₱55)",
+        "textEn": "Belt out a duet and unwind for an hour! (-₱55)",
+        "hint": "-₱55, ++Mental, ++Social",
+        "effects": {
+          "money": -55,
+          "mental": 18,
+          "social": 14,
+          "relationships": { "miggy": 10, "carlo": 10 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Manood lang nang sandali tapos balik review sa dorm.",
+        "textEn": "Cheer for one song then head back to review.",
+        "hint": "Free, +Mental, +GWA",
+        "effects": { "mental": 6, "gwa": -0.05 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_free_seminar_food",
+    "chapter": "college_year1",
+    "weight": 2,
+    "once": true,
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "ALERT! May libreng career seminar sa auditorium — at ang balita ko, may libreng Jolli-spaghetti at certificate para sa attendees!",
+          "textEn": "ALERT! Free career seminar at the auditorium — word is there is free packed spaghetti and an attendance certificate!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Takbo sa auditorium! Libreng pagkain at learning!",
+        "textEn": "Sprint to the auditorium! Free food and a certificate!",
+        "hint": "+Energy, +Mental, +GWA",
+        "effects": { "energy": 14, "mental": 8, "gwa": -0.05 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_family_care_package",
+    "chapter": "college_year1",
+    "weight": 2,
+    "once": true,
+    "conditions": { "isProvincial": true },
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Dumating ang padalang kahon mula {hometown}! May limang kilong bigas, tuyo, longganisa, at maikling sulat ni Mama: 'Kain nang maayos, anak. Proud kami sa'yo.'",
+          "textEn": "A care box arrived from {hometown}! Five kilos of rice, dried fish, homemade longganisa, and Mama's handwritten note: 'Eat well, anak. We are so proud of you.'"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tawagan si Mama nang maluha-luha at magluto ng masarap na hapunan!",
+        "textEn": "Call Mama with happy tears and cook a real home-style dinner!",
+        "hint": "+₱350 saved, ++Mental, ++Energy, +Family",
+        "effects": {
+          "money": 350,
+          "energy": 18,
+          "mental": 18,
+          "relationships": { "family": 14 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college1_side_hustle_pitch",
+    "chapter": "college_year1",
+    "weight": 2,
+    "once": true,
+    "scene": {
+      "background": "bg_sari_sari",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "Bro, ubos lagi 'yung printing at ballpen sa loob ng building! Mag-tinda tayo ng yellow pad, scantron, at bottled water bago exam weeks!",
+          "textEn": "Hey, campus stalls always run out of yellow pads and scantrons on exam weeks! Let us sell a mini survival kit!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Game! Simulan ang campus supplies hustle! (Play Tusok-Tusok)",
+        "textEn": "Let us do it! Launch the campus supplies hustle! (Play Selling Game)",
+        "hint": "Minigame + Entrepreneur Flag",
+        "effects": { "flagsAdd": ["student_hustler", "business_instinct"] },
+        "triggerMinigame": "tusok",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Baka next week na lang, tambak pa readings ko.",
+        "textEn": "Maybe next week, buried in readings right now.",
+        "effects": { "gwa": -0.04 },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

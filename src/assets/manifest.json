@@ -1,0 +1,250 @@
+{
+  "stylePrefix": "HD pixel art, 16-bit/32-bit modern indie visual novel aesthetic, crisp nearest-neighbor pixels, warm tropical Philippine sunlight and twilight color palette, rich environmental detail, no anti-aliasing blur, no text, no watermark",
+  "backgrounds": [
+    {
+      "id": "bg_provincial_house",
+      "category": "background",
+      "filename": "bg_provincial_house.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#f59e0b", "#7c2d12", "#15803d", "#fef3c7", "#3b82f6"],
+      "prompt": "Warm Filipino provincial ancestral/concrete-and-wood house interior and porch at golden morning, capiz shell windows, electric fan, calendar on wall, rice fields and coconut palms visible outside, steaming pandesal on table"
+    },
+    {
+      "id": "bg_barangay_street",
+      "category": "background",
+      "filename": "bg_barangay_street.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#38bdf8", "#f97316", "#64748b", "#16a34a", "#fde68a"],
+      "prompt": "Lively Philippine barangay street in sunny morning, colorful tricycles parked, basketball court hoop in distance, tangled electrical wires, tropical bougainvillea over concrete fences, small sari-sari store awning"
+    },
+    {
+      "id": "bg_jeepney_interior",
+      "category": "background",
+      "filename": "bg_jeepney_interior.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#dc2626", "#facc15", "#1e3a8a", "#475569", "#fef08a"],
+      "prompt": "First-person perspective inside a classic Philippine jeepney, stainless steel handrails, red and yellow upholstered benches, small hanging rosaries and 'Barya lang po sa umaga' sign, warm afternoon sunlight streaming through open windows"
+    },
+    {
+      "id": "bg_school_gate",
+      "category": "background",
+      "filename": "bg_school_gate.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#2563eb", "#dc2626", "#facc15", "#f8fafc", "#15803d"],
+      "prompt": "Philippine public high school and state university concrete gate arch at sunrise, Philippine flag waving proudly on tall flagpole, acacia trees lining the walkway, guard house, students walking in white and navy uniforms"
+    },
+    {
+      "id": "bg_classroom",
+      "category": "background",
+      "filename": "bg_classroom.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#14532d", "#fef9c3", "#92400e", "#e2e8f0", "#38bdf8"],
+      "prompt": "Classic Philippine classroom interior, green chalkboard with chalk dust, wooden armchairs in rows, spinning ceiling fans, jalousie glass windows letting in warm afternoon sun, framed Jose Rizal portrait above blackboard"
+    },
+    {
+      "id": "bg_canteen",
+      "category": "background",
+      "filename": "bg_canteen.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#ea580c", "#fef3c7", "#78350f", "#ef4444", "#22c55e"],
+      "prompt": "Bustling Philippine school canteen at lunch recess, glass display counter with turon, banana cue, pansit, and stainless steel trays, long wooden benches, hanging menu board with affordable student prices"
+    },
+    {
+      "id": "bg_computer_lab",
+      "category": "background",
+      "filename": "bg_computer_lab.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#0f172a", "#38bdf8", "#22c55e", "#334155", "#f8fafc"],
+      "prompt": "Philippine university computer laboratory with rows of desktop monitors glowing softly with code and spreadsheets, humming split-type aircon, whiteboard with flowchart diagrams, cool indoor lighting"
+    },
+    {
+      "id": "bg_library",
+      "category": "background",
+      "filename": "bg_library.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#78350f", "#f59e0b", "#fef3c7", "#1e293b", "#059669"],
+      "prompt": "Quiet Philippine university library in late afternoon, tall wooden bookshelves packed with textbooks and bound theses, study tables with yellow pad papers, highlighters, and warm desk lamps"
+    },
+    {
+      "id": "bg_sari_sari",
+      "category": "background",
+      "filename": "bg_sari_sari.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#dc2626", "#facc15", "#16a34a", "#f97316", "#1e1b4b"],
+      "prompt": "Neighborhood Philippine sari-sari store at dusk, metal security grille window hung with colorful shampoo sachets, snack packs, canned goods, warm yellow incandescent bulb glowing over wooden counter"
+    },
+    {
+      "id": "bg_carinderia",
+      "category": "background",
+      "filename": "bg_carinderia.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#d97706", "#b91c1c", "#fef3c7", "#451a03", "#15803d"],
+      "prompt": "Cozy roadside Philippine carinderia eatery, steaming stainless kaldero pots of adobo and sinigang behind glass case, plastic monoblock chairs, electric fan, checkered oilcloth tables, warm evening glow"
+    },
+    {
+      "id": "bg_boarding_house",
+      "category": "background",
+      "filename": "bg_boarding_house.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#1e293b", "#f59e0b", "#94a3b8", "#7c2d12", "#fef08a"],
+      "prompt": "Small Metro Manila student boarding house room at night, double-deck bed, small desk stacked with notebooks and instant noodle cups, clip-on desk fan, window overlooking glowing city apartment roofs"
+    },
+    {
+      "id": "bg_manila_street",
+      "category": "background",
+      "filename": "bg_manila_street.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#f97316", "#7c3aed", "#1e293b", "#facc15", "#ef4444"],
+      "prompt": "University Belt Manila street at golden sunset rush hour, elevated LRT train track above, colorful jeepneys with glowing headlights, photocopier and printing stalls, bustling sidewalks with students"
+    },
+    {
+      "id": "bg_rainy_flood",
+      "category": "background",
+      "filename": "bg_rainy_flood.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#1e3a5f", "#475569", "#94a3b8", "#facc15", "#0f172a"],
+      "prompt": "Dramatic typhoon monsoon rain over flooded Manila street at dusk, ankle-deep water reflecting warm streetlight ripples, slanting pixel rain streaks, colorful umbrellas, stranded jeepney lights"
+    },
+    {
+      "id": "bg_fiesta_night",
+      "category": "background",
+      "filename": "bg_fiesta_night.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#1e1b4b", "#f59e0b", "#ef4444", "#22c55e", "#38bdf8"],
+      "prompt": "Festive Philippine barangay fiesta night plaza, overhead crisscrossing colorful paper banderitas flags, glowing string bulbs, food stalls with sizzling barbecue smoke, church facade illuminated in background"
+    },
+    {
+      "id": "bg_christmas_parol",
+      "category": "background",
+      "filename": "bg_christmas_parol.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#0f172a", "#eab308", "#dc2626", "#16a34a", "#38bdf8"],
+      "prompt": "Magical Philippine December night street, glowing star-shaped capiz parol lanterns hanging from every porch, warm bibingka and puto bumbong stall emitting fragrant steam, twinkling lights"
+    },
+    {
+      "id": "bg_graduation_stage",
+      "category": "background",
+      "filename": "bg_graduation_stage.png",
+      "width": 1280,
+      "height": 720,
+      "palette": ["#1e3a8a", "#f59e0b", "#fef9c3", "#dc2626", "#f8fafc"],
+      "prompt": "Triumphant Philippine university graduation auditorium stage, deep royal blue velvet curtains, golden sunlight rays, floral garlands and sampaguita leis, proud podium and rows of cheering families"
+    }
+  ],
+  "sprites": [
+    {
+      "id": "player_male",
+      "category": "sprite",
+      "filename": "player_male_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#d99b66", "#1e293b", "#f8fafc", "#1e3a8a", "#92400e"],
+      "prompt": "Half-body pixel art portrait of a friendly Filipino male student in crisp white polo school uniform with navy collar, ID lanyard, warm brown skin, neat black hair, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "player_female",
+      "category": "sprite",
+      "filename": "player_female_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#d99b66", "#1e293b", "#f8fafc", "#1e3a8a", "#b45309"],
+      "prompt": "Half-body pixel art portrait of a resilient Filipino female student in crisp white school blouse with navy ribbon tie, ID lanyard, warm brown skin, shoulder-length black hair, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "mama",
+      "category": "sprite",
+      "filename": "mama_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#c68652", "#7c2d12", "#f59e0b", "#fef3c7", "#334155"],
+      "prompt": "Half-body pixel art portrait of a loving Filipino mother in her late 40s wearing a patterned floral daster or neat blouse, hair tied in a bun, gentle determined eyes, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "tatay",
+      "category": "sprite",
+      "filename": "tatay_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#b57442", "#1e293b", "#3f6212", "#cbd5e1", "#78350f"],
+      "prompt": "Half-body pixel art portrait of a hardworking Filipino father in his late 40s wearing a faded collared shirt and warm proud smile, tanned skin, short salt-and-pepper hair, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "miggy",
+      "category": "sprite",
+      "filename": "miggy_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#d99b66", "#dc2626", "#facc15", "#1e293b", "#f8fafc"],
+      "prompt": "Half-body pixel art portrait of Miggy, cheerful Filipino male barkada friend wearing school uniform with unbuttoned overshirt and cheeky grin, messy spiky hair, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "bea",
+      "category": "sprite",
+      "filename": "bea_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#e0ac7c", "#0f766e", "#f8fafc", "#1e293b", "#f59e0b"],
+      "prompt": "Half-body pixel art portrait of Bea, smart Filipino female honor student with round glasses, neat ponytail, holding a highlighter and notebook, warm supportive expression, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "carlo",
+      "category": "sprite",
+      "filename": "carlo_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#c68652", "#2563eb", "#f8fafc", "#1e293b", "#f97316"],
+      "prompt": "Half-body pixel art portrait of Carlo, charismatic Filipino student org officer wearing an org lanyard and varsity-style jacket over uniform, confident friendly smile, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "crush",
+      "category": "sprite",
+      "filename": "crush_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#e0ac7c", "#9333ea", "#f8fafc", "#1e293b", "#f472b6"],
+      "prompt": "Half-body pixel art portrait of Jamie, gentle Filipino classmate and love interest in neat school uniform with soft cardigan, warm expressive eyes, slight blush, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "prof",
+      "category": "sprite",
+      "filename": "prof_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#c68652", "#334155", "#e2e8f0", "#7f1d1d", "#0f172a"],
+      "prompt": "Half-body pixel art portrait of Prof. Reyes, strict Filipino college professor wearing a crisp barong-style polo and rectangular spectacles, holding a red grading pen and class record, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "nena",
+      "category": "sprite",
+      "filename": "nena_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#c68652", "#b45309", "#fef08a", "#dc2626", "#451a03"],
+      "prompt": "Half-body pixel art portrait of Aling Nena, stern but kind-hearted Filipino carinderia owner and landlady in her 50s wearing a colorful apron and coin pouch, holding a ladle, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    },
+    {
+      "id": "employer",
+      "category": "sprite",
+      "filename": "employer_neutral.png",
+      "width": 128,
+      "height": 256,
+      "palette": ["#d99b66", "#15803d", "#facc15", "#1e293b", "#f8fafc"],
+      "prompt": "Half-body pixel art portrait of a Filipino fastfood shift manager / small-business employer wearing a collared work polo and visor cap, brisk approachable smile, transparent background (variants: neutral, happy, sad, angry, worried, surprised)"
+    }
+  ]
+}

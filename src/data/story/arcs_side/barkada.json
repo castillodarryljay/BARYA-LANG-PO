@@ -1,0 +1,119 @@
+[
+  {
+    "id": "side_barkada_unli_wings",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "relationships": { "miggy": { "gte": 35 } } },
+    "scene": {
+      "background": "bg_carinderia",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "BARKADA BONDING! Nakakuha ako ng raket bonus — hati-hati tayo sa budget pares at mami sa kanto! Walang usapang acads for 2 hours!",
+          "textEn": "BARKADA BONDING! I got a side-gig bonus — let us split beef pares and mami at the corner! Zero academics talk for 2 hours!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "G! Ambag ako ng ₱60 para sa softdrinks at rice! (+Barkada, ++Mental)",
+        "textEn": "In! Pitch in ₱60 for drinks and extra rice! (+Barkada, ++Mental)",
+        "hint": "-₱60, ++Mental, ++Barkada",
+        "effects": {
+          "money": -60,
+          "mental": 18,
+          "social": 14,
+          "relationships": { "miggy": 12, "bea": 10, "carlo": 10 },
+          "flagsAdd": ["barkada_solid"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Libre na raw ni Miggy, so tubig lang ako pero full presence! (+Barkada)",
+        "textEn": "Just water for me, but 100% present for the laughs! (+Barkada)",
+        "hint": "Free, +Mental, +Barkada",
+        "effects": {
+          "mental": 14,
+          "social": 10,
+          "relationships": { "miggy": 10, "bea": 8 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "side_barkada_miggy_crisis",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "relationships": { "miggy": { "gte": 45 } } },
+    "scene": {
+      "background": "bg_barangay_street",
+      "characters": [{ "id": "miggy", "sprite": "miggy_sad", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "{name}... ngayon lang ako magiging seryoso. Kinukulang ako ng ₱300 sa exam permit bukas. Nahihiya na ako kay Bea... pwede ba akong makihiram hanggang next week?",
+          "textEn": "{name}... dropping the jokes for once. I am ₱300 short on my exam permit tomorrow. Too embarrassed to ask Bea... could you spot me until next week?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Eto ₱300, Miggy! Walang iwanan sa barkada! (-₱300, ++Miggy)",
+        "textEn": "Here is ₱300, Miggy! Nobody gets left behind! (-₱300, ++Miggy)",
+        "hint": "-₱300, ++Miggy, +helped_miggy",
+        "effects": {
+          "money": -300,
+          "mental": 8,
+          "relationships": { "miggy": 24 },
+          "flagsAdd": ["helped_miggy", "helped_classmate"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Wala rin akong ₱300, pero samahan kitang mag-part-time shift ngayon! (Play Jeepney Fare)",
+        "textEn": "I am broke too, so let us hustle a shift together right now! (Play Jeepney Fare)",
+        "hint": "Minigame + ++Miggy",
+        "effects": {
+          "relationships": { "miggy": 20 },
+          "flagsAdd": ["helped_miggy"]
+        },
+        "triggerMinigame": "jeepney",
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "side_barkada_miggy_repay",
+    "chapter": "side",
+    "weight": 4,
+    "once": true,
+    "conditions": { "flagsAll": ["helped_miggy"] },
+    "scene": {
+      "background": "bg_canteen",
+      "characters": [{ "id": "miggy", "sprite": "miggy_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "UTANG PAID WITH INTEREST! Eto ₱450, {name} — nakabenta ako ng sneakers ng pinsan ko at nakapasa sa exam dahil sa'yo! Solid ka talaga!",
+          "textEn": "DEBT PAID WITH INTEREST! Here is ₱450, {name} — I flipped my cousin's shoes and passed the exam thanks to you! Real one forever!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sabi ko na nga ba maaasahan ka, bro! (+₱450, ++Mental)",
+        "textEn": "Knew I could always count on you, bro! (+₱450, ++Mental)",
+        "hint": "+₱450, ++Mental",
+        "effects": { "money": 450, "mental": 14, "relationships": { "miggy": 10 } },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "course_hm_culinary_banquet",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["Hospitality"], "chapter": ["college_year1", "college_year2", "college_year3"] },
+    "scene": {
+      "background": "bg_carinderia",
+      "characters": [{ "id": "nena", "sprite": "nena_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Aling Nena",
+          "text": "Hospitality Management ka pala, {name}! May malaking catering order ako para sa barangay seminar — tulungan mo ako sa plating at service, doble ang tip!",
+          "textEn": "Hospitality Management major, {name}! I landed a big barangay catering order — help me with plating and service for double pay!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Akin na ang apron, Aling Nena! (Play Carinderia Rush)",
+        "textEn": "Hand me the apron, Aling Nena! (Play Carinderia Rush)",
+        "hint": "Minigame: +30% Hospitality Bonus!",
+        "effects": { "gwa": -0.08, "relationships": { "aling_nena": 14 } },
+        "triggerMinigame": "carinderia",
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

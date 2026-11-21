@@ -1,0 +1,30 @@
+[
+  {
+    "id": "course_bsba_feasib_pitch",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["BSBA"], "chapter": ["college_year2", "college_year3", "college_year4"] },
+    "scene": {
+      "background": "bg_canteen",
+      "characters": [{ "id": "employer", "sprite": "employer_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Business Mentor",
+          "text": "Maganda ang BSBA Feasibility Study mo, {name}! Subukan mong i-test market ang product mo sa campus ngayong linggo!",
+          "textEn": "Your BSBA Feasibility Study has real traction, {name}! Test-market your product on campus this week!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-launch ang test market booth! (Play Tusok-Tusok)",
+        "textEn": "Launch the campus test-market booth! (Play Selling Game)",
+        "hint": "Minigame: +25% BSBA Profit + Entrepreneur Flag",
+        "effects": { "gwa": -0.1, "flagsAdd": ["student_hustler", "business_instinct"] },
+        "triggerMinigame": "tusok",
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

@@ -1,0 +1,192 @@
+[
+  {
+    "id": "cum_laude_broke",
+    "title": "Cum Laude, Broke but Proud",
+    "titleEn": "Cum Laude, Broke but Proud",
+    "subtitle": "Walang laman ang wallet, pero nagniningning ang medalya sa dibdib.",
+    "subtitleEn": "Empty wallet, gleaming honor medal on your chest.",
+    "badge": "HONORS",
+    "accentColor": "#f59e0b",
+    "background": "bg_graduation_stage",
+    "priority": 100,
+    "conditions": {
+      "gwa": { "lte": 1.65 }
+    },
+    "epilogue": [
+      "Pagtawag ng 'Cum Laude' kasunod ng pangalan mo, napaluha si Mama habang sinasabit ang gintong medalya sa leeg mo.",
+      "Dalawang daang piso na lang ang laman ng coin purse mo — sakto lang sa jeep at siomai rice pauwi. Pero bawat puyat, bawat barya, at bawat pagtitiis sa {course} ay nagbunga.",
+      "Sa entablado, ngumiti ka sa pamilya mo at sa barkada. Broke ka man ngayon, pero hindi ka sumuko — at simula pa lang ito ng mas magandang buhay."
+    ],
+    "epilogueEn": [
+      "When 'Cum Laude' echoed right after your name, Mama burst into tears as she draped the gold medal over your shoulders.",
+      "Only ₱200 remained in your coin purse — just enough for jeepney fare and siomai rice home. Yet every sleepless night, every coin counted, and every battle in {course} paid off.",
+      "On stage, you smiled at your family and barkada. Broke today, unbroken forever — and your real future starts now."
+    ]
+  },
+  {
+    "id": "student_entrepreneur",
+    "title": "Student Entrepreneur",
+    "titleEn": "Student Entrepreneur",
+    "subtitle": "Mula barya-baryang tusok-tusok at raket hanggang sariling negosyo!",
+    "subtitleEn": "From pocket-change campus hustles to your very own business!",
+    "badge": "HIDDEN",
+    "accentColor": "#10b981",
+    "background": "bg_sari_sari",
+    "priority": 95,
+    "conditions": {
+      "money": { "gte": 6500 },
+      "flagsAny": ["student_hustler", "business_instinct", "food_entrepreneur", "abm_bookkeeper", "ict_freelancer"]
+    },
+    "epilogue": [
+      "Hindi ka lang naka-graduate sa {course} — may sarili ka nang maliit na negosyo at maayos na ipon bago ka pa bumaba ng entablado!",
+      "Nagsimula lang ang lahat sa pagtitinda ng school supplies, pag-budget ng barya, at walang sawang diskarte. Ngayon, may mga kapwa working students ka nang natutulungan sa pamamagitan ng raket na binuo mo.",
+      "Sabi ni Aling Nena habang nakangiti: 'Sabi ko na nga ba, hindi ka lang magtatapos — aasenso ka!'"
+    ],
+    "epilogueEn": [
+      "You didn't just graduate from {course} — you walked off the stage with real savings and a thriving small business!",
+      "It all began with loose coins, campus snacks, freelance hustle, and sharp budgeting. Now you're even giving fellow working students part-time work.",
+      "Aling Nena grinned proudly: 'I knew it — you wouldn't just graduate, you'd build something of your own!'"
+    ]
+  },
+  {
+    "id": "scholar_ending",
+    "title": "Iskolar Hanggang Dulo",
+    "titleEn": "Scholar to the Finish Line",
+    "subtitle": "Naalagaan mo ang scholarship mo mula simula hanggang martsa!",
+    "subtitleEn": "You protected your scholarship all the way to graduation!",
+    "badge": "SCHOLAR",
+    "accentColor": "#3b82f6",
+    "background": "bg_graduation_stage",
+    "priority": 90,
+    "conditions": {
+      "flagsAll": ["active_scholar"],
+      "flagsNone": ["scholarship_lost"],
+      "gwa": { "lte": 1.85 }
+    },
+    "epilogue": [
+      "Walong semestre ng kaba tuwing release ng grades — pero ni minsan hindi mo binitawan ang maintaining GWA ng scholarship mo!",
+      "Wala kang iniwang utang sa tuition at natulungan mo pang makahinga sina Mama at Tatay sa gastusin sa {hometown}.",
+      "Habang hawak mo ang diploma mo sa {course}, alam mong hindi nasayang ang tiwala ng bayan at ng pamilya mo."
+    ],
+    "epilogueEn": [
+      "Eight semesters of holding your breath before grades posted — yet you never lost your scholarship maintaining GWA!",
+      "You graduated tuition-debt free and lifted a huge weight off your family back in {hometown}.",
+      "Holding your {course} diploma, you know every exam and sleepless review honored the trust placed in you."
+    ]
+  },
+  {
+    "id": "board_exam_hopeful",
+    "title": "Board Exam Hopeful",
+    "titleEn": "Board Exam Hopeful",
+    "subtitle": "Graduate na — susunod na ang lisensya at tatlong letra sa pangalan!",
+    "subtitleEn": "Graduated — next stop: the PRC license and your dream title!",
+    "badge": "PRC BOUND",
+    "accentColor": "#06b6d4",
+    "background": "bg_library",
+    "priority": 85,
+    "conditions": {
+      "course": ["Nursing", "Education", "Engineering", "Criminology", "Psychology"],
+      "gwa": { "lte": 2.35 }
+    },
+    "epilogue": [
+      "Tapos na ang {course} graduation — pero hindi pa tapos ang pangarap! Kinabukasan pa lang, naka-ready na ulit ang highlighters, review books, at pulang underwear pang-suwerte sa board exam.",
+      "Sabi ni Prof. Reyes bago ka umalis ng campus: 'Kita tayo sa oath-taking, future licensed professional!'",
+      "Kahit tipid pa rin sa review center budget, dala mo ang tibay ng loob na hinubog ng apat na taong paglaban."
+    ],
+    "epilogueEn": [
+      "{course} graduation is complete — and the next dream is already calling! The very next morning, your highlighters, reviewers, and lucky red charm are ready for board review.",
+      "Prof. Reyes smiled before you left campus: 'See you at the PRC oath-taking, future licensed professional!'",
+      "Still stretching every peso for review books, you carry the grit forged across four unforgettable years."
+    ]
+  },
+  {
+    "id": "shifted_course_ending",
+    "title": "Shifted, Delayed, pero Graduate!",
+    "titleEn": "Shifted Course, Still Made It!",
+    "subtitle": "Hindi karera ang kolehiyo — ang mahalaga, natagpuan mo ang tamang daan.",
+    "subtitleEn": "College is not a race — what matters is finding the path meant for you.",
+    "badge": "RESILIENT",
+    "accentColor": "#a855f7",
+    "background": "bg_graduation_stage",
+    "priority": 80,
+    "conditions": {
+      "flagsAll": ["shifted_course"]
+    },
+    "epilogue": [
+      "Nauna nang nag-martsa ang ibang batchmates mo nang lumipat ka sa {course}. May mga gabing nagduda ka sa sarili mo habang nag-aayos ng irregular subjects.",
+      "Pero ngayon, hawak mo na ang diploma sa kursong tunay na swak sa puso at lakas mo. Kasama mo pa rin sina Mama at ang barkada na pumapalakpak sa unang hanay.",
+      "Delayed? Siguro. Worth it? Sobra-sobra."
+    ],
+    "epilogueEn": [
+      "Some of your original batchmates marched earlier after you shifted into {course}. There were lonely nights juggling irregular schedules.",
+      "Yet today you hold a diploma in the field that truly fits your heart and strengths, with Mama and your barkada cheering from the front row.",
+      "Delayed? Maybe. Worth it? One hundred percent."
+    ]
+  },
+  {
+    "id": "graduate_with_debts",
+    "title": "Utang pero Graduate",
+    "titleEn": "Graduate with Debts",
+    "subtitle": "May promissory note at utang pa, pero hawak mo na ang diploma!",
+    "subtitleEn": "Promissory notes and debts remain, yet the diploma is yours!",
+    "badge": "SURVIVOR",
+    "accentColor": "#f97316",
+    "background": "bg_manila_street",
+    "priority": 60,
+    "conditions": {
+      "money": { "lt": 500 }
+    },
+    "epilogue": [
+      "Ilang promissory note, pakiusap sa accounting office, at utang sa boarding house ang nilampasan mo — pero NAKA-GRADUATE KA SA {course}!",
+      "May listahan pa ng babayaran sa unang sahod mo, pero unang-una sa listahan mo ang masarap na kainan kasama si Mama at pagbabayad ng utang nang may dignidad.",
+      "Barya lang noon, mabigat ang utang minsan — pero nanalo ka sa laban."
+    ],
+    "epilogueEn": [
+      "Countless promissory notes, accounting office pleas, and overdue rent notices later — you STILL GRADUATED in {course}!",
+      "You already have a budget notebook listing who to repay from your first paycheck, starting with a proper family feast for Mama.",
+      "Scraped by on coins and grit, you crossed the finish line on your own two feet."
+    ]
+  },
+  {
+    "id": "stop_and_work",
+    "title": "Stop-and-Work (Babalik Ako)",
+    "titleEn": "Stop-and-Work (I Will Return)",
+    "subtitle": "Pinili mong tumayo para sa pamilya — hindi ito katapusan ng pangarap.",
+    "subtitleEn": "You stepped up for your family — this is a pause, not the end.",
+    "badge": "BREADWINNER",
+    "accentColor": "#eab308",
+    "background": "bg_manila_street",
+    "priority": 40,
+    "epilogue": [
+      "Pinili mong itigil muna ang pag-aaral para mag-full time trabaho at tulungan ang pamilya mo sa {hometown}. Mabigat sa loob nang ibalik mo ang school ID mo.",
+      "Makalipas ang dalawang taon, nakaipon ka na, nabayaran ang mga utang sa bahay, at nakakaluwag na si Mama. Isang umaga, naglalakad ka ulit papunta sa registrar para mag-re-enroll sa night classes.",
+      "Hindi namamatay ang pangarap ng estudyanteng Pilipino — naghihintay lang ng tamang pagkakataon."
+    ],
+    "epilogueEn": [
+      "You paused school to work full-time and support your family in {hometown}. Returning your student ID stung more than you expected.",
+      "Two years later, household debts are paid, Mama finally gets to rest, and one bright morning you walk back to the registrar to enroll in evening classes.",
+      "A Filipino student's dream never dies — it just waits for the right tide."
+    ]
+  },
+  {
+    "id": "burnout_recovery",
+    "title": "Hinga Muna (Burnout & Recovery)",
+    "titleEn": "Breathe First (Burnout & Recovery)",
+    "subtitle": "Bumigay ang katawan at isip — pero natuto kang mahalin ang sarili mo.",
+    "subtitleEn": "Mind and body hit the wall — and you learned to heal first.",
+    "badge": "RECOVERY",
+    "accentColor": "#ec4899",
+    "background": "bg_provincial_house",
+    "priority": 30,
+    "epilogue": [
+      "Sa sobrang puyat, trabaho, at bigat ng problema, nagdesisyon kang mag-File ng Leave of Absence (LOA) at umuwi muna sa {hometown}.",
+      "Sa piling ng pamilya at mga totoong kaibigan, muli mong narinig ang huni ng ibon tuwing umaga at natutong magpahinga nang walang konsensya.",
+      "Hindi kahinaan ang paghinto para magpagaling. Pagbalik mo sa campus sa susunod na taon, mas buo ka na."
+    ],
+    "epilogueEn": [
+      "After relentless exhaustion, shifts, and pressure, you filed a Leave of Absence and went home to {hometown} to heal.",
+      "Surrounded by family and real friends, you rediscovered quiet mornings, proper sleep, and resting without guilt.",
+      "Pausing to recover is never defeat. When you return to campus next year, you will stand stronger than ever."
+    ]
+  }
+]

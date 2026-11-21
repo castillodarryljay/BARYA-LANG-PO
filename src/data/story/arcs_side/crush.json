@@ -1,0 +1,83 @@
+[
+  {
+    "id": "side_crush_sunset_roof",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "relationships": { "crush": { "gte": 40 } } },
+    "scene": {
+      "background": "bg_manila_street",
+      "characters": [{ "id": "crush", "sprite": "crush_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Jamie",
+          "text": "{name}, may oras ka ba ng 30 minutes? Ang ganda ng sunset sa campus oval — gusto lang kitang makausap nang tahimik.",
+          "textEn": "{name}, got 30 minutes? The sunset over the campus oval is gorgeous — I just wanted to talk quietly with you."
+        },
+        {
+          "speaker": "Jamie",
+          "text": "Alam kong pareho tayong pagod sa pag-aaral at pagtitipid... pero ikaw 'yung dahilan kung bakit lagi akong excited pumasok araw-araw.",
+          "textEn": "I know we are both exhausted from school and counting every coin... yet you are the reason I actually look forward to coming to campus every day."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "'Ikaw din ang inspirasyon ko, Jamie. Sabay nating abutin ang diploma!'",
+        "textEn": "'You are my inspiration too, Jamie. Let us reach graduation side by side!'",
+        "hint": "++Jamie, ++Mental, +jamie_together",
+        "effects": {
+          "mental": 20,
+          "relationships": { "crush": 20 },
+          "flagsAdd": ["jamie_together"],
+          "journal": {
+            "title": "Sunset kasama si Jamie",
+            "titleEn": "Sunset with Jamie",
+            "summary": "Nagkaintindihan kayo ni Jamie — inspirasyon niyo ang isa't isa hanggang graduation.",
+            "summaryEn": "You and Jamie confessed your feelings — inspiring each other all the way to graduation.",
+            "category": "relationship"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "'Salamat Jamie — focus muna tayo sa studies pero lagi akong nandito para sa'yo.'",
+        "textEn": "'Thank you Jamie — let us stay focused on school, and I will always be here for you.'",
+        "hint": "+Jamie, +GWA, +Mental",
+        "effects": {
+          "mental": 14,
+          "gwa": -0.05,
+          "relationships": { "crush": 12 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "side_crush_care_review",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "flagsAll": ["jamie_together"] },
+    "scene": {
+      "background": "bg_library",
+      "characters": [{ "id": "crush", "sprite": "crush_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Jamie",
+          "text": "Ginawan kita ng flashcards para sa susunod na major exam mo, {name}! At may baon akong homemade sandwich para tipid ka sa lunch!",
+          "textEn": "I made flashcards for your next major exam, {name}! Plus a homemade sandwich so you save lunch money today!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sobrang sweet mo naman, Jamie! (+Energy, +Mental, +GWA)",
+        "textEn": "You are the absolute best, Jamie! (+Energy, +Mental, +GWA)",
+        "hint": "+Energy, +Mental, +GWA",
+        "effects": { "energy": 14, "mental": 16, "gwa": -0.1, "relationships": { "crush": 12 } },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

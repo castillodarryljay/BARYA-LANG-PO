@@ -1,0 +1,6 @@
+{
+  "name": "Barya Lang: Road to Graduation",
+  "description": "A Filipino branching visual novel and student life-sim about surviving Senior High School and College while broke — fully playable offline.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

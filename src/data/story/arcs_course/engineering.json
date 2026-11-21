@@ -1,0 +1,30 @@
+[
+  {
+    "id": "course_eng_plate_cram",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["Engineering"], "chapter": ["college_year1", "college_year2", "college_year3"] },
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [{ "id": "miggy", "sprite": "miggy_surprised", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "Grabe 'yang Drafting Plate at Calculus problem set mo, {name}! Puno ng eraser crumbs buong sahig — pero ang linis ng drawing mo ah!",
+          "textEn": "Whoa, look at that Drafting Plate and Calculus set, {name}! Floor covered in eraser dust — yet those lines are razor sharp!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tapusin ang plate at mag-offer ng Math tutoring sa freshies! (Play Tutoring Quiz)",
+        "textEn": "Finish the plate and tutor freshmen in Calculus! (Play Tutoring Quiz)",
+        "hint": "Minigame + GWA boost",
+        "effects": { "gwa": -0.12 },
+        "triggerMinigame": "tutoring",
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

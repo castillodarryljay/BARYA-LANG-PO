@@ -1,0 +1,332 @@
+[
+  {
+    "id": "college3_opening",
+    "chapter": "college_year3",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year3", "semester": 1, "week": 1 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "COLLEGE YEAR 3! Junior year — ang tinaguriang 'Hell Year' sa {course}. May Thesis Proposal, heavy practicum prep, at kaliwa't kanang fees.",
+          "textEn": "COLLEGE YEAR 3! Junior year — famously called 'Hell Year' in {course}. Thesis proposals, heavy major labs, and nonstop fees."
+        },
+        {
+          "speaker": "Bea",
+          "text": "Kailangan na natin bumuo ng Thesis Group ngayong linggo, {name}! Sabay-sabay tayo nina Miggy at Jamie para walang freeloader!",
+          "textEn": "We need to lock in our Thesis Group this week, {name}! Let us team up with Miggy and Jamie so there are zero freeloaders!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bumuo ng dream Thesis Team kasama ang barkada!",
+        "textEn": "Form the dream Thesis Team with your barkada!",
+        "hint": "+GWA, +Barkada, +thesis_group_formed",
+        "effects": {
+          "gwa": -0.08,
+          "relationships": { "bea": 10, "miggy": 10, "crush": 8 },
+          "flagsAdd": ["thesis_group_formed"],
+          "journal": {
+            "title": "Junior Year & Thesis Group",
+            "titleEn": "Junior Year & Thesis Group",
+            "summary": "Nagsimula ang 3rd year at binuo mo ang Thesis Team kasama ang mga pinagkakatiwalaan mong kaibigan.",
+            "summaryEn": "Entered 3rd year and assembled your trusted Thesis Team.",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-solo / small-pair thesis kay Bea para mas kontrolado ang oras ng trabaho.",
+        "textEn": "Pair up tightly with Bea to keep work shifts flexible.",
+        "hint": "++GWA, +Bea, -Energy",
+        "effects": {
+          "gwa": -0.14,
+          "energy": -8,
+          "relationships": { "bea": 14 },
+          "flagsAdd": ["thesis_group_formed", "duo_thesis"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college3_thesis_proposal",
+    "chapter": "college_year3",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year3", "semester": 1, "week": 3 },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_neutral", "position": "left" },
+        { "id": "bea", "sprite": "bea_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Title Defense! Ilatag ninyo ang tatlong thesis proposals ninyo. Tandaan: kailangan realistic sa budget ng estudyante, hindi puro drawing!",
+          "textEn": "Title Defense! Pitch your three thesis proposals. Remember: keep it realistic for a student budget, not sci-fi fantasy!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-pitch ang community-focused {course} study na swak sa budget!",
+        "textEn": "Pitch a practical, community-focused {course} study that fits your budget!",
+        "hint": "++GWA, +Prof. Reyes, +thesis_approved",
+        "effects": {
+          "energy": -14,
+          "gwa": -0.16,
+          "relationships": { "prof_reyes": 14 },
+          "flagsAdd": ["thesis_title_approved"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "I-pitch ang ambitious tech/research innovation (-₱350 prototype materials).",
+        "textEn": "Pitch an ambitious innovation study (-₱350 initial materials).",
+        "hint": "-₱350, +++GWA, +honor_thesis",
+        "effects": {
+          "money": -350,
+          "energy": -16,
+          "gwa": -0.22,
+          "relationships": { "prof_reyes": 18 },
+          "flagsAdd": ["thesis_title_approved", "ambitious_thesis"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college3_major_crunch",
+    "chapter": "college_year3",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year3", "semester": 1, "week": 4 },
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [
+        { "id": "employer", "sprite": "employer_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Sabay-sabay dumating ang tuition balance, thesis printing, at hospital bill sa bahay. Biglang nag-message ang manager mo sa part-time work.",
+          "textEn": "Tuition balance, thesis printing, and a family clinic bill all hit in the same week. Suddenly your part-time manager sends an offer."
+        },
+        {
+          "speaker": "Manager",
+          "text": "{name}, nag-resign ang assistant supervisor namin. Kung mag-full time ka ngayon, ₱18,000/month agad ang sahod mo — pero kailangan mong mag-stop muna sa school.",
+          "textEn": "{name}, our assistant supervisor resigned. If you go full-time now, you get ₱18,000/month immediately — but you would have to pause school."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "'Salamat po, pero tatapusin ko ang {course} ko! Part-time lang muna.' (-₱1,600 tuition)",
+        "textEn": "'Thank you, but I am finishing {course}! Keeping it part-time.' (-₱1,600 tuition)",
+        "hint": "-₱1,600, ++Mental, Stay in School",
+        "effects": {
+          "money": -1600,
+          "mental": 12,
+          "flagsAdd": ["rejected_dropout_offer"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Tanggapin ang full-time offer para makabayad ng utang at tulungan si Mama.",
+        "textEn": "Accept the full-time job to pay off debts and lift Mama up.",
+        "hint": "Triggers Stop-and-Work Ending",
+        "effects": { "flagsAdd": ["chose_work_over_school"] },
+        "next": "END:stop_and_work"
+      }
+    ]
+  },
+  {
+    "id": "college3_hell_week",
+    "chapter": "college_year3",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year3", "semester": 2, "week": 2 },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "bea", "sprite": "bea_worried", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "HELL WEEK! Tatlong major exams, dalawang case study, at isang lab demo sa loob ng apat na araw! Nakakadalawang kape na ako at nanginginig na kamay ko!",
+          "textEn": "HELL WEEK! Three major exams, two case studies, and a lab demo in four days! On my second coffee and my hands are vibrating!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-divide and conquer kasama ang barkada — tulungan sa reviewers!",
+        "textEn": "Divide and conquer reviewers with the barkada!",
+        "hint": "+GWA, +Barkada, -Energy",
+        "effects": {
+          "energy": -14,
+          "gwa": -0.14,
+          "relationships": { "bea": 10, "miggy": 10 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Uminom ng tubig, matulog ng 6 hours, at unahin ang pinakamalaking exam.",
+        "textEn": "Drink water, get 6 real hours of sleep, and prioritize the biggest exam.",
+        "hint": "+Mental, +Energy, +GWA",
+        "effects": { "mental": 10, "energy": 6, "gwa": -0.06 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college3_business_boom",
+    "chapter": "college_year3",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year3", "semester": 2, "week": 4 },
+    "scene": {
+      "background": "bg_manila_street",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "University Week fair! May bakanteng booth slot — kung magtutulungan tayo magbenta ng iced coffee, tusok-tusok, at org merch, malaking kita 'to pambayad ng tuition!",
+          "textEn": "University Week fair! There is an open booth slot — if we sell iced coffee, street snacks, and merch, we can make serious tuition money!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Buksan ang student booth! (Play Tusok-Tusok)",
+        "textEn": "Launch the student fair booth! (Play Street Snacks)",
+        "hint": "Minigame + Entrepreneur Flag",
+        "effects": {
+          "flagsAdd": ["student_hustler", "u_week_entrepreneur"],
+          "relationships": { "carlo": 12 }
+        },
+        "triggerMinigame": "tusok",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Magbayad na lang ng tuition directly (-₱1,500) at mag-review.",
+        "textEn": "Skip the booth, settle tuition (-₱1,500), and keep studying.",
+        "hint": "-₱1,500, +GWA",
+        "effects": { "money": -1500, "gwa": -0.08 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college3_year_end",
+    "chapter": "college_year3",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year3", "semester": 2, "week": 6 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "crush", "sprite": "crush_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Jamie",
+          "text": "4TH YEAR NA TAYO NEXT SEM, {name}! Graduating status na! Parang kailan lang nag-aagawan pa tayo ng barya sa jeep!",
+          "textEn": "WE ARE SENIORS NEXT TERM, {name}! Graduating status! Feels like yesterday we were counting coins in the jeepney!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Huling taon na — ilaban natin hanggang PICC / Graduation Stage!",
+        "textEn": "One final year — let us fight all the way to the Graduation Stage!",
+        "hint": "+Energy, +Mental, +₱500 summer gig",
+        "effects": {
+          "money": 500,
+          "energy": 25,
+          "mental": 20,
+          "journal": {
+            "title": "Graduating Status!",
+            "titleEn": "Graduating Status!",
+            "summary": "Nalampasan mo ang 3rd Year Hell Year! Isang taon na lang — Thesis, OJT, at Graduation na!",
+            "summaryEn": "Conquered Junior Hell Year! One final year — Thesis, OJT, and Graduation!",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college3_ojt_prep",
+    "chapter": "college_year3",
+    "weight": 2,
+    "once": true,
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [
+        { "id": "prof", "sprite": "prof_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Maghanda na kayo ng resume at endorsement letter para sa 4th Year OJT/Practicum! May partner companies na nagbibigay ng allowance sa top applicants.",
+          "textEn": "Prepare your resume and endorsement letters for 4th Year OJT! Several partner sites pay real allowances to strong applicants."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Ayusin nang pulido ang resume at portfolio ngayon!",
+        "textEn": "Polish your resume and portfolio right away!",
+        "hint": "+paid_ojt_slot, +GWA",
+        "effects": { "gwa": -0.08, "flagsAdd": ["paid_ojt_slot"] },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college3_tutoring_network",
+    "chapter": "college_year3",
+    "weight": 2,
+    "once": true,
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "Ang daming freshies na nagpapaturo sa major subjects! Gusto mo bang mag-review session tayo — ₱100 per head sa 6 students?",
+          "textEn": "Tons of freshmen want tutoring in our major! Want to host a mini review session — ₱100 per head?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "G! Mag-tutor tayo! (Play Tutoring Quiz)",
+        "textEn": "Count me in! Let us tutor! (Play Tutoring Quiz)",
+        "hint": "Minigame + GWA boost",
+        "effects": { "gwa": -0.05, "relationships": { "bea": 10 } },
+        "triggerMinigame": "tutoring",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Pass muna — kailangan ko ng tulog.",
+        "textEn": "Pass for now — I need sleep.",
+        "effects": { "energy": 12 },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

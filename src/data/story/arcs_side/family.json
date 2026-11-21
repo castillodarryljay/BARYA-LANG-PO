@@ -1,0 +1,66 @@
+[
+  {
+    "id": "side_family_sunday_call",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "relationships": { "family": { "gte": 40 } } },
+    "scene": {
+      "background": "bg_provincial_house",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "left" },
+        { "id": "tatay", "sprite": "tatay_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Tatay",
+          "text": "Kumusta ang anak naming matibay? Kahit pagod ka sa {course}, lagi mong tandaan: hindi ka nag-iisa. Pinagmamalaki ka namin sa buong barangay!",
+          "textEn": "How is our toughest scholar doing? Even when {course} wears you down, remember you are never alone. The whole barangay hears how proud we are of you!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Magkwento nang masaya kay Mama at Tatay (+20 Mental, +Family).",
+        "textEn": "Share all your recent wins with Mama and Tatay (+20 Mental, +Family).",
+        "hint": "+20 Mental, +Family",
+        "effects": { "mental": 20, "relationships": { "family": 14 } },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Magpadala ng ₱250 pambili ng pansit para sa Sunday dinner nila (-₱250, ++Family).",
+        "textEn": "Send ₱250 to treat them to Sunday pancit (-₱250, ++Family).",
+        "hint": "-₱250, ++Family, ++Mental",
+        "effects": { "money": -250, "mental": 18, "relationships": { "family": 22 } },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "side_family_ofw_box",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "familyBg": ["ofw"] },
+    "scene": {
+      "background": "bg_provincial_house",
+      "characters": [{ "id": "mama", "sprite": "mama_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Mama",
+          "text": "Dumating na ang balikbayan box! May bagong sapatos, chocolates, at bonus padala para sa tuition mo, {name} — pero nami-miss na talaga namin ang Pasko nang kumpleto.",
+          "textEn": "The balikbayan box arrived! New shoes, chocolates, and extra tuition money for you, {name} — though we miss spending Christmas all together."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-video call agad ang OFW parent mo at ipangakong magtatapos ka (+₱600, +Mental).",
+        "textEn": "Video call your OFW parent immediately and vow to make them proud (+₱600, +Mental).",
+        "hint": "+₱600, +Mental, +Family",
+        "effects": { "money": 600, "mental": 12, "relationships": { "family": 14 } },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

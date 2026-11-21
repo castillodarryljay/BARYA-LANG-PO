@@ -1,0 +1,1276 @@
+[
+  {
+    "id": "exp_rand_typhoon_flood",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_rainy_flood",
+      "characters": [
+        { "id": "player", "sprite": "player_worried", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Signal No. 2! Biglang bumuhos ang malakas na ulan paglabas mo ng klase. Hanggang bukong-bukong na ang baha sa España at halos walang dumadaan na jeep.",
+          "textEn": "Typhoon Signal No. 2! Torrential monsoon rain hits right after dismissal. Ankle-deep floodwater pools along the street and jeepneys are packed solid."
+        },
+        {
+          "speaker": "Miggy",
+          "text": "{name}, stranded tayo! ₱150 ang singil ng pedicab patawid sa baha, pero pwede rin tayong makisilong muna sa waiting shed habang hinihintay humupa.",
+          "textEn": "{name}, we are stranded! The pedicab driver is asking ₱150 to cross the flood, or we can wait it out under the shed roof."
+        },
+        {
+          "speaker": "{name}",
+          "text": "Basa na ang bag ko — kailangan kong ingatan ang mga notes at phone ko!",
+          "textEn": "My bag is already soaked — I have to protect my notebooks and phone!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-hati sa pedicab kasama si Miggy (₱80 each) para makauwi nang tuyo.",
+        "textEn": "Split the pedicab fare with Miggy (₱80 each) to get home dry.",
+        "hint": "-₱80, +6 EN, +8 Miggy",
+        "effects": {
+          "money": -80,
+          "energy": 6,
+          "mental": 4,
+          "relationships": { "miggy": 8 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Ibalot sa plastic ang sapatos at lumusong nang maingat kasama si Miggy.",
+        "textEn": "Wrap your shoes in plastic bags and wade carefully with Miggy.",
+        "hint": "₱0 cost, -14 EN, +10 Miggy",
+        "effects": {
+          "energy": -14,
+          "mental": -4,
+          "relationships": { "miggy": 10 },
+          "flagsAdd": ["flood_commuter"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Maghintay sa carinderia, uminom ng mainit na sabaw (₱45), at mag-review.",
+        "textEn": "Take shelter at a carinderia with hot soup (₱45) and review notes.",
+        "hint": "-₱45, GWA ↑, +8 MH",
+        "effects": {
+          "money": -45,
+          "gwa": -0.06,
+          "mental": 8,
+          "relationships": { "aling_nena": 5 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_brownout_cram",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [
+        { "id": "player", "sprite": "player_worried", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Alas-nwebe ng gabi, dalawang oras bago ang online submission deadline — CLICK! Biglang namatay ang ilaw at electric fan. Brownout sa buong barangay!",
+          "textEn": "9 PM, two hours before an online submission deadline — CLICK! The lights and fan die instantly. Neighborhood-wide brownout!"
+        },
+        {
+          "speaker": "{name}",
+          "text": "Naku po, 18% na lang ang battery ng phone ko at walang Wi-Fi! Paano ko ipapasa 'tong requirement sa {course}?!",
+          "textEn": "Oh no, my phone is at 18% and the Wi-Fi router is dead! How do I submit this {course} requirement?!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tumakbo sa 24-hour comshop sa kabilang kanto na may generator (₱100).",
+        "textEn": "Sprint to the 24-hour computer shop with a generator (₱100).",
+        "hint": "-₱100, GWA ↑, -8 EN",
+        "effects": {
+          "money": -100,
+          "gwa": -0.1,
+          "energy": -8,
+          "mental": 6
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Gumamit ng kandila at ₱20 mobile data hotspot para maipasa on time!",
+        "textEn": "Light a candle and load ₱20 mobile data to submit right on time!",
+        "hint": "-₱20, GWA ↑, -12 EN, +Survival",
+        "effects": {
+          "money": -20,
+          "gwa": -0.07,
+          "energy": -12,
+          "flagsAdd": ["candlelight_scholar"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-message nang maayos kay Prof. Reyes at humingi ng 12-hour extension.",
+        "textEn": "Send a polite photo of the blackout notice to Prof. Reyes for an extension.",
+        "hint": "+6 EN, +4 MH, +Prof",
+        "effects": {
+          "energy": 6,
+          "mental": 4,
+          "relationships": { "prof_reyes": 4 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_ghosting_groupmate",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [
+        { "id": "player", "sprite": "player_angry", "position": "left" },
+        { "id": "bea", "sprite": "bea_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Gabi bago ang group presentation. Seen-zone pa rin sa group chat ang isa ninyong kaklase na naka-assign sa pinakamalaking part ng slides.",
+          "textEn": "Night before the group presentation. One groupmate assigned to half the slides has left the group chat on 'Seen' for three days."
+        },
+        {
+          "speaker": "Bea",
+          "text": "{name}, nag-story siya sa social media na nasa milk tea shop pero zero pa rin ang ambag niya sa Google Docs! Anong gagawin natin?",
+          "textEn": "{name}, they just posted an Instagram story at a milk tea shop while their section in our document is completely blank! What do we do?"
+        },
+        {
+          "speaker": "{name}",
+          "text": "Classic 'ambag ko prayers' na naman. Kailangan nating magdesisyon nang matalino.",
+          "textEn": "Classic 'my contribution is prayers' all over again. We need to handle this smartly."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Buhatin na lang kasama si Bea at isama sa peer evaluation ang totoong ambag.",
+        "textEn": "Carry the project with Bea and write an honest peer evaluation.",
+        "hint": "GWA ↑↑, -15 EN, +10 Bea",
+        "effects": {
+          "gwa": -0.14,
+          "energy": -15,
+          "mental": -4,
+          "relationships": { "bea": 10, "prof_reyes": 6 },
+          "flagsAdd": ["group_carrier"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "I-confront nang mahinahon at bigyan ng 2-hour final deadline o tanggal sa list.",
+        "textEn": "Confront them calmly with a firm 2-hour deadline or removal from the cover page.",
+        "hint": "GWA ↑, +8 MH, +6 Social",
+        "effects": {
+          "gwa": -0.08,
+          "mental": 8,
+          "social": 6,
+          "relationships": { "bea": 8 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_phone_cracked",
+    "chapter": "random",
+    "weight": 3,
+    "scene": {
+      "background": "bg_jeepney_interior",
+      "characters": [
+        { "id": "player", "sprite": "player_surprised", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "SCREECH! Biglang nagpreno ang jeepney sa traffic! Dumulas ang phone mo mula sa bulsa at bumagsak sa metal floor — may malaking bitak sa screen pero gumagana pa ang touch.",
+          "textEn": "SCREECH! The jeepney slams its brakes in rush-hour traffic! Your phone slips from your pocket onto the metal floor — spiderweb crack across the screen, though touch still works."
+        },
+        {
+          "speaker": "{name}",
+          "text": "Aray! Nandoon lahat ng PDF reviewers, GCash, at schedule ko! ₱550 ang palit ng LCD sa repair stall...",
+          "textEn": "Ouch! All my PDF reviewers, e-wallet, and schedules are on this phone! The repair kiosk charges ₱550 for a replacement screen..."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Ipaayos agad sa Greenhills/mall kiosk (₱550) para hindi masira ang touch.",
+        "textEn": "Repair the screen right away (₱550) before it dies completely.",
+        "hint": "-₱550, +10 MH",
+        "effects": {
+          "money": -550,
+          "mental": 10
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Lagyan muna ng ₱40 tempered glass tape at mag-raket sa Jeepney Fare Pass!",
+        "textEn": "Seal it with a ₱40 protector for now and earn cash via Jeepney Fare Pass!",
+        "hint": "-₱40, Play Jeepney Fare Pass",
+        "effects": { "money": -40 },
+        "triggerMinigame": "jeepney",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Tiisin muna ang cracked screen — basta nababasa pa ang reviewers, laban!",
+        "textEn": "Live with the spiderweb crack for now — if it displays reviewers, it works!",
+        "hint": "₱0 cost, -6 MH, +Tipid",
+        "effects": {
+          "mental": -6,
+          "flagsAdd": ["cracked_screen_warrior"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_viral_raket",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_sari_sari",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" },
+        { "id": "player", "sprite": "player_happy", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Nag-trending sa campus freedom wall ang homemade graham balls at iced coffee na tinitinda ninyo sa labas ng gate!",
+          "textEn": "The homemade graham balls and budget iced coffee you sell outside the gate just went viral on the campus freedom wall!"
+        },
+        {
+          "speaker": "Miggy",
+          "text": "{name}! 40 orders agad sa inbox natin! Kung mag-o-overtime tayong mag-pack ngayong gabi, malaking kita 'to!",
+          "textEn": "{name}! We already have 40 pre-orders in our inbox! If we hustle and pack tonight, this will be a huge payday!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-grab ang momentum! Mag-sell sa Tusok-Tusok / Side Hustle minigame!",
+        "textEn": "Ride the viral wave and run a live Side Hustle shift!",
+        "hint": "Play Tusok-Tusok Hustle +₱150 bonus",
+        "effects": { "money": 150, "social": 8, "relationships": { "miggy": 8 } },
+        "triggerMinigame": "tusok",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Tanggapin ang 20 orders lang para may oras pa sa aral at pahinga.",
+        "textEn": "Cap it at 20 orders so you still have time to study and sleep.",
+        "hint": "+₱420, +6 Social, -8 EN",
+        "effects": {
+          "money": 420,
+          "social": 6,
+          "energy": -8,
+          "mental": 6,
+          "relationships": { "miggy": 6 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_deans_list_surprise",
+    "chapter": "random",
+    "weight": 4,
+    "conditions": { "gwa": { "lte": 1.85 } },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "prof", "sprite": "prof_happy", "position": "right" },
+        { "id": "player", "sprite": "player_surprised", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Nagkukumpulan ang mga estudyante sa bulletin board ng college building. Nakita mo ang pangalan mo — nakapaskil sa Honor Roll & Dean's List candidates!",
+          "textEn": "Students crowd around the department bulletin board. Near the top of the printed sheet, you spot your own name on the Dean's List honor roll!"
+        },
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Deserve mo 'yan, {name}. Alam ng faculty kung gaano ka kasipag. May ₱500 book stipend ang honor roll nominees ngayong buwan.",
+          "textEn": "Well deserved, {name}. The faculty sees how hard you work. Honor roll nominees receive a ₱500 book stipend this month."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin nang buong pasasalamat at ibalita agad kina Mama at Tatay!",
+        "textEn": "Accept gratefully and call Mama and Tatay right away!",
+        "hint": "+₱500, +16 MH, +12 Family, +Prof",
+        "effects": {
+          "money": 500,
+          "mental": 16,
+          "relationships": { "family": 12, "prof_reyes": 10 },
+          "flagsAdd": ["deans_lister"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "I-share ang book stipend sa study group ninyo ni Bea para mas marami ang pumasa!",
+        "textEn": "Use part of the stipend to print shared reviewers for Bea's study group!",
+        "hint": "+₱300 net, +14 Bea, +10 Social, GWA ↑",
+        "effects": {
+          "money": 300,
+          "gwa": -0.05,
+          "social": 10,
+          "mental": 12,
+          "relationships": { "bea": 14, "prof_reyes": 8 },
+          "flagsAdd": ["deans_lister"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_alinga_nena_sabaw",
+    "chapter": "random",
+    "weight": 4,
+    "conditions": { "money": { "lt": 800 } },
+    "scene": {
+      "background": "bg_carinderia",
+      "characters": [
+        { "id": "nena", "sprite": "nena_happy", "position": "right" },
+        { "id": "player", "sprite": "player_neutral", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Gabi na at ₱35 na lang ang barya sa bulsa mo. Nag-order ka ng isang tasang kanin at libreng sabaw sa carinderia ni Aling Nena.",
+          "textEn": "It is late evening and only ₱35 in coins jingle in your pocket. You quietly order one cup of rice and free soup at Aling Nena's carinderia."
+        },
+        {
+          "speaker": "Aling Nena",
+          "text": "Huy {name}, huwag mo akong lokohin — nakikita ko sa mata mo na hindi ka pa nagtatanghalian. Eto, may dalawang pirasong adobo at itlog sa ilalim ng kanin mo. Libre na 'yan sa masipag na bata.",
+          "textEn": "Don't fool me, {name} — I can tell you skipped lunch too. Look under your rice: two pieces of adobo and a boiled egg. On the house for a hardworking kid."
+        },
+        {
+          "speaker": "{name}",
+          "text": "Aling Nena... babayaran ko po kayo pag naka-graduate ako, pramis!",
+          "textEn": "Aling Nena... I promise I will repay your kindness the day I graduate!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tumulong maghugas ng pinggan pagkatapos kumain bilang pasasalamat.",
+        "textEn": "Stay 30 minutes to help wash dishes as a heartfelt thank-you.",
+        "hint": "+18 EN, +16 MH, +14 Aling Nena",
+        "effects": {
+          "energy": 18,
+          "mental": 16,
+          "relationships": { "aling_nena": 14 },
+          "flagsAdd": ["nena_favorite"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-volunteer sa rush hour ng carinderia bukas para kumita rin!",
+        "textEn": "Offer to cover the lunch rush right now to earn extra cash!",
+        "hint": "+12 EN, Play Carinderia Rush",
+        "effects": { "energy": 12, "mental": 10, "relationships": { "aling_nena": 10 } },
+        "triggerMinigame": "carinderia",
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_midnight_canton",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "crush", "sprite": "crush_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Alas-onse ng gabi, umuulan nang mahina sa labas. Nagluto kayo ng tatlong pack ng spicy pancit canton at nilagang itlog sa maliit na rice cooker.",
+          "textEn": "11 PM, gentle tropical rain tapping the window. You cook three packs of spicy pancit canton with boiled eggs in a tiny dorm rice cooker."
+        },
+        {
+          "speaker": "Jamie",
+          "text": "Alam mo {name}, nakakatawa no — ang hirap ng buhay estudyante, pero kapag ganito tayong sabay-sabay kumakain, parang kaya natin lahat.",
+          "textEn": "You know {name}, it is funny — student life is exhausting, yet moments like sharing noodles together make everything feel survivable."
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Basta walang uubos ng kalamansi flavor! Cheers sa mga puyat pero hindi sumusuko!",
+          "textEn": "Just nobody hog the calamansi flavor! Cheers to the sleep-deprived who never quit!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Magkwentuhan tungkol sa mga pangarap ninyo 5 years from now.",
+        "textEn": "Stay up talking about where you all dream of being 5 years from now.",
+        "hint": "+18 MH, +10 Social, +Jamie & Miggy",
+        "effects": {
+          "mental": 18,
+          "social": 10,
+          "energy": -5,
+          "relationships": { "crush": 10, "miggy": 10 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Sabay-sabay mag-flashcards habang kumakain para productive pa rin!",
+        "textEn": "Quiz each other with flashcards between bites so the night stays productive!",
+        "hint": "GWA ↑, +12 MH, +Jamie & Miggy",
+        "effects": {
+          "gwa": -0.09,
+          "mental": 12,
+          "relationships": { "crush": 8, "miggy": 8 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_freelance_rush",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_happy", "position": "right" },
+        { "id": "player", "sprite": "player_neutral", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "May nag-message na maliit na lokal na negosyo sa campus board: naghahanap ng student freelancer para mag-ayos ng poster layout at inventory sheet sa loob ng isang gabi.",
+          "textEn": "A neighborhood small business posts an urgent gig on the campus board: looking for a student freelancer to fix a flyer layout and inventory sheet overnight."
+        },
+        {
+          "speaker": "Carlo",
+          "text": "Uy {name}, nirekomenda kita! Malaki ang bayad nito kung matatapos mo agad.",
+          "textEn": "Hey {name}, I recommended you! Pay is solid if you can knock it out fast."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin ang gig at tapusin nang malinis! (+₱550, -14 EN)",
+        "textEn": "Take the overnight gig and deliver clean work! (+₱550, -14 EN)",
+        "hint": "+₱550, -14 EN, +8 Carlo",
+        "effects": {
+          "money": 550,
+          "energy": -14,
+          "mental": 4,
+          "relationships": { "carlo": 8 },
+          "flagsAdd": ["reliable_freelancer"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Subukan ang live Freelance Task challenge para mas malaki ang kita!",
+        "textEn": "Launch the live Freelance Task minigame for performance pay!",
+        "hint": "Play Freelance Task",
+        "conditions": { "strand": ["TVL-ICT", "ABM", "STEM"] },
+        "effects": { "relationships": { "carlo": 6 } },
+        "triggerMinigame": "freelance",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-pass muna at ibigay sa kaklaseng mas nangangailangan.",
+        "textEn": "Pass the gig along to a classmate who needs rent money more right now.",
+        "hint": "+10 Social, +8 MH, +6 Carlo",
+        "effects": {
+          "social": 10,
+          "mental": 8,
+          "relationships": { "carlo": 6 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_barangay_fiesta",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_fiesta_night",
+      "characters": [
+        { "id": "tatay", "sprite": "tatay_happy", "position": "left" },
+        { "id": "mama", "sprite": "mama_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Pista sa {hometown}! Makukulay ang banderitas sa plaza, umuusok ang mga inihaw na barbecue, at rinig ang tugtog ng marching band mula sa kalsada.",
+          "textEn": "Barangay fiesta in {hometown}! Colorful paper banderitas flutter over the plaza, smoky barbecue grills sizzle, and a brass band echoes down the street."
+        },
+        {
+          "speaker": "Tatay",
+          "text": "Uwi ka muna kahit isang gabi, {name}! Minsan lang sa isang taon ang pista — nagluto si Mama mo ng paborito mong caldereta.",
+          "textEn": "Come home for one night, {name}! Fiesta only comes once a year — your Mama cooked your favorite caldereta."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Umuwi at makisaya kasama ang pamilya at mga kapitbahay!",
+        "textEn": "Spend the fiesta evening laughing and eating with family and neighbors!",
+        "hint": "-₱100 pamasahe, +22 EN, +20 MH, +14 Family",
+        "effects": {
+          "money": -100,
+          "energy": 22,
+          "mental": 20,
+          "relationships": { "family": 14 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Tumulong magbenta ng malamig na buko juice sa plaza habang nakikifiesta!",
+        "textEn": "Help sell chilled buko juice at the fiesta plaza to earn extra baon!",
+        "hint": "+₱420, +10 Family, +8 MH, -8 EN",
+        "effects": {
+          "money": 420,
+          "energy": -8,
+          "mental": 8,
+          "social": 8,
+          "relationships": { "family": 10 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_library_lost_wallet",
+    "chapter": "random",
+    "weight": 3,
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "player", "sprite": "player_surprised", "position": "left" },
+        { "id": "prof", "sprite": "prof_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Sa ilalim ng study table sa library, may napulot kang brown na pitaka. Pagtingin mo sa ID, may lamang ₱1,500 at tuition receipt ng isang freshman student!",
+          "textEn": "Under a library study table, you find a worn brown wallet. Inside are a freshman ID, ₱1,500 in neatly folded bills, and a tuition assessment slip!"
+        },
+        {
+          "speaker": "{name}",
+          "text": "Naku, pambayad ng tuition niya 'to! Malamang umiiyak na siya kakahanap ngayon.",
+          "textEn": "Oh no, that is their tuition money! They must be panicking looking for this right now."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-surrender agad sa Student Affairs at hanapin ang freshman para personal na isauli.",
+        "textEn": "Turn it in immediately and personally return it to the relieved freshman.",
+        "hint": "+20 MH, +12 Social, +10 Prof, +Honest Badge",
+        "effects": {
+          "mental": 20,
+          "social": 12,
+          "relationships": { "prof_reyes": 10 },
+          "flagsAdd": ["honest_student"],
+          "journal": {
+            "title": "Nagsauli ng Tuition Wallet",
+            "titleEn": "Returned a Lost Tuition Wallet",
+            "summary": "Kahit gipit ka, pinili mong isauli ang napulot na ₱1,500 tuition ng isang freshman.",
+            "summaryEn": "Even while broke, you returned a lost ₱1,500 tuition wallet to a freshman.",
+            "category": "choice"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Isauli agad at tanggapin ang ₱150 na kusa niyang binigay na pasasalamat.",
+        "textEn": "Return every peso and graciously accept the ₱150 merienda thank-you they insist on.",
+        "hint": "+₱150, +14 MH, +8 Social",
+        "effects": {
+          "money": 150,
+          "mental": 14,
+          "social": 8,
+          "flagsAdd": ["honest_student"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_jeepney_good_samaritan",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_jeepney_interior",
+      "characters": [
+        { "id": "player", "sprite": "player_neutral", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Rush hour sa jeep. Nag-aabot ka ng bayad nang mapansin mong kulang ng ₱15 ang pamasahe ng matandang lola sa tabi mo na pauwi galing check-up.",
+          "textEn": "Rush hour on the jeepney. Passing fares forward, you notice an elderly grandmother next to you is ₱15 short after coming from a clinic check-up."
+        },
+        {
+          "speaker": "{name}",
+          "text": "Manong driver, sagot ko na po ang bayad ni Lola — isang estudyante at isang senior po, barya lang.",
+          "textEn": "Driver, I have got Lola's fare covered — one student and one senior, exact coins."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sagutin ang pamasahe ni Lola at tulungan siyang bumaba nang maingat.",
+        "textEn": "Cover Lola's fare and help her step down safely at her stop.",
+        "hint": "-₱25, +14 MH, +Good Karma",
+        "effects": {
+          "money": -25,
+          "mental": 14,
+          "social": 6,
+          "flagsAdd": ["jeepney_kindness"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Tulungan ding mag-abot ng sukli sa buong jeepney ride!",
+        "textEn": "Help Manong pass exact change through the packed jeepney!",
+        "hint": "Play Jeepney Fare Pass",
+        "effects": { "money": -20, "mental": 10 },
+        "triggerMinigame": "jeepney",
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_side_crush_rainy_umbrella",
+    "chapter": "side",
+    "once": true,
+    "weight": 5,
+    "conditions": { "rel": { "crush": { "gte": 30 } } },
+    "scene": {
+      "background": "bg_rainy_flood",
+      "characters": [
+        { "id": "crush", "sprite": "crush_happy", "position": "right" },
+        { "id": "player", "sprite": "player_happy", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Biglang umulan pagkatapos ng late afternoon class. Nakatayo si Jamie sa gate nang walang payong — buti na lang dala mo ang maliit mong folding umbrella.",
+          "textEn": "A sudden downpour catches students at the gate after late afternoon class. Jamie stands without an umbrella — luckily you brought your small folding one."
+        },
+        {
+          "speaker": "Jamie",
+          "text": "Hala {name}, maliit 'yang payong mo, mababasa ang balikat mo kung maghahati tayo!",
+          "textEn": "Whoa {name}, your umbrella is tiny, your shoulder will get soaked if we share!"
+        },
+        {
+          "speaker": "{name}",
+          "text": "Okay lang, sanay na sa ulan. Hatid na kita hanggang sakayan ng jeep.",
+          "textEn": "I don't mind a little rain. Let me walk you to the jeepney stop."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Itagilid ang payong papunta kay Jamie at magkwentuhan habang naglalakad.",
+        "textEn": "Tilt the umbrella over Jamie and share stories all the way to the stop.",
+        "hint": "+16 Jamie, +16 MH, -6 EN",
+        "effects": {
+          "mental": 16,
+          "energy": -6,
+          "relationships": { "crush": 16 },
+          "flagsAdd": ["umbrella_memory"],
+          "journal": {
+            "title": "Isang Payong Sa Ulan",
+            "titleEn": "Shared Umbrella in the Rain",
+            "summary": "Hinatid mo si Jamie sa sakayan sa gitna ng malakas na ulan — core memory unlocked.",
+            "summaryEn": "Walked Jamie to the jeepney stop under one small umbrella — core memory unlocked.",
+            "category": "relationship"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Sumilong muna sa bakery at maghati sa tig-₱30 na mainit na ensaymada!",
+        "textEn": "Duck into the corner bakery and split a warm ₱30 ensaymada together!",
+        "hint": "-₱60, +14 Jamie, +14 MH, +6 EN",
+        "effects": {
+          "money": -60,
+          "energy": 6,
+          "mental": 14,
+          "relationships": { "crush": 14 },
+          "flagsAdd": ["umbrella_memory"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_side_crush_study_date",
+    "chapter": "side",
+    "once": true,
+    "weight": 5,
+    "conditions": { "rel": { "crush": { "gte": 50 } } },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "crush", "sprite": "crush_happy", "position": "right" },
+        { "id": "player", "sprite": "player_happy", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Sabado ng hapon sa library. May inabot si Jamie na maliit na sticky note sa ibabaw ng notebook mo: 'Kaya mo 'yan, future {course} graduate! — J.'",
+          "textEn": "Saturday afternoon in the quiet library. Jamie slides a tiny sticky note onto your notebook: 'You got this, future {course} graduate! — J.'"
+        },
+        {
+          "speaker": "Jamie",
+          "text": "Sorry kung corny, {name}... gusto ko lang malaman mo na bilib na bilib ako sa sipag mo. Sabay tayong mag-review lagi ha?",
+          "textEn": "Sorry if it is cheesy, {name}... I just want you to know how much I admire your grit. Can we keep being study partners?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Itago ang sticky note sa ID lace mo: 'Best study partner sa buong campus.'",
+        "textEn": "Tuck the sticky note behind your student ID: 'Best study partner on campus.'",
+        "hint": "+16 Jamie, GWA ↑, +16 MH",
+        "effects": {
+          "gwa": -0.1,
+          "mental": 16,
+          "relationships": { "crush": 16 },
+          "flagsAdd": ["study_date_spark"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-set ng deal: kung pareho tayong makapasa nang mataas, mag-fiesta date tayo!",
+        "textEn": "Make a deal: if we both ace this sem, we celebrate at the plaza fiesta!",
+        "hint": "+18 Jamie, GWA ↑, +12 MH",
+        "effects": {
+          "gwa": -0.09,
+          "mental": 12,
+          "relationships": { "crush": 18 },
+          "flagsAdd": ["study_date_spark", "crush_promise"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_side_miggy_acoustic_gig",
+    "chapter": "side",
+    "once": true,
+    "weight": 4,
+    "conditions": { "rel": { "miggy": { "gte": 35 } } },
+    "scene": {
+      "background": "bg_fiesta_night",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" },
+        { "id": "player", "sprite": "player_happy", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Friday acoustic night sa isang student café! Nakasampa si Miggy sa maliit na stage hawak ang lumang gitara niya, tumutugtog ng classic OPM songs.",
+          "textEn": "Friday acoustic night at a student café! Miggy climbs the tiny corner stage with his worn acoustic guitar, strumming classic OPM anthems."
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Pre {name}! Kailangan ko ng taga-bantay ng tip jar at taga-kanta sa chorus! Hati tayo sa tips mamaya!",
+          "textEn": "Bro {name}! Help me watch the tip jar and back me up on the chorus! We split the tips tonight!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sumampa sa stage at maki-jam sa chorus ng OPM classics!",
+        "textEn": "Hop on stage and belt out the OPM chorus with the crowd!",
+        "hint": "+₱320 tips, +18 MH, +14 Social, +14 Miggy",
+        "effects": {
+          "money": 320,
+          "mental": 18,
+          "social": 14,
+          "energy": -10,
+          "relationships": { "miggy": 14 },
+          "flagsAdd": ["opm_duet_star"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-cheer mula sa harap at tulungan siyang mag-promote ng gig online.",
+        "textEn": "Cheer loudly from the front table and hype his set to classmates.",
+        "hint": "+₱180 tips, +14 MH, +10 Miggy",
+        "effects": {
+          "money": 180,
+          "mental": 14,
+          "social": 8,
+          "relationships": { "miggy": 10 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_side_carlo_org_audit",
+    "chapter": "side",
+    "once": true,
+    "weight": 4,
+    "conditions": { "rel": { "carlo": { "gte": 30 } } },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "carlo", "sprite": "carlo_worried", "position": "right" },
+        { "id": "player", "sprite": "player_neutral", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Crisis sa student org room! Bukas ang liquidation report sa OSA, pero hindi nagtutugma ng ₱450 ang mga resibo ng Foundation Week booth.",
+          "textEn": "Crisis in the student org room! Liquidation is due to Student Affairs tomorrow, yet receipts are off by ₱450."
+        },
+        {
+          "speaker": "Carlo",
+          "text": "{name}, nalilito na ako sa mga resibo ng yelo, tarpaulin, at tape! Baka ma-suspend ang org recognition natin kung mali ang audit!",
+          "textEn": "{name}, I am drowning in ice, tarpaulin, and tape receipts! Our org could lose accreditation if the audit fails!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Umupo kasama si Carlo, i-audit isa-isa ang resibo, at hanapin ang nawawalang ₱450!",
+        "textEn": "Sit down with Carlo and reconcile every single receipt line by line!",
+        "hint": "GWA ↑, +16 Carlo, +10 Social, -12 EN",
+        "effects": {
+          "gwa": -0.06,
+          "social": 10,
+          "energy": -12,
+          "mental": 6,
+          "relationships": { "carlo": 16 },
+          "flagsAdd": ["org_audit_hero"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-set up ng clean spreadsheet template para transparent na ang org forever.",
+        "textEn": "Build a clean digital ledger template so the org stays transparent forever.",
+        "hint": "+₱250 honorarium, +14 Carlo, -10 EN",
+        "effects": {
+          "money": 250,
+          "energy": -10,
+          "relationships": { "carlo": 14 },
+          "flagsAdd": ["org_audit_hero"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_side_family_balut_talk",
+    "chapter": "side",
+    "once": true,
+    "weight": 4,
+    "conditions": { "rel": { "family": { "gte": 40 } } },
+    "scene": {
+      "background": "bg_provincial_house",
+      "characters": [
+        { "id": "tatay", "sprite": "tatay_neutral", "position": "right" },
+        { "id": "player", "sprite": "player_neutral", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Tahimik na gabi sa beranda. Nakaupo si Tatay habang umiinom ng mainit na kape at nakatanaw sa buwan.",
+          "textEn": "Quiet evening on the porch. Tatay sits sipping hot coffee while looking up at the moon."
+        },
+        {
+          "speaker": "Tatay",
+          "text": "Alam mo {name}, hindi man kami nakapagtapos ng college ng Mama mo, bawat araw na nakikita ka naming nagsusumikap sa {course}, parang kami na rin ang gumagraduate.",
+          "textEn": "You know {name}, even though your Mama and I never finished college, every day we watch you push through {course}, it feels like we are graduating right alongside you."
+        },
+        {
+          "speaker": "{name}",
+          "text": "Tay, kapag nakatapos ako, kayo naman ang magpapahinga. Pangako ko 'yan.",
+          "textEn": "Tay, the day I graduate, it will be your turn to rest. I promise."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tabihan si Tatay, kwentuhan siya ng mga natutunan mo sa school.",
+        "textEn": "Sit beside Tatay and share stories of everything you learned this term.",
+        "hint": "+20 MH, +10 EN, +16 Family",
+        "effects": {
+          "mental": 20,
+          "energy": 10,
+          "relationships": { "family": 16 },
+          "flagsAdd": ["tatay_promise"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-abot ng ₱200 mula sa raket mo pambili ng vitamins nina Mama at Tatay.",
+        "textEn": "Slip ₱200 from your side-hustle earnings for Mama and Tatay's vitamins.",
+        "hint": "-₱200, +22 Family, +18 MH",
+        "effects": {
+          "money": -200,
+          "mental": 18,
+          "relationships": { "family": 22 },
+          "flagsAdd": ["tatay_promise"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_side_prof_mentorship",
+    "chapter": "side",
+    "once": true,
+    "weight": 4,
+    "conditions": { "rel": { "prof_reyes": { "gte": 35 } } },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "prof", "sprite": "prof_happy", "position": "right" },
+        { "id": "player", "sprite": "player_neutral", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Tinawag ka ni Prof. Reyes sa faculty cubicle pagkatapos ng klase. Akala mo may mali sa papel mo — pero nakangiti siya.",
+          "textEn": "Prof. Reyes calls you into the faculty cubicle after lecture. You brace for bad news — yet he is smiling warmly."
+        },
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Working student din ako noon, {name}. Minsan nilalakad ko lang mula Taft hanggang Recto para makatipid ng pamasahe. Eto, hiramin mo 'tong reference book ko para sa {course} — huwag ka nang bumili.",
+          "textEn": "I was a working student once too, {name}. I used to walk from Taft to Recto just to save jeepney fare. Borrow my reference book for {course} — don't waste money buying one."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin ang libro at humingi ng tips kung paano mag-excel sa {course}!",
+        "textEn": "Gratefully borrow the textbook and ask for study strategies in {course}!",
+        "hint": "GWA ↑↑, +14 MH, +12 Prof, +₱350 saved",
+        "effects": {
+          "money": 350,
+          "gwa": -0.14,
+          "mental": 14,
+          "relationships": { "prof_reyes": 12 },
+          "flagsAdd": ["prof_mentee"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-alok na tumulong sa pag-encode ng lecture handouts ni Sir bilang kapalit.",
+        "textEn": "Offer to help digitize Sir's lecture notes in exchange.",
+        "hint": "GWA ↑, +16 Prof, -8 EN",
+        "effects": {
+          "gwa": -0.1,
+          "energy": -8,
+          "mental": 10,
+          "relationships": { "prof_reyes": 16 },
+          "flagsAdd": ["prof_mentee"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_sarisari_ledger_help",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_sari_sari",
+      "characters": [
+        { "id": "nena", "sprite": "nena_worried", "position": "right" },
+        { "id": "player", "sprite": "player_neutral", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Sabado ng umaga, nakasimangot si Aling Nena sa harap ng makapal niyang listahan ng utang at stock ng tindahan.",
+          "textEn": "Saturday morning, Aling Nena frowns over a thick notebook of store inventory and neighbor IOUs."
+        },
+        {
+          "speaker": "Aling Nena",
+          "text": "{name}, ikaw ang magaling sa kwenta! Pa-check naman ng inventory ko — mukhang nalulugi ako sa presyo ng kape at delata.",
+          "textEn": "{name}, you have a sharp head for numbers! Help me audit my stock pricing — I think inflation is eating my margins."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Ayusin ang pricing at utang tracker ni Aling Nena sa malinis na notebook!",
+        "textEn": "Reorganize Aling Nena's profit margins and ledger cleanly!",
+        "hint": "+₱380 bayad, +12 Aling Nena, -8 EN",
+        "effects": {
+          "money": 380,
+          "energy": -8,
+          "mental": 6,
+          "relationships": { "aling_nena": 12 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Tumulong muna sa lunch rush sa carinderia niya pagkatapos mag-audit!",
+        "textEn": "Help audit the ledger and jump into her lunch rush shift!",
+        "hint": "+₱120 + Play Carinderia Rush",
+        "effects": { "money": 120, "relationships": { "aling_nena": 10 } },
+        "triggerMinigame": "carinderia",
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_surprise_pop_quiz",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_neutral", "position": "right" },
+        { "id": "player", "sprite": "player_surprised", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "'Get 1/4 sheet of pad paper!' — ang limang salitang nagpapatigil ng tibok ng puso ng bawat estudyanteng Pilipino.",
+          "textEn": "'Get a 1/4 sheet of pad paper!' — the seven words that instantly stop every Filipino student's heartbeat."
+        },
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Surprise 20-item quiz sa lecture last week! Walang maghihiraman ng papel — este, sige magbigayan na pero tahimik!",
+          "textEn": "Surprise 20-item quiz on last week's lecture! No borrowing paper — alright, share quietly, clock starts now!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Subukan ang live Tutoring Quiz brain-warm-up para ma-ace ang surprise quiz!",
+        "textEn": "Lock in and test your recall in the Tutoring Quiz challenge!",
+        "hint": "Play Tutoring Quiz, GWA ↑",
+        "effects": { "gwa": -0.08, "relationships": { "prof_reyes": 6 } },
+        "triggerMinigame": "tutoring",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-share ng 1/4 pad paper sa buong row at mag-focus nang tahimik.",
+        "textEn": "Hand out 1/4 sheets to your whole row and focus calmly on every item.",
+        "hint": "GWA ↑, +10 Social, -6 EN",
+        "effects": {
+          "gwa": -0.07,
+          "social": 10,
+          "energy": -6
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_sunday_rest_day",
+    "chapter": "random",
+    "weight": 3,
+    "scene": {
+      "background": "bg_barangay_street",
+      "characters": [
+        { "id": "player", "sprite": "player_happy", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Bihirang Linggo ng umaga na walang exam bukas at walang pending shift. Presko ang hangin, malinis ang nilabhang uniform, at may ₱60 extra ka sa bulsa.",
+          "textEn": "A rare Sunday morning with no exam tomorrow and no shift on the clock. Cool breeze, freshly washed uniform drying on the line, and ₱60 spare change."
+        },
+        {
+          "speaker": "{name}",
+          "text": "Hinga muna. Hindi naman masama magpahinga paminsan-minsan para mas malakas ulit sa Lunes.",
+          "textEn": "Time to breathe. Taking one gentle morning to recharge makes Monday twice as conquerable."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bumili ng mainit na taho at pandesal (₱40) at maglakad-lakad habang nakikinig ng music.",
+        "textEn": "Grab warm taho and pandesal (₱40) and take a relaxing morning walk.",
+        "hint": "-₱40, +22 EN, +20 MH",
+        "effects": {
+          "money": -40,
+          "energy": 22,
+          "mental": 20
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-advance reading ng 2 chapters habang presko pa ang umaga.",
+        "textEn": "Do calm advance reading for two chapters while the morning is peaceful.",
+        "hint": "GWA ↑, +10 EN, +10 MH",
+        "effects": {
+          "gwa": -0.1,
+          "energy": 10,
+          "mental": 10
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_canteen_inflation",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_canteen",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_surprised", "position": "right" },
+        { "id": "player", "sprite": "player_worried", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Pagdating sa canteen, napalunok ka sa bagong price board: tumaas ng ₱15 ang bawat silog at ₱10 ang kanin dahil sa inflation!",
+          "textEn": "Stepping into the canteen, your jaw drops at the updated menu board: silog meals just jumped by ₱15 and extra rice went up ₱10!"
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Grabe na talaga ang bilihin ngayon, {name}! Parang kailan lang ₱55 lang ang tapsilog, ngayon ₱85 na!",
+          "textEn": "Prices are wild right now, {name}! Felt like tapsilog was ₱55 yesterday, now it is ₱85!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-meal prep ng adobo at itlog sa boarding house para makatipid buong linggo!",
+        "textEn": "Switch to batch-cooked adobo and boiled eggs to beat inflation all week!",
+        "hint": "+₱260 saved, -6 EN, +Tipid",
+        "effects": {
+          "money": 260,
+          "energy": -6,
+          "mental": 6,
+          "flagsAdd": ["baon_master"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Maghati kayo ni Miggy sa ulam at mag-extra kanin na lang (₱45 each).",
+        "textEn": "Split one full ulam order with Miggy and share extra rice (₱45 each).",
+        "hint": "-₱45, +10 EN, +8 Miggy",
+        "effects": {
+          "money": -45,
+          "energy": 10,
+          "mental": 8,
+          "relationships": { "miggy": 8 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_fastfood_double_pay",
+    "chapter": "random",
+    "weight": 4,
+    "scene": {
+      "background": "bg_manila_street",
+      "characters": [
+        { "id": "employer", "sprite": "employer_happy", "position": "right" },
+        { "id": "player", "sprite": "player_neutral", "position": "left" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Holiday weekend! Nag-text ang shift manager ng malapit na fastfood branch: nagkulang sila ng crew at nag-aalok ng holiday premium pay!",
+          "textEn": "Holiday weekend! The nearby fastfood shift manager texts you: they are short-staffed and offering holiday premium pay!"
+        },
+        {
+          "speaker": "Manager",
+          "text": "{name}, kung kaya mong mag-cover ng 1-hour rush shift ngayon, may +₱200 holiday bonus on top ng regular pay mo!",
+          "textEn": "{name}, if you can cover one rush shift today, there is a +₱200 holiday bonus on top of your shift pay!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Kunin ang holiday shift! (Play Fastfood Crew +₱200 bonus)",
+        "textEn": "Take the holiday shift! (Play Fastfood Crew +₱200 bonus)",
+        "hint": "+₱200 + Play Fastfood Crew",
+        "effects": { "money": 200 },
+        "triggerMinigame": "fastfood",
+        "next": "PLANNER"
+      },
+      {
+        "text": "Magpahinga na lang muna — kailangan ng katawan ko ang holiday rest.",
+        "textEn": "Politely decline and use the holiday to fully recover your energy.",
+        "hint": "+18 EN, +14 MH",
+        "effects": {
+          "energy": 18,
+          "mental": 14
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "exp_rand_commute_inspiration",
+    "chapter": "random",
+    "weight": 3,
+    "scene": {
+      "background": "bg_manila_street",
+      "characters": [
+        { "id": "player", "sprite": "player_happy", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Hapon sa footbridge habang kumakagat ang kulay kahel na sunset sa Manila skyline. Tanaw mo ang mga jeepney, estudyante, at mga manggagawang pauwi.",
+          "textEn": "Late afternoon on the pedestrian overpass as orange sunset washes over the Manila skyline. Below you, jeepneys, students, and workers stream homeward."
+        },
+        {
+          "speaker": "{name}",
+          "text": "Ang dami pala naming lumalaban araw-araw. Nakakapagod, oo... pero habang may pangarap ako para sa pamilya ko sa {hometown}, hindi ako hihinto.",
+          "textEn": "So many of us are fighting the same quiet battle every single day. It is exhausting, sure... yet as long as I carry my dream for {hometown}, I am not stopping."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Isulat sa journal ang pangako mo sa sarili mo at magpatuloy nang mas matatag!",
+        "textEn": "Write a promise to your future self in your journal and keep pushing!",
+        "hint": "+18 MH, +10 EN",
+        "effects": {
+          "mental": 18,
+          "energy": 10,
+          "journal": {
+            "title": "Sunset Sa Footbridge",
+            "titleEn": "Sunset Over the Overpass",
+            "summary": "Sandali kang huminto para huminga at maalala kung para kanino ang bawat pagod mo.",
+            "summaryEn": "Paused on the overpass at sunset to remember who you are fighting for.",
+            "category": "choice"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-review ng notes habang nakatayo sa overpass — tuloy ang grind!",
+        "textEn": "Review your flash notes right there in the golden light — keep grinding!",
+        "hint": "GWA ↑, +12 MH",
+        "effects": {
+          "gwa": -0.09,
+          "mental": 12
+        },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

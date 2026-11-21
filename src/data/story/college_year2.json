@@ -1,0 +1,363 @@
+[
+  {
+    "id": "college2_opening",
+    "chapter": "college_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year2", "semester": 1, "week": 1 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "bea", "sprite": "bea_neutral", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "COLLEGE YEAR 2! Sophomore ka na — wala nang 'freshie excuse'. Mas mabibigat na majors, mas mahal na lab/materials fees, at totoong test ng tiyaga sa {course}.",
+          "textEn": "COLLEGE YEAR 2! Sophomore status — no more freshie excuses. Heavier majors, steeper lab fees, and a real test of grit in {course}."
+        },
+        {
+          "speaker": "Bea",
+          "text": "Warning daw ng mga 3rd year: dito sa 2nd year pinakamaraming nagshi-shift o nalalagas! Kaya natin 'to basta walang susuko!",
+          "textEn": "Upperclassmen warned us: 2nd year is the biggest weed-out year! We can survive if nobody gives up!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-set ng strict study + work routine para steady ang GWA!",
+        "textEn": "Lock in a strict study-and-work routine to keep GWA steady!",
+        "hint": "+GWA, -Energy",
+        "effects": {
+          "gwa": -0.08,
+          "energy": -6,
+          "journal": {
+            "title": "Sophomore Year sa {course}",
+            "titleEn": "Sophomore Year in {course}",
+            "summary": "Nagsimula ang 2nd Year — simula na ng totoong major subjects.",
+            "summaryEn": "Entered 2nd Year — the core major subjects begin in earnest.",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Huminga muna at unahin ang mental health ngayong simula ng sem.",
+        "textEn": "Pace yourself and protect your mental health from day one.",
+        "hint": "+Mental, +Energy",
+        "effects": { "mental": 10, "energy": 8 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college2_shift_dilemma",
+    "chapter": "college_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year2", "semester": 1, "week": 3 },
+    "scene": {
+      "background": "bg_library",
+      "characters": [
+        { "id": "player", "sprite": "player_worried", "position": "left" },
+        { "id": "crush", "sprite": "crush_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Midterm crunch ng 2nd year. Nakatitig ka sa syllabus ng {course} habang iniisip: 'Para ba talaga sa akin 'to? O mas bagay ako sa ibang kurso na mas kaya ng budget at puso ko?'",
+          "textEn": "Sophomore midterm crunch. Staring at your {course} syllabus, a quiet doubt creeps in: 'Is this truly my path, or would another course fit my heart and budget better?'"
+        },
+        {
+          "speaker": "Jamie",
+          "text": "Kung nahihirapan ka, {name}, walang masama sa pag-shift ng kurso... pero kung mahal mo pa rin ang {course}, nandito kami para tumulong sa'yo.",
+          "textEn": "If you are struggling, {name}, there is zero shame in shifting courses... and if you still love {course}, we are right here to back you up."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Ilalaban ko pa rin ang {course}! Hindi ako susuko!",
+        "textEn": "I am sticking with {course}! Not giving up now!",
+        "hint": "+GWA, +Mental",
+        "effects": { "gwa": -0.08, "mental": 8, "flagsAdd": ["stayed_original_course"] },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-shift sa BS Business Administration (BSBA) — mas bagay sa diskarte ko!",
+        "textEn": "Shift to BS Business Administration (BSBA) — fits my hustle better!",
+        "hint": "Shifts Course -> Unlocks Shifted Ending",
+        "conditions": { "course": ["BSIT", "BSCS", "Nursing", "Education", "Engineering", "Criminology", "Hospitality", "Psychology"] },
+        "effects": {
+          "shiftCourse": "BSBA",
+          "mental": 16,
+          "money": -450,
+          "flagsAdd": ["shifted_course", "business_instinct"],
+          "journal": {
+            "title": "Nag-shift sa BSBA",
+            "titleEn": "Shifted to BSBA",
+            "summary": "Nagdesisyon kang lumipat sa BSBA kahit maging irregular — mas buo ang loob mo ngayon.",
+            "summaryEn": "Made the brave leap to shift into BSBA — irregular schedule, lighter heart.",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-shift sa BS Information Technology (BSIT) — mas malaki ang freelance potential!",
+        "textEn": "Shift to BS Information Technology (BSIT) — stronger freelance potential!",
+        "hint": "Shifts Course -> Unlocks Shifted Ending",
+        "conditions": { "course": ["BSBA", "Nursing", "Education", "Engineering", "Criminology", "Hospitality", "Psychology", "BSCS"] },
+        "effects": {
+          "shiftCourse": "BSIT",
+          "mental": 16,
+          "money": -450,
+          "flagsAdd": ["shifted_course", "ict_freelancer"],
+          "journal": {
+            "title": "Nag-shift sa BSIT",
+            "titleEn": "Shifted to BSIT",
+            "summary": "Lumipat ka sa BSIT para pagsabayin ang tech skills at freelance income.",
+            "summaryEn": "Shifted to BSIT to pair tech skills with freelance income.",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college2_tuition_crunch",
+    "chapter": "college_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year2", "semester": 1, "week": 4 },
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [
+        { "id": "nena", "sprite": "nena_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Aling Nena",
+          "text": "{name}, sabay ang bayaran ng tuition mo at meralco share ngayong buwan. Nagtaas na naman ng singil ang kuryente dahil sa init!",
+          "textEn": "{name}, tuition and electricity share landed in the same week. Power bills jumped again because of the summer heat!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bayaran ang tuition + utilities mula sa ipon (-₱1,600).",
+        "textEn": "Settle tuition and utilities from your savings (-₱1,600).",
+        "hint": "-₱1,600, +Aling Nena",
+        "effects": {
+          "money": -1600,
+          "relationships": { "aling_nena": 10 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-extra shift kay Aling Nena para bawas sa bayarin! (Play Carinderia Rush)",
+        "textEn": "Work an extra shift at Aling Nena's to offset the bill! (Play Carinderia Rush)",
+        "hint": "Minigame + Reduced bill (-₱950)",
+        "effects": {
+          "money": -950,
+          "relationships": { "aling_nena": 12 }
+        },
+        "triggerMinigame": "carinderia",
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college2_scholarship_check",
+    "chapter": "college_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year2", "semester": 1, "week": 6 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "prof", "sprite": "prof_neutral", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "End of 1st Semester ng 2nd Year! Evaluation na ng scholarship renewal at Dean's List. Sana napanatili ninyo ang magandang GWA!",
+          "textEn": "End of 2nd Year 1st Semester! Scholarship renewal and Dean's List evaluations are out. Hope you protected your GWA!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "I-submit ang grade slip sa Scholarship Office.",
+        "textEn": "Submit your grade slip to the Scholarship Office.",
+        "hint": "Checks GWA standing",
+        "effects": { "mental": 6 },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college2_sem2_major_terror",
+    "chapter": "college_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year2", "semester": 2, "week": 2 },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_angry", "position": "center" }
+      ],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Surprise oral recitation! Walang bubuklat ng notebook. Kapag hindi nakasagot, minus 10 sa midterm standing!",
+          "textEn": "Surprise graded recitation! Close your notebooks. Blank answers mean minus 10 on midterms!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Huminga nang malalim at sumagot gamit ang stock knowledge at logic!",
+        "textEn": "Stay composed and reason through the question aloud!",
+        "hint": "+GWA, +Prof. Reyes",
+        "effects": {
+          "energy": -10,
+          "gwa": -0.1,
+          "relationships": { "prof_reyes": 10 }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Maging tapat kung saan nalito at itanong ang tamang konsepto.",
+        "textEn": "Admit honestly where you got stuck and ask to clarify.",
+        "hint": "+Mental, +Prof. Reyes",
+        "effects": { "mental": 5, "relationships": { "prof_reyes": 6 } },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college2_sem2_tuition",
+    "chapter": "college_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year2", "semester": 2, "week": 4 },
+    "scene": {
+      "background": "bg_manila_street",
+      "characters": [
+        { "id": "mama", "sprite": "mama_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Mama",
+          "text": "Anak, na-delay ang padala/kita natin ngayong buwan pero nakaipon ako ng ₱700 para pandagdag sa exam permit mo. Kaya mo ba ang natitira?",
+          "textEn": "Anak, money came in late this month, but I scraped together ₱700 toward your exam permit. Can you cover the remainder?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin ang tulong ni Mama at bayaran ang balance (-₱900 net).",
+        "textEn": "Accept Mama's help and pay the remaining balance (-₱900 net).",
+        "hint": "-₱900, +Family",
+        "effects": { "money": -900, "relationships": { "family": 8 } },
+        "next": "PLANNER"
+      },
+      {
+        "text": "'Huwag na Ma, itago mo 'yan sa bahay! Kaya ko na 'to!' (-₱1,600).",
+        "textEn": "'Keep it for home, Ma! I have this covered!' (-₱1,600).",
+        "hint": "-₱1,600, ++Family, ++Mental",
+        "effects": {
+          "money": -1600,
+          "mental": 14,
+          "relationships": { "family": 18 },
+          "flagsAdd": ["independent_student"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college2_year_end",
+    "chapter": "college_year2",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year2", "semester": 2, "week": 6 },
+    "scene": {
+      "background": "bg_canteen",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "HALFWAY THERE! Tapos na ang 2nd Year! Dalawang taon na lang — 3rd Year at Thesis/OJT na!",
+          "textEn": "HALFWAY THERE! 2nd Year is in the books! Two more years — Junior year and Thesis/OJT ahead!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-summer hustle para may pondo sa 3rd year (+₱650, -Energy).",
+        "textEn": "Hustle during summer break to build a 3rd-year buffer (+₱650).",
+        "hint": "+₱650, +Energy reset",
+        "effects": {
+          "money": 650,
+          "energy": 16,
+          "mental": 12,
+          "journal": {
+            "title": "Kalahati na ng Kolehiyo!",
+            "titleEn": "Halfway Through College!",
+            "summary": "Nalampasan mo ang nakakatakot na 2nd year. Papasok ka na sa 3rd year!",
+            "summaryEn": "Cleared the notorious sophomore weed-out year. Junior year awaits!",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Umuwi sa {hometown} para magpahinga kasama ang pamilya (++Energy, ++Mental).",
+        "textEn": "Go home to {hometown} for real rest with family (++Energy, ++Mental).",
+        "hint": "++Energy, ++Mental, +Family",
+        "effects": {
+          "energy": 30,
+          "mental": 22,
+          "relationships": { "family": 14 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college2_side_gig_scale",
+    "chapter": "college_year2",
+    "weight": 2,
+    "once": true,
+    "scene": {
+      "background": "bg_sari_sari",
+      "characters": [
+        { "id": "employer", "sprite": "employer_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Small Business Owner",
+          "text": "Ikaw ba si {name}? Ni-refer ka ni Aling Nena! Kailangan namin ng student na mag-aayos ng social media menu at weekend deliveries — ₱500 plus tip!",
+          "textEn": "Are you {name}? Aling Nena recommended you! We need a student to design our menu and help with weekend orders — ₱500 plus tips!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin ang gig! (Play Freelance Task)",
+        "textEn": "Take the gig! (Play Freelance Task)",
+        "hint": "Minigame + Business Flag",
+        "effects": { "flagsAdd": ["student_hustler", "business_instinct"] },
+        "triggerMinigame": "freelance",
+        "next": "PLANNER"
+      },
+      {
+        "text": "I-refer si Miggy para maghati kayo sa komisyon (+₱200, +Miggy).",
+        "textEn": "Split the gig with Miggy (+₱200, +Miggy).",
+        "hint": "+₱200, +Miggy",
+        "effects": { "money": 200, "relationships": { "miggy": 14 } },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

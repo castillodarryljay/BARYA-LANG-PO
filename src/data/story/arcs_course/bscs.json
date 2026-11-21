@@ -1,0 +1,30 @@
+[
+  {
+    "id": "course_bscs_algo_contest",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["BSCS"], "chapter": ["college_year1", "college_year2", "college_year3"] },
+    "scene": {
+      "background": "bg_computer_lab",
+      "characters": [{ "id": "prof", "sprite": "prof_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Regional Programming Olympiad! Kailangan ng BSCS representative. May stipend at exemption sa isang quiz kapag sumali ka!",
+          "textEn": "Regional Programming Olympiad! We need a BSCS representative. Comes with a stipend and a quiz exemption!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Laban! Debug at optimize natin 'yan! (Play Freelance Task)",
+        "textEn": "Count me in! Let us crush those algorithms! (Play Freelance Task)",
+        "hint": "Minigame + ++GWA",
+        "effects": { "gwa": -0.15, "relationships": { "prof_reyes": 12 }, "flagsAdd": ["ict_freelancer"] },
+        "triggerMinigame": "freelance",
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

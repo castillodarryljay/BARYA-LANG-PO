@@ -1,0 +1,29 @@
+[
+  {
+    "id": "course_crim_morning_drill",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["Criminology"], "chapter": ["college_year1", "college_year2", "college_year3"] },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [{ "id": "carlo", "sprite": "carlo_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Carlo",
+          "text": "5:30 AM Criminology physical drill! Kahit puyat sa Criminal Law, ang tibay ng stamina mo, {name}!",
+          "textEn": "5:30 AM Criminology morning drill! Even after studying Criminal Law, your endurance is unstoppable, {name}!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Pangunahan ang morning push-ups at takbo (+Energy, +GWA, +Social).",
+        "textEn": "Lead the morning formation run (+Energy, +GWA, +Social).",
+        "hint": "+Energy, +GWA, +Social",
+        "effects": { "energy": 14, "gwa": -0.1, "social": 10 },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

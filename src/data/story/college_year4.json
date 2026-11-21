@@ -1,0 +1,364 @@
+[
+  {
+    "id": "college4_opening",
+    "chapter": "college_year4",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year4", "semester": 1, "week": 1 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "COLLEGE YEAR 4 — GRADUATING YEAR! Ito na ang huling stretch: Final Thesis Defense, OJT / Practicum, Graduation Clearance, at ang pinakahihintay na martsa!",
+          "textEn": "COLLEGE YEAR 4 — GRADUATING YEAR! The final stretch: Final Thesis Defense, OJT / Practicum, Graduation Clearance, and the march you fought years for!"
+        },
+        {
+          "speaker": "Miggy",
+          "text": "Senior na tayo, {name}! Isang kembot na lang, hindi na 'student discount' ang sasabihin natin sa jeep — 'bayad po, regular!'",
+          "textEn": "We are seniors, {name}! Almost done asking for student fare discounts on the jeep!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Ibigay ang 100% sa huling taon — para kay Mama at sa sarili!",
+        "textEn": "Give everything to this final year — for Mama and for yourself!",
+        "hint": "+Mental, +GWA",
+        "effects": {
+          "mental": 12,
+          "gwa": -0.06,
+          "journal": {
+            "title": "Huling Taon sa Kolehiyo!",
+            "titleEn": "Senior Year!",
+            "summary": "Nagsimula ang 4th Year sa {course}. Abot-kamay na ang diploma!",
+            "summaryEn": "Started Senior Year in {course}. The diploma is within reach!",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college4_thesis_final_defense",
+    "chapter": "college_year4",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year4", "semester": 1, "week": 4 },
+    "scene": {
+      "background": "bg_classroom",
+      "characters": [
+        { "id": "prof", "sprite": "prof_worried", "position": "left" },
+        { "id": "bea", "sprite": "bea_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "FINAL THESIS DEFENSE DAY! Suot mo ang hiram na blazer, hawak ang hardbound drafts, at nakaharap sa tatlong panelists kasama si Prof. Reyes!",
+          "textEn": "FINAL THESIS DEFENSE DAY! Wearing a borrowed blazer, holding your printed drafts, facing three panelists including Prof. Reyes!"
+        },
+        {
+          "speaker": "Prof. Reyes",
+          "text": "Bago kayo mag-conclude, {name}: ano ang totoong impact ng study ninyo sa komunidad, at bakit namin ito dapat aprubahan ngayon?",
+          "textEn": "Before you conclude, {name}: what is the real-world impact of your study, and why should this panel approve it today?"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Sumagot mula sa data at puso — ipakita ang totoong kwento ng respondents!",
+        "textEn": "Answer with hard data and heart — highlight the real voices in your findings!",
+        "hint": "++GWA, ++Prof. Reyes, +thesis_defended",
+        "effects": {
+          "energy": -18,
+          "gwa": -0.2,
+          "mental": 14,
+          "relationships": { "prof_reyes": 18, "bea": 14 },
+          "flagsAdd": ["thesis_defended", "best_thesis_nominee"],
+          "journal": {
+            "title": "THESIS DEFENDED!",
+            "titleEn": "THESIS DEFENDED!",
+            "summary": "Naipasa mo ang Final Thesis Defense sa {course}! Isang malaking tinik ang nabunot!",
+            "summaryEn": "Passed Final Thesis Defense in {course}! The biggest hurdle is cleared!",
+            "category": "milestone"
+          }
+        },
+        "next": "college4_thesis_celebration"
+      },
+      {
+        "text": "Mag-cover ng budget snacks para sa panel at tapusin nang kalmado (-₱280).",
+        "textEn": "Keep the presentation steady and cover panel printing/snacks (-₱280).",
+        "hint": "-₱280, +GWA, +thesis_defended",
+        "effects": {
+          "money": -280,
+          "energy": -12,
+          "gwa": -0.12,
+          "mental": 10,
+          "relationships": { "prof_reyes": 12 },
+          "flagsAdd": ["thesis_defended"]
+        },
+        "next": "college4_thesis_celebration"
+      }
+    ]
+  },
+  {
+    "id": "college4_thesis_celebration",
+    "chapter": "college_year4",
+    "once": true,
+    "scene": {
+      "background": "bg_carinderia",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "APPROVED! TAPOS NA ANG THESIS! Gusto kong umiyak at kumain ng tatlong cups ng rice!",
+          "textEn": "APPROVED! THESIS IS DONE! I want to cry and eat three cups of rice!"
+        },
+        {
+          "speaker": "Aling Nena",
+          "text": "Libre na ang sabaw at extra rice niyo ngayong gabi! Congrats mga anak!",
+          "textEn": "Soup and extra rice are on the house tonight! Congrats, kids!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Kain nang masaya kasama ang thesis team at si Aling Nena!",
+        "textEn": "Feast happily with your thesis team and Aling Nena!",
+        "hint": "+Energy, ++Mental",
+        "effects": {
+          "energy": 18,
+          "mental": 18,
+          "relationships": { "aling_nena": 10, "bea": 10, "miggy": 10 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college4_ojt_practicum",
+    "chapter": "college_year4",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year4", "semester": 2, "week": 2 },
+    "scene": {
+      "background": "bg_manila_street",
+      "characters": [
+        { "id": "employer", "sprite": "employer_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "OJT Supervisor",
+          "text": "Malapit mo nang matapos ang 400+ hours mo sa OJT / Practicum para sa {course}, {name}! Impressive ang work ethic mo — eto ang intern allowance mo!",
+          "textEn": "You are almost done with your 400+ hours of {course} OJT / Practicum, {name}! Impressive work ethic — here is your intern allowance!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tanggapin ang intern allowance (+₱1,400) at magpasalamat sa team!",
+        "textEn": "Receive the intern allowance (+₱1,400) and thank the team!",
+        "hint": "+₱1,400, +GWA, +ojt_completed",
+        "effects": {
+          "money": 1400,
+          "gwa": -0.1,
+          "mental": 12,
+          "flagsAdd": ["ojt_completed"],
+          "journal": {
+            "title": "OJT / Practicum Completed!",
+            "titleEn": "OJT / Practicum Completed!",
+            "summary": "Natapos mo ang OJT na may magandang evaluation at intern allowance!",
+            "summaryEn": "Completed your OJT with glowing evaluations and an intern stipend!",
+            "category": "milestone"
+          }
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-volunteer sa extra client project para sa mas malaking bonus (+₱2,200, -Energy).",
+        "textEn": "Stay for an extra capstone deliverable for a bigger bonus (+₱2,200, -Energy).",
+        "hint": "+₱2,200, -Energy, +ojt_completed",
+        "effects": {
+          "money": 2200,
+          "energy": -18,
+          "gwa": -0.12,
+          "flagsAdd": ["ojt_completed", "job_offer_after_grad"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college4_clearance_crunch",
+    "chapter": "college_year4",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year4", "semester": 2, "week": 4 },
+    "scene": {
+      "background": "bg_school_gate",
+      "characters": [
+        { "id": "player", "sprite": "player_worried", "position": "left" },
+        { "id": "carlo", "sprite": "carlo_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "GRADUATION CLEARANCE WEEK! Huling bayarin: Toga rental, graduation fee, yearbook/TOR processing, at final balance — ₱1,800 lahat!",
+          "textEn": "GRADUATION CLEARANCE WEEK! Final fees: Toga rental, graduation fee, TOR processing, and clearance — ₱1,800 total!"
+        },
+        {
+          "speaker": "Carlo",
+          "text": "Huling gastos na 'to, {name}! Pagkatapos ng pirma ng Accounting at Registrar, opisyal na graduate ka na!",
+          "textEn": "The very last fee, {name}! Once Accounting and Registrar sign off, you are officially a graduate!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Bayaran ang Graduation Clearance nang buo (-₱1,800)!",
+        "textEn": "Pay the Graduation Clearance in full (-₱1,800)!",
+        "hint": "-₱1,800, +cleared_for_graduation",
+        "effects": {
+          "money": -1800,
+          "mental": 14,
+          "flagsAdd": ["cleared_for_graduation"]
+        },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-promissory note sa Registrar at hiramin ang toga ni Kuya/Ate (-₱500).",
+        "textEn": "File a graduation promissory note and borrow a toga (-₱500).",
+        "hint": "-₱500, +promissory_grad, +cleared_for_graduation",
+        "effects": {
+          "money": -500,
+          "flagsAdd": ["cleared_for_graduation", "graduated_with_promissory"]
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college4_graduation_eve",
+    "chapter": "college_year4",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year4", "semester": 2, "week": 5 },
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "left" },
+        { "id": "crush", "sprite": "crush_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Bisperas ng Graduation. Nakasabit ang toga mo sa pader — katabi ng lumang coin purse mo na puno ng barya mula pa noong Grade 11.",
+          "textEn": "Graduation Eve. Your black toga hangs on the wall right beside the worn coin purse that carried you since Grade 11."
+        },
+        {
+          "speaker": "Mama",
+          "text": "Nandito na kami ni Tatay sa Manila, anak! Maaga kami bukas sa auditorium. Hindi kami makatulog sa sobrang saya!",
+          "textEn": "Tatay and I just arrived in Manila, anak! We will be at the auditorium first thing tomorrow. Too proud to even sleep!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Matulog nang mahimbing — bukas na ang pinakamalaking araw ng buhay mo!",
+        "textEn": "Sleep peacefully — tomorrow is the biggest day of your life!",
+        "hint": "++Energy, ++Mental",
+        "effects": {
+          "energy": 30,
+          "mental": 25,
+          "relationships": { "family": 15, "crush": 10 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "college4_graduation_march",
+    "chapter": "college_year4",
+    "once": true,
+    "milestoneWeek": { "chapter": "college_year4", "semester": 2, "week": 6 },
+    "scene": {
+      "background": "bg_graduation_stage",
+      "characters": [
+        { "id": "mama", "sprite": "mama_happy", "position": "left" },
+        { "id": "prof", "sprite": "prof_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "GRADUATION DAY! Tumutugtog ang Pomp and Circumstance. Nakaupo sina Mama, Tatay, Aling Nena, at ang buong barkada habang nakataas ang phone cameras nila.",
+          "textEn": "GRADUATION DAY! Pomp and Circumstance swells through the auditorium. Mama, Tatay, Aling Nena, and the entire barkada lift their cameras in tears."
+        },
+        {
+          "speaker": "Dean",
+          "text": "Candidates for the degree of {course}... please rise! {name} — step forward to receive your diploma!",
+          "textEn": "Candidates for the degree of {course}... please rise! {name} — step forward to receive your diploma!"
+        },
+        {
+          "speaker": "{name}",
+          "text": "Mula barya-baryang baon hanggang dito... PARA SA PAMILYA. PARA SA PANGARAP. GRADUATE NA AKO!",
+          "textEn": "From pocket coins all the way here... FOR FAMILY. FOR THE DREAM. I FINALLY GRADUATED!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Umakyat sa entablado at tanggapin ang diploma!",
+        "textEn": "Walk across the stage and claim your diploma!",
+        "hint": "Reveals Your Ending!",
+        "effects": {
+          "flagsAdd": ["college_graduated"],
+          "journal": {
+            "title": "COLLEGE GRADUATE!",
+            "titleEn": "COLLEGE GRADUATE!",
+            "summary": "Umakyat ka sa entablado at tinanggap ang diploma mo sa {course}!",
+            "summaryEn": "Walked the graduation stage and received your {course} diploma!",
+            "category": "ending"
+          }
+        },
+        "next": "END:AUTO"
+      }
+    ]
+  },
+  {
+    "id": "college4_last_barkada_night",
+    "chapter": "college_year4",
+    "weight": 2,
+    "once": true,
+    "scene": {
+      "background": "bg_fiesta_night",
+      "characters": [
+        { "id": "miggy", "sprite": "miggy_happy", "position": "left" },
+        { "id": "bea", "sprite": "bea_happy", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Miggy",
+          "text": "Huling tambay natin bilang estudyante bago maging mga 'adulting' taxpayers! Thank you sa lahat, {name} — kahit barya lang dala natin, mayaman tayo sa alaala!",
+          "textEn": "Our last student hangout before full adulting and taxes! Thank you for everything, {name} — broke in cash, rich in memories!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Cheers ng fishball at palamig! Friends forever!",
+        "textEn": "Cheers with fishballs and sweet gulaman! Friends forever!",
+        "hint": "++Mental, ++Social",
+        "effects": {
+          "money": -45,
+          "mental": 20,
+          "social": 16,
+          "relationships": { "miggy": 12, "bea": 12, "carlo": 12 }
+        },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

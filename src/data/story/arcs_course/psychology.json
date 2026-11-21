@@ -1,0 +1,29 @@
+[
+  {
+    "id": "course_psych_peer_counseling",
+    "chapter": "course",
+    "weight": 4,
+    "once": true,
+    "conditions": { "course": ["Psychology"], "chapter": ["college_year1", "college_year2", "college_year3"] },
+    "scene": {
+      "background": "bg_library",
+      "characters": [{ "id": "crush", "sprite": "crush_happy", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Jamie",
+          "text": "Ikaw daw ang nag-organize ng Psych Peer Support circle bago finals, {name}! Sobrang laking tulong sa mga kabado sa exam!",
+          "textEn": "I heard you helped run the Psych Peer Support circle before finals, {name}! Such a lifesaver for anxious students!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-facilitate ng grounding exercise para sa lahat (+Mental, +Social, +GWA).",
+        "textEn": "Lead a grounding session for stressed classmates (+Mental, +Social, +GWA).",
+        "hint": "+Mental, +Social, +GWA",
+        "effects": { "mental": 16, "social": 12, "gwa": -0.1, "relationships": { "crush": 8 } },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]

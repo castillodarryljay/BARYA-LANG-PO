@@ -1,0 +1,66 @@
+[
+  {
+    "id": "side_thesis_data_gathering",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "flagsAll": ["thesis_title_approved"] },
+    "scene": {
+      "background": "bg_barangay_street",
+      "characters": [
+        { "id": "bea", "sprite": "bea_happy", "position": "left" },
+        { "id": "miggy", "sprite": "miggy_worried", "position": "right" }
+      ],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "Data gathering day! Kailangan natin ng 120 survey respondents para sa {course} thesis natin. Mainit pero kaya 'to!",
+          "textEn": "Data gathering day! We need 120 survey respondents for our {course} thesis. Sweltering out here, but we can do it!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Mag-bahay-bahay at magbigay ng candies sa respondents (-₱90, ++GWA).",
+        "textEn": "Go door-to-door with small thank-you candies (-₱90, ++GWA).",
+        "hint": "-₱90, ++GWA, -Energy",
+        "effects": { "money": -90, "energy": -12, "gwa": -0.12, "flagsAdd": ["solid_thesis_data"] },
+        "next": "PLANNER"
+      },
+      {
+        "text": "Mag-hybrid QR code at classroom survey para tipid (-₱30, +GWA).",
+        "textEn": "Run hybrid QR codes and classroom surveys to cut printing costs (-₱30, +GWA).",
+        "hint": "-₱30, +GWA",
+        "effects": { "money": -30, "gwa": -0.08, "flagsAdd": ["solid_thesis_data"] },
+        "next": "PLANNER"
+      }
+    ]
+  },
+  {
+    "id": "side_thesis_overnight_cram",
+    "chapter": "side",
+    "weight": 3,
+    "once": true,
+    "conditions": { "flagsAll": ["solid_thesis_data"] },
+    "scene": {
+      "background": "bg_boarding_house",
+      "characters": [{ "id": "bea", "sprite": "bea_worried", "position": "right" }],
+      "lines": [
+        {
+          "speaker": "Bea",
+          "text": "Chapter 4 & 5 overnight! May dalawang thermos ng kape at pancit canton — kapag natapos natin 'to tonight, safe na tayo sa mock defense!",
+          "textEn": "Chapter 4 & 5 overnight sprint! Two thermoses of coffee and pancit canton — finish tonight and we cruise into mock defense!"
+        }
+      ]
+    },
+    "choices": [
+      {
+        "text": "Tapusin ang statistical analysis at charts hanggang 3AM! (-Energy, ++GWA)",
+        "textEn": "Finish the analysis and charts until 3 AM! (-Energy, ++GWA)",
+        "hint": "-Energy, ++GWA, +Bea",
+        "effects": { "energy": -16, "gwa": -0.14, "relationships": { "bea": 12 } },
+        "next": "PLANNER"
+      }
+    ]
+  }
+]
