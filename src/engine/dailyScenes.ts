@@ -6,6 +6,13 @@ import {
   SEM2_DAYS,
   WEEKS_PER_SEMESTER,
 } from '../data/config';
+import {
+  computeRealisticTempC,
+  DAILY_SLICE_OF_LIFE_BUZZ,
+  DAILY_ULAM_MENU,
+  PHILIPPINE_CALENDAR_EVENTS,
+  PHILIPPINE_MONTHLY_THEMES,
+} from '../data/philippineEvents';
 import type {
   CalendarDayInfo,
   DailyMomentSnapshot,
@@ -90,7 +97,7 @@ export function getCalendarDayInfo(dayOfYear: number, totalDays: number = 1): Ca
     else if (seed < 90) weather = 'cloudy';
     else weather = 'rainy';
   } else {
-    if (seed < 52) weather = 'hot';
+    if (seed < 55) weather = 'hot';
     else if (seed < 85) weather = 'sunny';
     else weather = 'cloudy';
   }
@@ -100,10 +107,21 @@ export function getCalendarDayInfo(dayOfYear: number, totalDays: number = 1): Ca
     breezy: { tl: 'Presko · Mahangin', en: 'Cool & Breezy' },
     cloudy: { tl: 'Maulap · Makulimlim', en: 'Partly Cloudy' },
     rainy: { tl: 'Maulan · Magdala ng Payong', en: 'Rainy · Bring Umbrella' },
-    hot: { tl: 'Mainit · Maalinsangan', en: 'Hot & Humid' },
+    hot: { tl: 'Mainit · Heat Index Alert', en: 'Hot · High Heat Index' },
   };
 
-  const special = CALENDAR_SPECIAL_DAYS[day];
+  const phEvent = PHILIPPINE_CALENDAR_EVENTS[day];
+  const fallbackSpecial = CALENDAR_SPECIAL_DAYS[day];
+  const monthTheme = PHILIPPINE_MONTHLY_THEMES[monthMeta.short] ?? {
+    tl: 'Regular na Pasukan',
+    en: 'Regular School Month',
+  };
+  const tempC = computeRealisticTempC(season, weather, day);
+  const ulam = DAILY_ULAM_MENU[(day * 5 + Math.max(1, totalDays) * 3) % DAILY_ULAM_MENU.length];
+  const buzz =
+    DAILY_SLICE_OF_LIFE_BUZZ[
+      (day * 7 + Math.max(1, totalDays) * 11) % DAILY_SLICE_OF_LIFE_BUZZ.length
+    ];
 
   return {
     dayOfYear: day,
@@ -116,8 +134,16 @@ export function getCalendarDayInfo(dayOfYear: number, totalDays: number = 1): Ca
     weather,
     weatherLabelTl: weatherLabels[weather].tl,
     weatherLabelEn: weatherLabels[weather].en,
-    specialDayTl: special?.tl,
-    specialDayEn: special?.en,
+    tempC,
+    monthThemeTl: monthTheme.tl,
+    monthThemeEn: monthTheme.en,
+    isHolidayOrBreak: Boolean(phEvent?.isNoClass),
+    specialDayTl: phEvent?.tl ?? fallbackSpecial?.tl,
+    specialDayEn: phEvent?.en ?? fallbackSpecial?.en,
+    dailyUlamTl: ulam.tl,
+    dailyUlamEn: ulam.en,
+    dailyBuzzTl: buzz.tl,
+    dailyBuzzEn: buzz.en,
   };
 }
 

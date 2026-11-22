@@ -443,20 +443,22 @@ test('continuous 7-beat interactive daily story flows smoothly from wake_up to b
   state = applyDailyStoryChoice(state, munggoChoice).nextState;
   assert.equal(state.dayBeat, 'afternoon');
 
-  // 5. Afternoon supports inline Job Picker story choices & Study progression
+  // 5. Afternoon supports inline Job Picker story choices & Study/Real-World Encounter progression
   const jobPickerScene = buildDailyStoryScene(state, { showJobPicker: true });
   assert.ok(jobPickerScene.choices.some((c) => c.triggerMinigame === 'carinderia'));
   assert.ok(jobPickerScene.choices.some((c) => c.id === 'close_job_picker'));
 
   const aftScene = buildDailyStoryScene(state);
-  const studyChoice = aftScene.choices.find((c) => c.id === 'aft_study');
+  const studyChoice = aftScene.choices.find(
+    (c) => c.countsAsAction === 'study' && !c.disabled
+  );
   assert.ok(studyChoice);
   state = applyDailyStoryChoice(state, studyChoice).nextState;
   assert.equal(state.dayBeat, 'evening');
 
   // 6. Evening -> Bedtime
   const eveScene = buildDailyStoryScene(state);
-  const mamaChoice = eveScene.choices.find((c) => c.id === 'eve_dinner_mama');
+  const mamaChoice = eveScene.choices.find((c) => !c.openJobPicker && !c.disabled);
   assert.ok(mamaChoice);
   state = applyDailyStoryChoice(state, mamaChoice).nextState;
   assert.equal(state.dayBeat, 'bedtime');
@@ -474,6 +476,61 @@ test('continuous 7-beat interactive daily story flows smoothly from wake_up to b
   assert.equal(day2.dayBeat, 'wake_up');
   assert.deepEqual(day2.dayContextTags, []);
   assert.equal(verifySaveIntegrity(day2).valid, true);
+});
+
+test('real Philippine calendar holidays, monthly themes, realistic temps, and real-world student encounters work accurately', async () => {
+  const { buildDailyStoryScene } = await import('./dailyStoryFlow');
+
+  // Official Philippine National Holidays & No-Class Days
+  const independenceDay = getCalendarDayInfo(12, 12); // June 12
+  assert.equal(independenceDay.monthName, 'June');
+  assert.equal(independenceDay.dayOfMonth, 12);
+  assert.equal(independenceDay.isHolidayOrBreak, true);
+  assert.ok(independenceDay.specialDayTl?.includes('Kalayaan'));
+
+  const teachersDay = getCalendarDayInfo(127, 127); // Oct 5
+  assert.equal(teachersDay.monthName, 'October');
+  assert.equal(teachersDay.dayOfMonth, 5);
+  assert.ok(teachersDay.specialDayTl?.includes('Teachers'));
+
+  const bonifacioDay = getCalendarDayInfo(183, 183); // Nov 30
+  assert.equal(bonifacioDay.monthName, 'November');
+  assert.equal(bonifacioDay.dayOfMonth, 30);
+  assert.equal(bonifacioDay.isHolidayOrBreak, true);
+
+  const laborDay = getCalendarDayInfo(335, 335); // May 1
+  assert.equal(laborDay.monthName, 'May');
+  assert.equal(laborDay.dayOfMonth, 1);
+  assert.equal(laborDay.isHolidayOrBreak, true);
+
+  // Daily uniqueness: consecutive days rotate ulam & slice-of-life buzz
+  const d1 = getCalendarDayInfo(1, 1);
+  const d2 = getCalendarDayInfo(2, 2);
+  assert.notEqual(d1.dailyUlamTl, d2.dailyUlamTl);
+  assert.notEqual(d1.dailyBuzzTl, d2.dailyBuzzTl);
+
+  // Holiday switches commute beat to Walang Pasok holiday mode
+  const holidaySave = {
+    ...createInitialSave(baseProfile),
+    dayOfYear: 12,
+    totalWeeks: 12,
+    dayBeat: 'commute' as const,
+  };
+  const holidayCommute = buildDailyStoryScene(holidaySave);
+  assert.ok(
+    holidayCommute.beatLabelTl.includes('Walang Pasok') ||
+      Boolean(holidayCommute.encounterTagTl)
+  );
+
+  // Real-world student problem triggers on Day 1 afternoon for BSIT profile
+  const day1AftSave = {
+    ...createInitialSave(baseProfile),
+    dayOfYear: 1,
+    totalWeeks: 1,
+    dayBeat: 'afternoon' as const,
+  };
+  const day1AftScene = buildDailyStoryScene(day1AftSave);
+  assert.ok(day1AftScene.encounterTagTl, 'Expected real-world student encounter on Day 1 afternoon');
 });
 
 

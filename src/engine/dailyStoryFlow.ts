@@ -5,6 +5,7 @@ import {
   MIN_STRENUOUS_ENERGY,
   MINIGAME_CONFIGS,
 } from '../data/config';
+import { getDailyRealWorldEncounter } from '../data/philippineEvents';
 import {
   getCalendarDayInfo,
   normalizeDayOfYear,
@@ -183,6 +184,7 @@ export function buildDailyStoryScene(
   const lowMoney = state.stats.money < 120;
   const inDebt = state.stats.money < 0;
   const seed = (day + state.totalWeeks) % 3;
+  const isNoClassDay = Boolean(weekday.isWeekend || cal.isHolidayOrBreak);
 
   if (options?.showJobPicker && (beat === 'afternoon' || beat === 'evening')) {
     return buildJobPickerScene(
@@ -193,7 +195,26 @@ export function buildDailyStoryScene(
     );
   }
 
-  // 1. WAKE UP (05:30 AM)
+  // Inject authentic real-world Filipino student problem / daily encounter when scheduled for this beat!
+  const realEncounter = getDailyRealWorldEncounter(state, cal, beat, weekday.isWeekend);
+  if (realEncounter) {
+    return {
+      id: realEncounter.id,
+      beat,
+      beatLabelTl: BEAT_META[beat].tl,
+      beatLabelEn: BEAT_META[beat].en,
+      locationTl: realEncounter.locationTl,
+      locationEn: realEncounter.locationEn,
+      encounterTagTl: realEncounter.tagTl,
+      encounterTagEn: realEncounter.tagEn,
+      background: realEncounter.background,
+      characters: realEncounter.characters,
+      lines: realEncounter.lines,
+      choices: realEncounter.choices,
+    };
+  }
+
+  // 1. WAKE UP (05:30 AM) — Unique Philippine Date, Weather, Temperature & Slice-of-Life Buzz
   if (beat === 'wake_up') {
     const characters: SceneCharacter[] = [
       {
@@ -209,33 +230,33 @@ export function buildDailyStoryScene(
     const openingLine: DialogueLine = cal.specialDayTl
       ? {
           speaker: 'Narrator',
-          text: `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.tl}). Tumutunog ang alarm sa tabi ng unan mo. ${cal.specialDayTl} ngayon!`,
-          textEn: `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.short}). Your alarm rings beside your pillow. Today is ${cal.specialDayEn}!`,
+          text: `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.tl}, ${cal.tempC}°C). ${cal.specialDayTl}! ${cal.dailyBuzzTl}`,
+          textEn: `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.short}, ${cal.tempC}°C). ${cal.specialDayEn}! ${cal.dailyBuzzEn}`,
         }
       : cal.weather === 'rainy'
         ? {
             speaker: 'Narrator',
             text: isBoarding
-              ? `05:30 AM — Rinig mo ang patak ng ulan sa yero ng boarding house. Malamig ang simoy ng ${cal.seasonLabelTl} — nakakatuksong magkumot pa!`
-              : `05:30 AM — Tilaok ng manok at mahinang ambon sa labas ng bintana. Amoy mainit na kape na sa kusina ni Mama.`,
+              ? `05:30 AM — ${cal.tempC}°C at patak ng ulan sa yero ng boarding house (${cal.monthThemeTl}). ${cal.dailyBuzzTl}`
+              : `05:30 AM — ${cal.tempC}°C, mahinang ambon sa labas ng bintana (${cal.monthThemeTl}). ${cal.dailyBuzzTl}`,
             textEn: isBoarding
-              ? `05:30 AM — Rain patters gently against the boarding house tin roof. Cool ${cal.seasonLabelEn} air makes your blanket feel twice as heavy.`
-              : `05:30 AM — Roosters crow through soft morning rain outside. The comforting scent of hot coffee drifts from Mama’s kitchen.`,
+              ? `05:30 AM — ${cal.tempC}°C with rain pattering on the boarding house tin roof (${cal.monthThemeEn}). ${cal.dailyBuzzEn}`
+              : `05:30 AM — ${cal.tempC}°C with soft morning rain outside (${cal.monthThemeEn}). ${cal.dailyBuzzEn}`,
           }
         : cal.weather === 'hot'
           ? {
               speaker: 'Narrator',
-              text: `05:30 AM — Maalinsangan na agad kahit bukang-liwayway pa lang. Umiikot ang electric fan sa number 3 habang bumabangon ka.`,
-              textEn: `05:30 AM — Warm summer air greets you at dawn. Your electric fan hums on setting 3 as you sit up for Day ${day}/365.`,
+              text: `05:30 AM — Maalinsangan na agad (PAGASA forecast: ${cal.tempC}°C Heat Index!). Umiikot ang electric fan sa number 3. ${cal.dailyBuzzTl}`,
+              textEn: `05:30 AM — Warm summer air already lingers (PAGASA forecast: ${cal.tempC}°C Heat Index!). Your fan hums on setting 3. ${cal.dailyBuzzEn}`,
             }
           : {
               speaker: 'Narrator',
               text: isBoarding
-                ? `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.tl}). Nakasabit na sa pako ang plantsadong uniporme mo at nakahanda ang barya sa desk.`
-                : `05:30 AM — Sumisilip ang ginintuang sinag ng araw sa bintana. Bagong araw na naman ng laban tungo sa graduation!`,
+                ? `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.tl}, ${cal.tempC}°C · ${cal.monthThemeTl}). ${cal.dailyBuzzTl}`
+                : `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.tl}, ${cal.tempC}°C · ${cal.monthThemeTl}). ${cal.dailyBuzzTl}`,
               textEn: isBoarding
-                ? `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.short}). Your pressed uniform hangs on the hook with exact jeepney coins stacked on the desk.`
-                : `05:30 AM — Golden dawn light streams through the window. Another day closer to graduation!`,
+                ? `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.short}, ${cal.tempC}°C · ${cal.monthThemeEn}). ${cal.dailyBuzzEn}`
+                : `05:30 AM — ${cal.monthName} ${cal.dayOfMonth} (${weekday.short}, ${cal.tempC}°C · ${cal.monthThemeEn}). ${cal.dailyBuzzEn}`,
             };
 
     const secondLine: DialogueLine = !isBoarding
@@ -243,27 +264,35 @@ export function buildDailyStoryScene(
           speaker: 'Mama',
           text: inDebt
             ? `Gising na {name}! Huwag ka munang ma-stress sa budget, kain muna tayo ng mainit na sinangag bago ka umalis.`
-            : weekday.isWeekend
-              ? `Magandang umaga {name}! Walang pasok ngayon (${weekday.tl}), ano ang plano mo ngayong umaga?`
-              : `Gising na {name}, may nakahanda nang kape at pandesal sa mesa! Huwag magpapagutom sa eskwela ha?`,
+            : cal.isHolidayOrBreak
+              ? `Magandang umaga {name}! Walang pasok ngayon (${cal.specialDayTl ?? weekday.tl}) — sulitin natin ang araw na ’to!`
+              : weekday.isWeekend
+                ? `Magandang umaga {name}! Walang pasok ngayon (${weekday.tl}), ano ang plano mo ngayong umaga?`
+                : `Gising na {name}, may nakahanda nang kape at pandesal sa mesa! Huwag magpapagutom sa eskwela ha?`,
           textEn: inDebt
             ? `Wake up {name}! Don’t stress too much about the budget yet — eat some warm garlic rice before heading out.`
-            : weekday.isWeekend
-              ? `Good morning {name}! It’s ${weekday.short} — no classes today. How do you want to start your morning?`
-              : `Time to wake up {name}, hot coffee and pandesal are on the table! Don’t skip meals at school, okay?`,
+            : cal.isHolidayOrBreak
+              ? `Good morning {name}! No classes today (${cal.specialDayEn ?? weekday.short}) — let’s make the most of it!`
+              : weekday.isWeekend
+                ? `Good morning {name}! It’s ${weekday.short} — no classes today. How do you want to start your morning?`
+                : `Time to wake up {name}, hot coffee and pandesal are on the table! Don’t skip meals at school, okay?`,
         }
       : {
           speaker: '{name}',
           text: inDebt
-            ? `Hays... negative ₱${Math.abs(state.stats.money)} pa ang wallet ko. Kailangan ng matinding diskarte ngayong araw.`
-            : state.stats.energy < 35
-              ? `Ang bigat pa ng talukap ng mata ko... pero laban lang, Day ${day} of 365 na!`
-              : `Okay {name}, bagong araw! Paano natin sisimulan ang umaga?`,
+            ? `Hays... negative ₱${Math.abs(state.stats.money)} pa ang wallet ko. Kailangan ng matinding diskarte ngayong ${cal.monthShort} ${cal.dayOfMonth}.`
+            : cal.isHolidayOrBreak
+              ? `Walang pasok ngayon (${cal.specialDayTl})! Magandang pagkakataon para magpahinga, mag-review, o mag-raket.`
+              : state.stats.energy < 35
+                ? `Ang bigat pa ng talukap ng mata ko... pero laban lang, Day ${day} of 365 na!`
+                : `Okay {name}, bagong araw (${cal.monthShort} ${cal.dayOfMonth})! Paano natin sisimulan ang umaga?`,
           textEn: inDebt
-            ? `Sigh... still down ₱${Math.abs(state.stats.money)} in debt. Gotta hustle smart today.`
-            : state.stats.energy < 35
-              ? `My eyelids still feel heavy... but we keep going, Day ${day} of 365!`
-              : `Alright {name}, fresh morning! How do we kick off today?`,
+            ? `Sigh... still down ₱${Math.abs(state.stats.money)} in debt. Gotta hustle smart this ${cal.monthShort} ${cal.dayOfMonth}.`
+            : cal.isHolidayOrBreak
+              ? `No classes today (${cal.specialDayEn})! Great window to rest, catch up on notes, or earn extra cash.`
+              : state.stats.energy < 35
+                ? `My eyelids still feel heavy... but we keep going, Day ${day} of 365!`
+                : `Alright {name}, fresh morning (${cal.monthShort} ${cal.dayOfMonth})! How do we kick off today?`,
         };
 
     const breakfastCost = isBoarding ? -30 : 0;
@@ -326,19 +355,31 @@ export function buildDailyStoryScene(
     };
   }
 
-  // 2. COMMUTE / WEEKEND MORNING (06:15 AM)
+  // 2. COMMUTE / HOLIDAY OR WEEKEND MORNING (06:15 AM)
   if (beat === 'commute') {
-    if (weekday.isWeekend) {
-      const weekendBg = cal.weather === 'rainy' ? 'bg_rainy_flood' : 'bg_barangay_street';
+    if (isNoClassDay) {
+      const holidayBg =
+        cal.monthShort === 'Dec'
+          ? 'bg_christmas_parol'
+          : cal.weather === 'rainy'
+            ? 'bg_rainy_flood'
+            : 'bg_barangay_street';
       const jeepGate = canStartMinigame('jeepney', state, false);
+      const isHoliday = Boolean(cal.isHolidayOrBreak);
       return {
         id: `daily_${state.totalWeeks}_commute_wknd`,
         beat: 'commute',
-        beatLabelTl: 'Sabado/Linggo',
-        beatLabelEn: 'Weekend Morning',
-        locationTl: `${weekday.tl} · Labas ng Bahay`,
-        locationEn: `${weekday.short} · Neighborhood Street`,
-        background: weekendBg,
+        beatLabelTl: isHoliday ? 'Walang Pasok!' : 'Sabado/Linggo',
+        beatLabelEn: isHoliday ? 'Holiday / No Class' : 'Weekend Morning',
+        locationTl: isHoliday
+          ? `${cal.monthShort} ${cal.dayOfMonth} · Walang Pasok sa Campus`
+          : `${weekday.tl} · Labas ng Bahay`,
+        locationEn: isHoliday
+          ? `${cal.monthShort} ${cal.dayOfMonth} · National Holiday / Break`
+          : `${weekday.short} · Neighborhood Street`,
+        encounterTagTl: isHoliday ? cal.specialDayTl : undefined,
+        encounterTagEn: isHoliday ? cal.specialDayEn : undefined,
+        background: holidayBg,
         characters: [
           { id: 'player', sprite: 'player_happy', position: 'left' },
           { id: 'miggy', sprite: 'miggy_happy', position: 'right' },
@@ -346,20 +387,24 @@ export function buildDailyStoryScene(
         lines: [
           {
             speaker: 'Narrator',
-            text: `06:30 AM — Walang regular na klase ngayong ${weekday.tl}! Mas kalmado ang kalsada at rinig ang nagtitinda ng taho sa kanto.`,
-            textEn: `06:30 AM — No regular classes this ${weekday.short}! The street is peaceful and a taho vendor calls out down the corner.`,
+            text: isHoliday
+              ? `06:30 AM — Walang regular na klase ngayong ${cal.monthName} ${cal.dayOfMonth} (${cal.specialDayTl})! Ramdam ang holiday vibe sa buong barangay.`
+              : `06:30 AM — Walang regular na klase ngayong ${weekday.tl}! Mas kalmado ang kalsada (${cal.tempC}°C) at rinig ang nagtitinda ng taho sa kanto.`,
+            textEn: isHoliday
+              ? `06:30 AM — No regular classes on ${cal.monthName} ${cal.dayOfMonth} (${cal.specialDayEn})! A festive, unhurried holiday mood fills the barangay.`
+              : `06:30 AM — No regular classes this ${weekday.short}! The street is calm (${cal.tempC}°C) and a taho vendor calls out down the corner.`,
           },
           {
             speaker: 'Miggy',
-            text: `Uy {name}! Sakto, gising ka na! Weekend ngayon (+15% kita sa raket!). Sasama ka ba sa morning hustle o mag-re-review ka muna?`,
-            textEn: `Hey {name}, you’re up! It’s the weekend (+15% side-hustle pay!). Joining a morning hustle or catching up on studies?`,
+            text: `Uy {name}! Sakto, walang klase ngayon! Sasama ka ba sa morning hustle (+15% kita!), mag-taho muna, o mag-aasikaso ng gamit sa bahay?`,
+            textEn: `Hey {name}, no classes today! Joining a morning hustle (+15% pay!), grabbing warm taho, or catching up on chores & rest?`,
           },
         ],
         choices: [
           {
             id: 'wknd_taho_walk',
-            text: 'Bumili ng mainit na taho at mag-morning stretch sa kalsada',
-            textEn: 'Buy warm taho and take a calm morning walk',
+            text: 'Bumili ng mainit na taho at mag-morning stroll kasama si Miggy',
+            textEn: 'Buy warm taho and take a calm morning stroll with Miggy',
             hint: '-₱20 · +8 EN · +8 MH · +3 Social',
             hintEn: '-₱20 · +8 EN · +8 MH · +3 Social',
             nextBeat: 'morning_campus',
@@ -383,8 +428,8 @@ export function buildDailyStoryScene(
           },
           {
             id: 'wknd_chores',
-            text: 'Maglaba ng uniporme at ayusin ang desk para handa sa Lunes',
-            textEn: 'Wash uniforms and tidy your study desk for Monday',
+            text: 'Maglaba ng uniporme at ayusin ang study desk para handa sa susunod na pasok',
+            textEn: 'Wash uniforms and organize your desk for the next school day',
             hint: '-5 EN · +6 MH · -0.02 GWA',
             hintEn: '-5 EN · +6 MH · -0.02 GWA',
             nextBeat: 'morning_campus',
@@ -407,8 +452,8 @@ export function buildDailyStoryScene(
       beat: 'commute',
       beatLabelTl: 'Biyahe',
       beatLabelEn: 'Commute',
-      locationTl: isRainy ? 'Kalsada · Maulang Biyahe' : 'Jeepney Stop · Morning Rush',
-      locationEn: isRainy ? 'Street · Rainy Commute' : 'Jeepney Stop · Morning Rush',
+      locationTl: isRainy ? `Kalsada · Maulang Biyahe (${cal.tempC}°C)` : `Jeepney Stop · Morning Rush (${cal.tempC}°C)`,
+      locationEn: isRainy ? `Street · Rainy Commute (${cal.tempC}°C)` : `Jeepney Stop · Morning Rush (${cal.tempC}°C)`,
       background: isRainy ? 'bg_rainy_flood' : 'bg_jeepney_interior',
       characters: [
         { id: 'player', sprite: rushed ? 'player_surprised' : 'player_neutral', position: 'left' },
@@ -418,15 +463,15 @@ export function buildDailyStoryScene(
         {
           speaker: 'Narrator',
           text: rushed
-            ? `06:30 AM — Hala, napasarap ang snooze mo! Mabilisang suklay at takbo palabas ng gate habang puno na ang mga dumadaang jeep.`
+            ? `06:30 AM — Hala, napasarap ang snooze mo! Mabilisang suklay at takbo palabas ng gate habang siksikan na ang mga dumadaang jeep.`
             : isRainy
-              ? `06:15 AM — Buhos ang ulan sa kanto at tumaas ang singil ng tricycle. Buti na lang may dala kang payong!`
-              : `06:15 AM — Maaga ka sa sakayan! Dumadagundong ang radyo ng jeepney habang umaakyat ang mga estudyante at empleyado.`,
+              ? `06:15 AM — Buhos ang ulan sa kanto at mabagal ang daloy ng traffic. Buti na lang may dala kang payong!`
+              : `06:15 AM — Maaga ka sa sakayan (${cal.monthThemeTl})! Dumadagundong ang radyo ng jeepney habang umaakyat ang mga estudyante.`,
           textEn: rushed
             ? `06:30 AM — That snooze went fast! You comb your hair on the run as packed jeepneys rumble past the corner.`
             : isRainy
               ? `06:15 AM — Rain pours down the avenue and wet streets slow traffic to a crawl. Good thing you grabbed an umbrella!`
-              : `06:15 AM — Right on time at the jeepney stop! Morning radio hums as students and commuters hop aboard.`,
+              : `06:15 AM — Right on time at the jeepney stop (${cal.monthThemeEn})! Morning radio hums as students hop aboard.`,
         },
         {
           speaker: 'Miggy',
@@ -486,17 +531,22 @@ export function buildDailyStoryScene(
     };
   }
 
-  // 3. MORNING CAMPUS / CLASS (07:30 AM)
+  // 3. MORNING CAMPUS / CLASS OR HOLIDAY MORNING (07:30 AM)
   if (beat === 'morning_campus') {
-    if (weekday.isWeekend) {
+    if (isNoClassDay) {
+      const isHoliday = Boolean(cal.isHolidayOrBreak);
       return {
         id: `daily_${state.totalWeeks}_morning_wknd`,
         beat: 'morning_campus',
-        beatLabelTl: 'Weekend Study / Tambay',
-        beatLabelEn: 'Weekend Morning',
-        locationTl: 'Campus Library · Weekend',
-        locationEn: 'Campus Library · Weekend',
-        background: 'bg_library',
+        beatLabelTl: isHoliday ? 'Holiday Morning' : 'Weekend Morning',
+        beatLabelEn: isHoliday ? 'Holiday Morning' : 'Weekend Morning',
+        locationTl: isHoliday
+          ? `${cal.specialDayTl?.split('(')[0].trim() ?? 'Holiday'} · Free Day`
+          : 'Campus Library · Weekend',
+        locationEn: isHoliday
+          ? `${cal.specialDayEn?.split('(')[0].trim() ?? 'Holiday'} · Free Day`
+          : 'Campus Library · Weekend',
+        background: isHoliday && cal.monthShort === 'Dec' ? 'bg_christmas_parol' : 'bg_library',
         characters: [
           { id: 'player', sprite: 'player_neutral', position: 'left' },
           { id: 'bea', sprite: 'bea_happy', position: 'right' },
@@ -504,17 +554,21 @@ export function buildDailyStoryScene(
         lines: [
           {
             speaker: 'Bea',
-            text: `Hi {name}! Nagulat ako nandito ka rin kahit ${weekday.tl}. May ginawa akong color-coded reviewer para sa ${state.subjects[0]?.name ?? state.profile.course} — sabay ka?`,
-            textEn: `Hi {name}! Surprised to see you here on a ${weekday.short}. I made color-coded notes for ${state.subjects[0]?.name ?? state.profile.course} — want to study together?`,
+            text: isHoliday
+              ? `Hi {name}! Walang pasok ngayon (${cal.specialDayTl?.split('(')[0].trim()}) pero nag-advance reading ako sa ${state.subjects[0]?.name ?? state.profile.course} — sabay ka o raket muna?`
+              : `Hi {name}! Nagulat ako nandito ka rin kahit ${weekday.tl}. May ginawa akong color-coded reviewer para sa ${state.subjects[0]?.name ?? state.profile.course} — sabay ka?`,
+            textEn: isHoliday
+              ? `Hi {name}! Enjoying the day off (${cal.specialDayEn?.split('(')[0].trim()}), though I’m reading ahead on ${state.subjects[0]?.name ?? state.profile.course} — study together or hustling today?`
+              : `Hi {name}! Surprised to see you here on a ${weekday.short}. I made color-coded notes for ${state.subjects[0]?.name ?? state.profile.course} — want to study together?`,
           },
           {
             speaker: '{name}',
             text: tags.has('worked_shift')
               ? `Kakatapos ko lang ng morning raket, Bea! Nakakapagod pero sulit ang kita.`
-              : `Sakto Bea, kailangan ko talagang bumawi sa grades ngayong sem!`,
+              : `Sakto Bea, magandang pagkakataon ’to para makabawi habang walang regular classes!`,
             textEn: tags.has('worked_shift')
               ? `Just wrapped up a morning hustle, Bea! Tired, but the extra pesos were worth it.`
-              : `Perfect timing Bea, I really need to keep my grades sharp this semester!`,
+              : `Perfect timing Bea — free days are the best time to get ahead!`,
           },
         ],
         choices: [
@@ -535,8 +589,8 @@ export function buildDailyStoryScene(
           },
           {
             id: 'wknd_quick_shift',
-            text: 'Mag-3-hour Weekend Part-Time Shift (+15% Weekend Pay!)',
-            textEn: 'Take a 3-hour Weekend Part-Time Shift (+15% Weekend Pay!)',
+            text: 'Mag-3-hour Holiday/Weekend Part-Time Shift (+15% Pay!)',
+            textEn: 'Take a 3-hour Holiday/Weekend Part-Time Shift (+15% Pay!)',
             hint: '+₱144 · -18 EN · -5 MH',
             hintEn: '+₱144 · -18 EN · -5 MH',
             nextBeat: 'lunch',
@@ -570,11 +624,12 @@ export function buildDailyStoryScene(
       };
     }
 
-    // Weekday Classroom / Lab Story Scene
+    // Weekday Classroom / Lab Story Scene (dynamically tailored to Philippine monthly observance & subject!)
     const subjectName = state.subjects[day % state.subjects.length]?.name ?? state.profile.course;
     const roomBg = isTech && seed === 1 ? 'bg_computer_lab' : 'bg_classroom';
     const rushed = tags.has('snoozed');
     const walked = tags.has('walked_school');
+    const isMondayFlag = weekday.short === 'Mon';
 
     return {
       id: `daily_${state.totalWeeks}_morning_campus`,
@@ -595,13 +650,17 @@ export function buildDailyStoryScene(
           text: rushed
             ? `07:38 AM — Hiningal ka pagpasok ng ${subjectName}! Sakto, nagche-check na ng attendance si Prof. Reyes.`
             : walked
-              ? `07:45 AM — Medyo pawisan ka galing sa lakad pero buo pa ang barya mo sa bulsa. Tahimik na ang classroom habang nagsusulat si Prof. Reyes sa board.`
-              : `07:30 AM — Maaga ka sa upuan mo para sa ${subjectName}. Umiikot ang ceiling fan at handa na ang ballpen at yellow pad mo.`,
+              ? `07:45 AM — Medyo pawisan ka galing sa lakad (${cal.tempC}°C) pero buo pa ang barya mo sa bulsa. Nagsusulat na si Prof. Reyes sa board.`
+              : isMondayFlag
+                ? `07:30 AM — Katatapos lang ng Monday Flag Ceremony (Lupang Hinirang at Panatang Makabayan)! Handa ka na sa ${subjectName}.`
+                : `07:30 AM — Maaga ka sa upuan mo para sa ${subjectName} (${cal.monthThemeTl}). Umiikot ang ceiling fan at handa na ang yellow pad mo.`,
           textEn: rushed
             ? `07:38 AM — You slip into ${subjectName} catching your breath right as Prof. Reyes checks attendance!`
             : walked
-              ? `07:45 AM — A little sweaty from walking, yet your pocket coins are untouched. Prof. Reyes begins writing on the board.`
-              : `07:30 AM — Seated early for ${subjectName}. Ceiling fans whirr overhead as you open your notebook and pen.`,
+              ? `07:45 AM — A little sweaty from walking (${cal.tempC}°C), yet your pocket coins are untouched. Prof. Reyes starts writing on the board.`
+              : isMondayFlag
+                ? `07:30 AM — Fresh from the Monday Flag Ceremony! You settle into your desk for ${subjectName}.`
+                : `07:30 AM — Seated early for ${subjectName} (${cal.monthThemeEn}). Ceiling fans whirr overhead as you open your notebook.`,
         },
         {
           speaker: 'Prof. Reyes',
@@ -683,7 +742,7 @@ export function buildDailyStoryScene(
     };
   }
 
-  // 4. LUNCH (12:00 PM)
+  // 4. LUNCH (12:00 PM) — Rotating Daily Filipino Ulam Menu!
   if (beat === 'lunch') {
     const hungry = !tags.has('ate_breakfast');
     const carinderiaGate = canStartMinigame('carinderia', state, false);
@@ -694,8 +753,8 @@ export function buildDailyStoryScene(
       beat: 'lunch',
       beatLabelTl: 'Tanghalian',
       beatLabelEn: 'Lunch Break',
-      locationTl: 'Carinderia ni Aling Nena · 12:00 PM',
-      locationEn: 'Aling Nena’s Carinderia · 12:00 PM',
+      locationTl: `Carinderia ni Aling Nena · 12:00 PM`,
+      locationEn: `Aling Nena’s Carinderia · 12:00 PM`,
       background: seed === 1 ? 'bg_canteen' : 'bg_carinderia',
       characters: [
         { id: 'player', sprite: hungry ? 'player_worried' : 'player_happy', position: 'left' },
@@ -708,24 +767,24 @@ export function buildDailyStoryScene(
         {
           speaker: 'Narrator',
           text: hungry
-            ? `12:00 PM — Kumukulo na ang tiyan mo dahil hindi ka nakapag-almusal kanina! Amoy ginisang munggo at adobo sa carinderia ni Aling Nena.`
+            ? `12:00 PM — Kumukulo na ang tiyan mo dahil hindi ka nakapag-almusal kanina! Ulam of the day kay Aling Nena: ${cal.dailyUlamTl}!`
             : tags.has('aced_class')
-              ? `12:00 PM — Ang gaan ng pakiramdam matapos ang recitation kanina! Puno na ang carinderia ng gutom na estudyante.`
-              : `12:00 PM — Bell na para sa tanghalian! Umuusok ang mga kaldero sa tapat ng campus.`,
+              ? `12:00 PM — Ang gaan ng pakiramdam matapos ang klase kanina! Umuusok sa counter ang specialty ngayon: ${cal.dailyUlamTl}.`
+              : `12:00 PM — Bell na para sa tanghalian! Amoy bagong lutong ${cal.dailyUlamTl} sa tapat ng campus.`,
           textEn: hungry
-            ? `12:00 PM — Your stomach growls loudly after skipping breakfast! The aroma of sautéed munggo and adobo fills Aling Nena’s eatery.`
+            ? `12:00 PM — Your stomach growls loudly after skipping breakfast! Today’s carinderia special: ${cal.dailyUlamEn}!`
             : tags.has('aced_class')
-              ? `12:00 PM — Still smiling after nailing morning recitation! Students pack the carinderia benches.`
-              : `12:00 PM — Lunch bell rings! Steaming pots of ulam line the counter right outside campus.`,
+              ? `12:00 PM — Still smiling after morning class! Steaming on the counter today: ${cal.dailyUlamEn}.`
+              : `12:00 PM — Lunch bell rings! The aroma of freshly cooked ${cal.dailyUlamEn} greets you outside campus.`,
         },
         {
           speaker: 'Aling Nena',
           text: lowMoney
-            ? `Oh {name}, halika! Half-rice at munggo plus libreng mainit na sabaw? O kung gusto mong kumita, kulang ako sa taga-serve ngayong lunch rush!`
-            : `Magandang tanghali {name}! Bagong luto ang adobo at ginisang munggo — o gusto mo bang mag-sideline muna habang dagsa ang customers?`,
+            ? `Oh {name}, halika! Half-rice at ${cal.dailyUlamTl} plus libreng mainit na sabaw? O kung gusto mong kumita, kulang ako sa taga-serve ngayong lunch rush!`
+            : `Magandang tanghali {name}! Bagong luto ang ${cal.dailyUlamTl} — o gusto mo bang mag-sideline muna habang dagsa ang customers?`,
           textEn: lowMoney
-            ? `Hey {name}, come here! Half-rice with munggo and free hot soup? Or if you need cash, I’m short-handed for the lunch rush!`
-            : `Good noon {name}! Fresh adobo and munggo just came off the stove — or want to help serve the lunch rush for extra pay?`,
+            ? `Hey {name}, come here! Half-rice with ${cal.dailyUlamEn} and free hot soup? Or if you need cash, I’m short-handed for the lunch rush!`
+            : `Good noon {name}! Fresh ${cal.dailyUlamEn} just came off the stove — or want to help serve the lunch rush for extra pay?`,
         },
         companionIsCrush
           ? {
@@ -735,15 +794,15 @@ export function buildDailyStoryScene(
             }
           : {
               speaker: 'Miggy',
-              text: `Tara {name}, siomai rice at gulaman! Kwentuhan muna bago sumabak sa hapon!`,
-              textEn: `Come on {name}, siomai rice and cold gulaman! Let’s unwind before afternoon hits!`,
+              text: `Tara {name}, kain tayo at kwentuhan muna bago sumabak sa hapon!`,
+              textEn: `Come on {name}, let’s grab lunch and unwind before afternoon hits!`,
             },
       ],
       choices: [
         {
           id: 'lunch_munggo',
-          text: 'Umorder ng half-rice, munggo, at libreng sabaw kay Aling Nena',
-          textEn: 'Order half-rice, munggo, and free hot soup from Aling Nena',
+          text: `Umorder ng half-rice, ${cal.dailyUlamTl}, at libreng sabaw kay Aling Nena`,
+          textEn: `Order half-rice, ${cal.dailyUlamEn}, and free hot soup from Aling Nena`,
           hint: '-₱45 · +15 EN · +6 MH · +2 Aling Nena',
           hintEn: '-₱45 · +15 EN · +6 MH · +2 Aling Nena',
           nextBeat: 'afternoon',
@@ -816,8 +875,8 @@ export function buildDailyStoryScene(
       beat: 'afternoon',
       beatLabelTl: 'Hapon',
       beatLabelEn: 'Afternoon',
-      locationTl: isRainy ? 'Campus Walkway · Maulang Hapon' : 'Campus Gate · 02:00 PM',
-      locationEn: isRainy ? 'Campus Walkway · Rainy Afternoon' : 'Campus Gate · 2:00 PM',
+      locationTl: isRainy ? `Campus Walkway · Maulang Hapon (${cal.tempC}°C)` : `Campus Gate · 02:00 PM (${cal.tempC}°C)`,
+      locationEn: isRainy ? `Campus Walkway · Rainy Afternoon (${cal.tempC}°C)` : `Campus Gate · 2:00 PM (${cal.tempC}°C)`,
       background: isRainy ? 'bg_rainy_flood' : 'bg_school_gate',
       characters: [
         { id: 'player', sprite: 'player_neutral', position: 'left' },
@@ -829,22 +888,22 @@ export function buildDailyStoryScene(
           text: tags.has('worked_shift')
             ? `02:00 PM — Medyo pagod na ang braso mo sa shift kanina, pero ang sarap sa pakiramdam ng hawak na dagdag kita! Mahaba pa ang hapon.`
             : tags.has('tipid_lunch')
-              ? `02:00 PM — Biskwit lang ang laman ng tiyan mo pero tuloy ang laban! Abala ang lahat ng estudyante sa hapon.`
-              : `02:00 PM — Tanghaling tapat hanggang hapon sa campus! Maraming pwedeng gawin bago lumubog ang araw.`,
+              ? `02:00 PM — Biskwit lang ang laman ng tiyan mo pero tuloy ang laban! Abala ang campus para sa ${cal.monthThemeTl}.`
+              : `02:00 PM — Tanghaling tapat hanggang hapon sa campus (${cal.monthThemeTl})! Maraming pwedeng gawin bago lumubog ang araw.`,
           textEn: tags.has('worked_shift')
             ? `02:00 PM — Your arms ache slightly from the earlier shift, yet the extra pesos in your pocket feel rewarding. Still plenty of afternoon left.`
             : tags.has('tipid_lunch')
-              ? `02:00 PM — Running on crackers and determination! Campus buzzes with afternoon energy.`
-              : `02:00 PM — Golden afternoon around campus! Plenty of ways to spend the next few hours before sunset.`,
+              ? `02:00 PM — Running on crackers and determination! Campus buzzes for ${cal.monthThemeEn}.`
+              : `02:00 PM — Afternoon energy around campus (${cal.monthThemeEn})! Plenty of ways to spend the next few hours before sunset.`,
         },
         {
           speaker: 'Carlo',
           text: schGate.allowed
-            ? `Uy {name}! Balita ko bukas na ang Scholarship Application Quest (pasok ang GWA mo!) — at may org booth din kami mamaya. Anong lakad mo ngayong hapon?`
-            : `Uy {name}! May campus org booth kami ngayong hapon, pero alam kong naghahabol ka rin ng aral o raket. Anong plano mo?`,
+            ? `Uy {name}! Balita ko bukas na ang Scholarship Application Quest (pasok ang GWA mo!) — at may org booth din kami para sa ${cal.monthThemeTl}. Anong lakad mo?`
+            : `Uy {name}! May student org prep kami ngayong hapon para sa ${cal.monthThemeTl}, pero alam kong naghahabol ka rin ng aral o raket. Anong plano mo?`,
           textEn: schGate.allowed
-            ? `Hey {name}! Word is the Scholarship Quest is open and your GWA qualifies! Plus we’ve got an org booth this afternoon. What’s your move?`
-            : `Hey {name}! We’re running a student org booth this afternoon, though I know you’re balancing study and hustle too. What’s the plan?`,
+            ? `Hey {name}! Word is the Scholarship Quest is open and your GWA qualifies! Plus we’ve got an org booth for ${cal.monthThemeEn}. What’s your move?`
+            : `Hey {name}! We’re prepping an org booth for ${cal.monthThemeEn}, though I know you’re balancing study and hustle too. What’s the plan?`,
         },
       ],
       choices: [
@@ -959,12 +1018,12 @@ export function buildDailyStoryScene(
         {
           speaker: 'Narrator',
           text: isDecember
-            ? `06:30 PM — Umiilaw na ang mga parol sa labas at malamig ang simoy ng Disyembre! Nakauwi ka na mula sa mahabang araw.`
+            ? `06:30 PM — Umiilaw na ang mga parol sa labas at malamig ang simoy ng Disyembre (${cal.tempC}°C)! Amoy bibingka sa kanto.`
             : tags.has('worked_shift')
               ? `06:30 PM — Ngalay ang mga paa mo galing sa raket, pero buo ang loob mo habang binibilang ang barya at papel sa pitaka.`
               : `06:30 PM — Lumubog na ang araw at tahimik na ang paligid. May oras ka pa para sa hapunan, pamilya, o huling hirit ng araw.`,
           textEn: isDecember
-            ? `06:30 PM — Capiz star parols glow outside in the cool December breeze! You’re finally back from a long day.`
+            ? `06:30 PM — Capiz star parols glow outside in the cool December breeze (${cal.tempC}°C)! Warm bibingka scents drift down the corner.`
             : tags.has('worked_shift')
               ? `06:30 PM — Your feet ache from today’s shift, yet counting your hard-earned pesos brings a proud smile.`
               : `06:30 PM — Sunset fades into calm evening light. You still have time for dinner, family, or one final evening push.`,
@@ -973,10 +1032,10 @@ export function buildDailyStoryScene(
           speaker: 'Mama',
           text: isBoarding
             ? `Ring... ring! Video call mula kay Mama: "Kumusta araw mo {name}? Kumain ka na ba ng hapunan diyan sa boarding house?"`
-            : `"Tara na {name}, nakahain na ang hapunan! Ikwento mo naman kung anong nangyari sa eskwela ngayong araw."`,
+            : `"Tara na {name}, nakahain na ang hapunan! Ikwento mo naman kung anong nangyari ngayong ${cal.monthShort} ${cal.dayOfMonth}."`,
           textEn: isBoarding
             ? `Ring... ring! Video call from Mama: "How was your day {name}? Did you eat dinner yet over at the boarding house?"`
-            : `"Come eat {name}, dinner’s on the table! Tell me all about how school went today."`,
+            : `"Come eat {name}, dinner’s on the table! Tell me all about how ${cal.monthShort} ${cal.dayOfMonth} went."`,
         },
       ],
       choices: [
@@ -1060,11 +1119,15 @@ export function buildDailyStoryScene(
   const recapBitsTl: string[] = [];
   const recapBitsEn: string[] = [];
   if (tags.has('aced_class')) {
-    recapBitsTl.push('nakapag-recite ka sa klase');
-    recapBitsEn.push('you nailed class recitation');
+    recapBitsTl.push('nakapag-recite at lumaban sa klase');
+    recapBitsEn.push('you powered through class');
   } else if (tags.has('studied_with_bea')) {
     recapBitsTl.push('nakapag-aral kayo ni Bea');
     recapBitsEn.push('you reviewed with Bea');
+  }
+  if (tags.has('survived_flood') || tags.has('helped_nena_flood')) {
+    recapBitsTl.push('nalampasan mo ang baha ng Habagat');
+    recapBitsEn.push('you braved the monsoon flood');
   }
   if (tags.has('worked_shift')) {
     recapBitsTl.push('kumita ka sa raket shift');

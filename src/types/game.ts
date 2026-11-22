@@ -127,6 +127,8 @@ export interface DailyStoryScene {
   beatLabelEn: string;
   locationTl: string;
   locationEn: string;
+  encounterTagTl?: string;
+  encounterTagEn?: string;
   background: string;
   characters: SceneCharacter[];
   lines: DialogueLine[];
@@ -144,8 +146,16 @@ export interface CalendarDayInfo {
   weather: WeatherId;
   weatherLabelTl: string;
   weatherLabelEn: string;
+  tempC: number; // Realistic Philippine temperature / heat index (°C)
+  monthThemeTl: string;
+  monthThemeEn: string;
+  isHolidayOrBreak?: boolean;
   specialDayTl?: string;
   specialDayEn?: string;
+  dailyUlamTl: string;
+  dailyUlamEn: string;
+  dailyBuzzTl: string;
+  dailyBuzzEn: string;
 }
 
 export interface DailyMomentSnapshot {

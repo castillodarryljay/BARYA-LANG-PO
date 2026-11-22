@@ -236,7 +236,10 @@ export const WeeklyPlanner: React.FC = () => {
               <span className="hidden sm:inline text-amber-500/50">•</span>
               <span className="hidden sm:inline-flex items-center gap-1 text-amber-100/85 truncate">
                 {WEATHER_ICON[cal.weather]}
-                <span className="truncate">{isTL ? cal.weatherLabelTl : cal.weatherLabelEn}</span>
+                <span className={cal.tempC >= 38 ? 'text-orange-300 font-bold' : 'text-amber-200 font-semibold'}>
+                  {cal.tempC}°C
+                </span>
+                <span className="truncate">· {isTL ? cal.weatherLabelTl : cal.weatherLabelEn}</span>
               </span>
             </div>
 
@@ -289,18 +292,24 @@ export const WeeklyPlanner: React.FC = () => {
               <span className="font-semibold text-[#fff4de] truncate">
                 {isTL ? scene.locationTl : scene.locationEn}
               </span>
-              {cal.specialDayTl && (
+              {cal.specialDayTl ? (
                 <span className="text-amber-300 font-semibold inline-flex items-center gap-1 shrink-0">
                   <Sparkles className="w-3 h-3 shrink-0" />
                   <span className="truncate max-w-[140px] sm:max-w-none">
                     {isTL ? cal.specialDayTl : cal.specialDayEn}
                   </span>
                 </span>
+              ) : (
+                <span className="hidden sm:inline text-amber-200/65 truncate">
+                  · {isTL ? cal.monthThemeTl : cal.monthThemeEn}
+                </span>
               )}
             </div>
-            <span className="sm:hidden inline-flex items-center gap-1 text-[10px] font-mono text-amber-200/80 shrink-0">
+            <span className="sm:hidden inline-flex items-center gap-1 text-[10px] font-mono text-amber-200/80 shrink-0 tabular-nums">
               {WEATHER_ICON[cal.weather]}
-              <span>{(isTL ? cal.weatherLabelTl : cal.weatherLabelEn).split('·')[0].trim()}</span>
+              <span className={cal.tempC >= 38 ? 'text-orange-300 font-bold' : ''}>
+                {cal.tempC}°C
+              </span>
             </span>
           </div>
         </div>
@@ -349,9 +358,18 @@ export const WeeklyPlanner: React.FC = () => {
             <span className="font-pixel text-base sm:text-lg text-amber-300 tracking-wide truncate">
               {speakerName}
             </span>
-            <span className="sm:hidden text-[11px] font-mono text-amber-200/65 shrink-0">
-              · {beatInfo.index}/7 {isTL ? scene.beatLabelTl : scene.beatLabelEn}
-            </span>
+            {scene.encounterTagTl ? (
+              <span
+                data-testid="real-world-encounter-tag"
+                className="text-[11px] font-mono font-semibold text-orange-300 truncate"
+              >
+                · {isTL ? scene.encounterTagTl : scene.encounterTagEn}
+              </span>
+            ) : (
+              <span className="sm:hidden text-[11px] font-mono text-amber-200/65 shrink-0">
+                · {beatInfo.index}/7 {isTL ? scene.beatLabelTl : scene.beatLabelEn}
+              </span>
+            )}
           </div>
           <span className="text-[11px] font-mono text-amber-200/60 tabular-nums shrink-0">
             {lineIndex + 1}/{scene.lines.length}
